@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "218674894044",
+    "firebase_url": "https://androsharefb.firebaseio.com",
+    "project_id": "androsharefb",
+    "storage_bucket": "androsharefb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:218674894044:android:03cc4b1a5d984b505f1019",
+        "android_client_info": {
+          "package_name": "com.example.androshare"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "218674894044-7opidogsbu3v0qf72h83ev7nstpl515g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.androshare",
+            "certificate_hash": "3142dc11f30b5c2f1d154aa82410f9589ddfa5ea"
+          }
+        },
+        {
+          "client_id": "218674894044-oigj9h8o2n7j11ao49iamppa2v1fhvtt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBrUIbfbGRswXXmA_9nGFrhyvo_QifAB4c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "218674894044-oigj9h8o2n7j11ao49iamppa2v1fhvtt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
