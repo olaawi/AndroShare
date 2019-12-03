@@ -1,18 +1,16 @@
 package com.example.androshare
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.auth.api.signin.*
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.*
+import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_sign_in.*
+
 
 class SignInActivity : AppCompatActivity() {
 
@@ -20,10 +18,12 @@ class SignInActivity : AppCompatActivity() {
     lateinit var mGoogleSignInClient: GoogleSignInClient
     lateinit var mGoogleSignInOptions: GoogleSignInOptions
     private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var database: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_in)
+        database = FirebaseDatabase.getInstance().reference
         firebaseAuth = FirebaseAuth.getInstance()
         configureGoogleSignIn()
         setupUI()
@@ -43,6 +43,7 @@ class SignInActivity : AppCompatActivity() {
         mGoogleSignInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
+            .requestProfile()
             .build()
         mGoogleSignInClient = GoogleSignIn.getClient(this, mGoogleSignInOptions)
     }
@@ -77,6 +78,17 @@ class SignInActivity : AppCompatActivity() {
         val credential = GoogleAuthProvider.getCredential(acct.idToken, null)
         firebaseAuth.signInWithCredential(credential).addOnCompleteListener {
             if (it.isSuccessful) {
+                val account = GoogleSignIn.getLastSignedInAccount(this)
+                if (account != null) {
+                    val givenName = account.givenName
+                    val familyName = account.familyName
+                    val email = account.email
+                    val id = account.id
+                    val profile = User(givenName, familyName, email, id)
+                    if (id != null) {
+                        database.child("users").child(id).setValue(profile) // TODO debug
+                    }
+                }
                 val intent = Intent(this, HomeActivity::class.java)
                 startActivity(intent)
             } else {
