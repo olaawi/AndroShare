@@ -12,7 +12,7 @@ import com.google.firebase.auth.*
 import com.google.firebase.firestore.*
 import kotlinx.android.synthetic.main.activity_sign_in.*
 
-// hala
+// hala wants to commit
 
 class SignInActivity : AppCompatActivity() {
 
