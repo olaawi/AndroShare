@@ -81,24 +81,41 @@ class SignInActivity : AppCompatActivity() {
             if (it.isSuccessful) {
                 val account = GoogleSignIn.getLastSignedInAccount(this)
                 if (account != null) {
-                    val givenName = account.givenName
-                    val familyName = account.familyName
-                    val email = account.email
                     val id = account.id
-                    val user = User(givenName!!, familyName!!, email!!, id!!)
-                    database.collection("users").add(user)
-                        .addOnSuccessListener { documentReference ->
-                            Log.d(
-                                "signIn",
-                                "DocumentSnapshot added with ID: ${documentReference.id}"
-                            )
+                    var userExists = false
+                    database.collection("users")
+                        .get()
+                        .addOnSuccessListener { result ->
+                            for (document in result) {
+                                if (document.get("id") == id) {
+                                    userExists = true
+                                    break
+                                }
+                            }
                         }
-                        .addOnFailureListener { e ->
-                            Log.w("signIn", "Error adding document", e)
+                        .addOnFailureListener { exception ->
+                            Log.d("signIn", "Error reading from database", exception)
                         }
+                    if (!userExists) {
+                        val givenName = account.givenName
+                        val familyName = account.familyName
+                        val email = account.email
+                        val user = User(givenName!!, familyName!!, email!!, id!!)
+                        database.collection("users").add(user)
+                            .addOnSuccessListener { documentReference ->
+                                Log.d(
+                                    "signIn",
+                                    "DocumentSnapshot added with ID: ${documentReference.id}"
+                                )
+                            }
+                            .addOnFailureListener { exception ->
+                                Log.w("signIn", "Error adding document", exception)
+                            }
+                    }
                 }
-//                val intent = Intent(this, HomeActivity::class.java)
-//                startActivity(intent)
+                val intent = Intent(this, HomeActivity::class.java)
+                intent.putExtra("Username","John Doe")
+                startActivity(intent)
             } else {
                 Toast.makeText(this, "Google sign in failed:(", Toast.LENGTH_LONG).show()
             }
