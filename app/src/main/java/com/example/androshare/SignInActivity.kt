@@ -35,7 +35,7 @@ class SignInActivity : AppCompatActivity() {
         super.onStart()
         val user = FirebaseAuth.getInstance().currentUser
         if (user != null) {
-            val intent = Intent(this, HomeActivity::class.java)
+            val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()
         }
@@ -114,7 +114,7 @@ class SignInActivity : AppCompatActivity() {
                             }
                     }
                 }
-                val intent = Intent(this, HomeActivity::class.java)
+                val intent = Intent(this, MainActivity::class.java)
                 intent.putExtra("Username","John Doe")
                 startActivity(intent)
             } else {
