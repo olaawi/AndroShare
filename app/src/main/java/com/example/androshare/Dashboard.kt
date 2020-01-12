@@ -31,8 +31,9 @@ class Dashboard : Fragment() {
     private var param2: String? = null
     private var listener: OnFragmentInteractionListener? = null
 
-    lateinit var recyclerView: RecyclerView
-    lateinit var eventAdapter: EventAdapter
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var eventAdapter: EventAdapter
+    private lateinit var events: Array<Event?>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,19 +42,16 @@ class Dashboard : Fragment() {
             param2 = it.getString(ARG_PARAM2)
         }
 
-        recyclerView.layoutManager = LinearLayoutManager(context)
-
-        val events: Array<Event?> = arrayOfNulls<Event>(2)
-        events.set(0, Event("first event", "this is my first event",
+        events = arrayOfNulls<Event>(2)
+        events[0] = Event("first event", "this is my first event",
             User("Ola", "Awisat", "ola@gmail", "0"),
-            Event.EventType.PUBLIC_EVENT))
+            Event.EventType.PUBLIC_EVENT)
 
-        events.set(1, Event("second event", "this is my second event",
+        events[1] = Event("second event", "this is my second event",
             User("Ola", "Awisat", "ola@gmail", "0"),
-            Event.EventType.PUBLIC_EVENT))
+            Event.EventType.PUBLIC_EVENT)
 
-        eventAdapter = EventAdapter(context!!, events)
-        recyclerView.adapter = eventAdapter
+
     }
 
     override fun onCreateView(
@@ -64,19 +62,26 @@ class Dashboard : Fragment() {
         return inflater.inflate(R.layout.fragment_dashboard, container, false)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        recyclerView = view.findViewById(R.id.recyclerView)
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        eventAdapter = EventAdapter(context!!, events)
+        recyclerView.adapter = eventAdapter
+    }
+
     // TODO: Rename method, update argument and hook method into UI event
     fun onButtonPressed(uri: Uri) {
         listener?.onFragmentInteraction(uri)
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
-            listener = context
-        } else {
-            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
-        }
-    }
+//    override fun onAttach(context: Context) {
+//        super.onAttach(context)
+//        if (context is OnFragmentInteractionListener) {
+//            listener = context
+//        } else {
+//            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
+//        }
+//    }
 
     override fun onDetach() {
         super.onDetach()
