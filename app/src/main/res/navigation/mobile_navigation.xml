@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@id/dashboard">
+    app:startDestination="@id/dashboard"
+    tools:ignore="UnusedNavigation">
 
 
 
@@ -27,5 +28,9 @@
         android:name="com.example.androshare.NewEvent"
         android:label="fragment_new_event"
         tools:layout="@layout/fragment_new_event" />
+    <fragment
+        android:id="@+id/notifications"
+        android:name="com.example.androshare.Notifications"
+        android:label="fragment_notifications" />
 
 </navigation>
