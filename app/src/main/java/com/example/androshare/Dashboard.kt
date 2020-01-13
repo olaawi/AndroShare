@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -34,6 +35,7 @@ class Dashboard : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var eventAdapter: EventAdapter
     private lateinit var events: Array<Event?>
+    private lateinit var newEventButton: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,6 +69,13 @@ class Dashboard : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(context)
         eventAdapter = EventAdapter(context!!, events)
         recyclerView.adapter = eventAdapter
+        newEventButton = view.findViewById(R.id.new_event_button)
+        newEventButton.setOnClickListener { view ->
+            Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
+                .setAction("Action", null)
+                .show()
+            // TODO: Open new event dialog
+        }
     }
 
     // TODO: Rename method, update argument and hook method into UI event
