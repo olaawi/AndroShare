@@ -1,6 +1,7 @@
 package com.example.androshare
 
 import EventAdapter
+import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
@@ -8,9 +9,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.new_event_dialog.view.*
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -45,13 +48,17 @@ class Dashboard : Fragment() {
         }
 
         events = arrayOfNulls<Event>(2)
-        events[0] = Event("first event", "this is my first event",
+        events[0] = Event(
+            "first event", "this is my first event",
             User("Ola", "Awisat", "ola@gmail", "0"),
-            Event.EventType.PUBLIC_EVENT)
+            Event.EventType.PUBLIC_EVENT
+        )
 
-        events[1] = Event("second event", "this is my second event",
+        events[1] = Event(
+            "second event", "this is my second event",
             User("Ola", "Awisat", "ola@gmail", "0"),
-            Event.EventType.PUBLIC_EVENT)
+            Event.EventType.PUBLIC_EVENT
+        )
 
 
     }
@@ -64,17 +71,40 @@ class Dashboard : Fragment() {
         return inflater.inflate(R.layout.fragment_dashboard, container, false)
     }
 
+    @SuppressLint("InflateParams")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         recyclerView = view.findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(context)
         eventAdapter = EventAdapter(context!!, events)
         recyclerView.adapter = eventAdapter
         newEventButton = view.findViewById(R.id.new_event_button)
-        newEventButton.setOnClickListener { view ->
-            Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
-                .setAction("Action", null)
-                .show()
-            // TODO: Open new event dialog
+        // When new event button is clicked:
+        newEventButton.setOnClickListener {
+            //Inflate the dialog with custom view
+            val newEventDialogView = LayoutInflater.from(activity).inflate(R.layout.new_event_dialog, null)
+            //AlertDialogBuilder
+            val dialogBuilder = AlertDialog.Builder(activity!!)
+                .setView(newEventDialogView)
+                .setTitle("Create New Event")
+            //show dialog
+            val mAlertDialog = dialogBuilder.show()
+            //login button click of custom layout
+            newEventDialogView.confirm_button.setOnClickListener {
+                //dismiss dialog
+                mAlertDialog.dismiss()
+                //get text from EditTexts of custom layout
+                val name = newEventDialogView.dialogNameEt.text.toString()
+                //set the input text in TextView
+                // TODO: create event from given data
+                Snackbar.make(view, "Event created successfully!", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null)
+                    .show()
+            }
+            //cancel button click of custom layout
+            newEventDialogView.cancel_button.setOnClickListener {
+                //dismiss dialog
+                mAlertDialog.dismiss()
+            }
         }
     }
 
