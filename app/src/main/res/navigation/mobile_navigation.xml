@@ -14,23 +14,14 @@
         android:label="fragment_dashboard"
         tools:layout="@layout/fragment_dashboard" />
     <fragment
-        android:id="@+id/profile"
-        android:name="com.example.androshare.Profile"
-        android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile" />
+        android:id="@+id/nearMe"
+        android:name="com.example.androshare.NearMe"
+        android:label="fragment_near_me"
+        tools:layout="@layout/fragment_near_me" />
     <fragment
-        android:id="@+id/settings"
-        android:name="com.example.androshare.AppSettings"
-        android:label="fragment_settings"
-        tools:layout="@layout/fragment_settings" />
-    <fragment
-        android:id="@+id/newEvent"
-        android:name="com.example.androshare.NewEvent"
-        android:label="fragment_new_event"
-        tools:layout="@layout/fragment_new_event" />
-    <fragment
-        android:id="@+id/notifications"
-        android:name="com.example.androshare.Notifications"
-        android:label="fragment_notifications" />
+        android:id="@+id/favourites"
+        android:name="com.example.androshare.Favourites"
+        android:label="fragment_favourites"
+        tools:layout="@layout/fragment_favourites" />
 
 </navigation>

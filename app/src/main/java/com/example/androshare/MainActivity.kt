@@ -15,9 +15,9 @@ import androidx.navigation.ui.setupWithNavController
 class MainActivity : AppCompatActivity() {
 
     lateinit var dashboardFragment : Dashboard
-    lateinit var newEventFragment : NewEvent
+    lateinit var nearMeFragment: NearMe
     lateinit var profileFragment : Profile
-    lateinit var settingsFragment : AppSettings
+    lateinit var favouritesFragment: Favourites
     lateinit var notificationsFragment : Notifications
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,35 +53,19 @@ class MainActivity : AppCompatActivity() {
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                         .commit()
                 }
-                R.id.navigation_new_event -> {
-                    newEventFragment = NewEvent()
+                R.id.navigation_near_me -> {
+                    nearMeFragment = NearMe()
                     supportFragmentManager
                         .beginTransaction()
-                        .replace(R.id.frame_layout, newEventFragment)
+                        .replace(R.id.frame_layout, nearMeFragment)
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                         .commit()
                 }
-                R.id.navigation_profile -> {
-                    profileFragment = Profile()
+                R.id.navigation_favourites -> {
+                    favouritesFragment = Favourites()
                     supportFragmentManager
                         .beginTransaction()
-                        .replace(R.id.frame_layout, profileFragment)
-                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                        .commit()
-                }
-                R.id.navigation_settings -> {
-                    settingsFragment = AppSettings()
-                    supportFragmentManager
-                        .beginTransaction()
-                        .replace(R.id.frame_layout, settingsFragment)
-                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                        .commit()
-                }
-                R.id.navigation_notifications -> {
-                    notificationsFragment = Notifications()
-                    supportFragmentManager
-                        .beginTransaction()
-                        .replace(R.id.frame_layout, notificationsFragment)
+                        .replace(R.id.frame_layout, favouritesFragment)
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                         .commit()
                 }
