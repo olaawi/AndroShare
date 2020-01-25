@@ -23,5 +23,10 @@
         android:name="com.example.androshare.Favourites"
         android:label="fragment_favourites"
         tools:layout="@layout/fragment_favourites" />
+    <fragment
+        android:id="@+id/secondaryMenu"
+        android:name="com.example.androshare.SecondaryMenu"
+        android:label="fragment_secondary_menu"
+        tools:layout="@layout/fragment_secondary_menu" />
 
 </navigation>

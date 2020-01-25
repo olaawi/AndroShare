@@ -15,8 +15,7 @@
         tools:ignore="GoogleAppIndexingWarning">
 
         <activity android:name=".SignInActivity" />
-        <activity android:name=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -8,19 +8,19 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <!--hala -->
-    <style name="AppTheme.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
+<!--    &lt;!&ndash;hala &ndash;&gt;-->
+<!--    <style name="AppTheme.NoActionBar">-->
+<!--        &lt;!&ndash; Customize your theme here. &ndash;&gt;-->
+<!--        <item name="windowActionBar">false</item>-->
+<!--        <item name="windowNoTitle">true</item>-->
+<!--    </style>-->
 
-    <!--hala -->
-    <style name="AppTheme.AppBarOverlay" parent="Theme.AppCompat.Light.DarkActionBar">
-    </style>
+<!--    &lt;!&ndash;hala &ndash;&gt;-->
+<!--    <style name="AppTheme.AppBarOverlay" parent="Theme.AppCompat.Light.DarkActionBar">-->
+<!--    </style>-->
 
-    <!--hala -->
-    <style name="AppTheme.PopupOverlay" parent="Theme.AppCompat.Light">
-    </style>
+<!--    &lt;!&ndash;hala &ndash;&gt;-->
+<!--    <style name="AppTheme.PopupOverlay" parent="Theme.AppCompat.Light">-->
+<!--    </style>-->
 
 </resources>

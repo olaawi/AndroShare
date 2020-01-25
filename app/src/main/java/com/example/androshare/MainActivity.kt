@@ -19,6 +19,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var profileFragment : Profile
     lateinit var favouritesFragment: Favourites
     lateinit var notificationsFragment : Notifications
+    lateinit var secondaryMenuFragment : SecondaryMenu
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,6 +69,14 @@ class MainActivity : AppCompatActivity() {
                         .replace(R.id.frame_layout, favouritesFragment)
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                         .commit()
+                }
+                    R.id.navigation_secondary_menu -> {
+                        secondaryMenuFragment = SecondaryMenu()
+                        supportFragmentManager
+                            .beginTransaction()
+                            .replace(R.id.frame_layout, secondaryMenuFragment)
+                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                            .commit()
                 }
             }
             true
