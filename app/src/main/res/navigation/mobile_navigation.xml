@@ -7,7 +7,6 @@
     tools:ignore="UnusedNavigation">
 
 
-
     <fragment
         android:id="@+id/dashboard"
         android:name="com.example.androshare.Dashboard"
@@ -24,9 +23,14 @@
         android:label="fragment_favourites"
         tools:layout="@layout/fragment_favourites" />
     <fragment
-        android:id="@+id/secondaryMenu"
-        android:name="com.example.androshare.SecondaryMenu"
-        android:label="fragment_secondary_menu"
-        tools:layout="@layout/fragment_secondary_menu" />
+        android:id="@+id/appSettings"
+        android:name="com.example.androshare.AppSettings"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/profile"
+        android:name="com.example.androshare.Profile"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
 
 </navigation>

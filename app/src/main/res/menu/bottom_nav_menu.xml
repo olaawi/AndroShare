@@ -18,6 +18,7 @@
 
     <item
         android:id="@+id/navigation_secondary_menu"
-        android:icon="@drawable/ic_menu_black_24dp" />
+        android:icon="@drawable/ic_menu_black_24dp"
+        android:title="More"/>
 
 </menu>

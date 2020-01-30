@@ -16,10 +16,7 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var dashboardFragment : Dashboard
     lateinit var nearMeFragment: NearMe
-    lateinit var profileFragment : Profile
     lateinit var favouritesFragment: Favourites
-    lateinit var notificationsFragment : Notifications
-    lateinit var secondaryMenuFragment : SecondaryMenu
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,14 +67,7 @@ class MainActivity : AppCompatActivity() {
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                         .commit()
                 }
-                    R.id.navigation_secondary_menu -> {
-                        secondaryMenuFragment = SecondaryMenu()
-                        supportFragmentManager
-                            .beginTransaction()
-                            .replace(R.id.frame_layout, secondaryMenuFragment)
-                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                            .commit()
-                }
+
             }
             true
         }
