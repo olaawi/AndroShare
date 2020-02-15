@@ -32,5 +32,15 @@
         android:name="com.example.androshare.Profile"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/logout"
+        android:name="com.example.androshare.Logout"
+        android:label="fragment_logout"
+        tools:layout="@layout/fragment_logout" />
+    <fragment
+        android:id="@+id/more"
+        android:name="com.example.androshare.More"
+        android:label="fragment_more"
+        tools:layout="@layout/fragment_more" />
 
 </navigation>

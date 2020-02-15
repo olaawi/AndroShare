@@ -17,7 +17,7 @@
         android:title="Favorites" />
 
     <item
-        android:id="@+id/navigation_secondary_menu"
+        android:id="@+id/navigation_more"
         android:icon="@drawable/ic_menu_black_24dp"
         android:title="More"/>
 

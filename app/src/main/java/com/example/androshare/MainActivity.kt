@@ -1,27 +1,53 @@
 package com.example.androshare
 
 import android.os.Bundle
-import android.provider.Settings
+import android.view.MenuItem
+import androidx.appcompat.app.ActionBarDrawerToggle
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
+import androidx.core.view.GravityCompat
 import androidx.fragment.app.FragmentTransaction
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.navigation.NavigationView
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.fragment_more.*
+import kotlinx.android.synthetic.main.fragment_more.view.*
 
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var dashboardFragment : Dashboard
-    lateinit var nearMeFragment: NearMe
-    lateinit var favouritesFragment: Favourites
+    private lateinit var dashboardFragment : Dashboard
+    private lateinit var nearMeFragment: NearMe
+    private lateinit var favouritesFragment: Favourites
+    private lateinit var moreFragment : More
+//    private lateinit var appSettingsFragment: AppSettings
+//    private lateinit var profileFragment : Profile
+//    private lateinit var logoutFragment : Logout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val bottomNavigation: BottomNavigationView = findViewById(R.id.bottom_navigation)
+//        val navigationSecondaryMenu : NavigationView = findViewById(R.id.global_settings_menu)
+
+//        setSupportActionBar(tool_bar)
+//        val actionBar = supportActionBar
+//        actionBar?.title = "Navigation Drawer"
+
+//        val drawerToggle: ActionBarDrawerToggle = object : ActionBarDrawerToggle(
+//            this,
+//            mainLayout,
+//            tool_bar,
+//            (R.string.open),
+//            (R.string.close)
+//        ) {
+//        }
+
+//        drawerToggle.isDrawerIndicatorEnabled = true
+//        mainLayout.addDrawerListener(drawerToggle)
+//        drawerToggle.syncState()
+//
+//        nav_view.setNavigationItemSelectedListener(this)
 
         dashboardFragment = Dashboard()
         supportFragmentManager
@@ -29,20 +55,40 @@ class MainActivity : AppCompatActivity() {
             .replace(R.id.frame_layout, dashboardFragment)
             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
             .commit()
-//
-//        val navController = findNavController(R.id.nav_host_fragment)
-//        // Passing each menu ID as a set of Ids because each
-//        // menu should be considered as top level destinations.
-//        val appBarConfiguration = AppBarConfiguration(
-//            setOf(
-//                R.id.navigation_dashboard, R.id.navigation_new_event, R.id.navigation_profile, R.id.navigation_settings
-//            )
-//        )
-//        setupActionBarWithNavController(navController, appBarConfiguration)
-//        navView.setupWithNavController(navController)
+
+//        navigationSecondaryMenu.setNavigationItemSelectedListener(this)
+//        navigationSecondaryMenu.setNavigationItemSelectedListener { item ->
+//            when (item.itemId) {
+//                R.id.appSettings -> {
+//                    appSettingsFragment = AppSettings()
+//                    supportFragmentManager
+//                        .beginTransaction()
+//                        .replace(R.id.frame_layout, appSettingsFragment)
+//                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+//                        .commit()
+//                }
+//                R.id.profile -> {
+//                    profileFragment = Profile()
+//                    supportFragmentManager
+//                        .beginTransaction()
+//                        .replace(R.id.frame_layout, profileFragment)
+//                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+//                        .commit()
+//                }
+//                R.id.logout -> {
+//                    logoutFragment = Logout()
+//                    supportFragmentManager
+//                        .beginTransaction()
+//                        .replace(R.id.frame_layout, logoutFragment)
+//                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+//                        .commit()
+//                }
+//            }
+//            true
+//        }
 
         bottomNavigation.setOnNavigationItemSelectedListener { item ->
-            when(item.itemId){
+            when (item.itemId) {
                 R.id.navigation_dashboard -> {
                     dashboardFragment = Dashboard()
                     supportFragmentManager
@@ -67,11 +113,59 @@ class MainActivity : AppCompatActivity() {
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                         .commit()
                 }
+                R.id.navigation_more -> {
+                    moreFragment = More()
+                    supportFragmentManager
+                        .beginTransaction()
+                        .replace(R.id.frame_layout, moreFragment)
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                        .commit()
+                }
 
             }
             true
         }
     }
 
+//    override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
+//        when(menuItem.itemId){
+//            R.id.appSettings -> {
+//                appSettingsFragment = AppSettings()
+//                supportFragmentManager
+//                    .beginTransaction()
+//                    .replace(R.id.frame_layout, appSettingsFragment)
+//                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+//                    .commit()
+//            }
+//            R.id.profile -> {
+//                profileFragment = Profile()
+//                supportFragmentManager
+//                    .beginTransaction()
+//                    .replace(R.id.frame_layout, profileFragment)
+//                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+//                    .commit()
+//            }
+//            R.id.logout -> {
+//                logoutFragment = Logout()
+//                supportFragmentManager
+//                    .beginTransaction()
+//                    .replace(R.id.frame_layout, logoutFragment)
+//                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+//                    .commit()
+//            }
+//
+//        }
+//        return true
+//    }
 
+//    public fun OnBackPressed(){
+//
+//        if(mainLayout.isDrawerOpen(GravityCompat.START)){
+//            mainLayout.closeDrawer(GravityCompat.START)
+//        }
+//        else{
+//            super.OnBackPressed()
+//        }
+//    }
 }
+
