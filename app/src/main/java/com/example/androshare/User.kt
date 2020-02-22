@@ -11,5 +11,4 @@ class User constructor(
     public var email: String = email
     public var id: String = id
 
-
 }

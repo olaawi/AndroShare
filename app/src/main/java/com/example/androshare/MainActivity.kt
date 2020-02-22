@@ -20,34 +20,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var nearMeFragment: NearMe
     private lateinit var favouritesFragment: Favourites
     private lateinit var moreFragment : More
-//    private lateinit var appSettingsFragment: AppSettings
-//    private lateinit var profileFragment : Profile
-//    private lateinit var logoutFragment : Logout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val bottomNavigation: BottomNavigationView = findViewById(R.id.bottom_navigation)
-//        val navigationSecondaryMenu : NavigationView = findViewById(R.id.global_settings_menu)
-
-//        setSupportActionBar(tool_bar)
-//        val actionBar = supportActionBar
-//        actionBar?.title = "Navigation Drawer"
-
-//        val drawerToggle: ActionBarDrawerToggle = object : ActionBarDrawerToggle(
-//            this,
-//            mainLayout,
-//            tool_bar,
-//            (R.string.open),
-//            (R.string.close)
-//        ) {
-//        }
-
-//        drawerToggle.isDrawerIndicatorEnabled = true
-//        mainLayout.addDrawerListener(drawerToggle)
-//        drawerToggle.syncState()
-//
-//        nav_view.setNavigationItemSelectedListener(this)
 
         dashboardFragment = Dashboard()
         supportFragmentManager
@@ -55,37 +32,6 @@ class MainActivity : AppCompatActivity() {
             .replace(R.id.frame_layout, dashboardFragment)
             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
             .commit()
-
-//        navigationSecondaryMenu.setNavigationItemSelectedListener(this)
-//        navigationSecondaryMenu.setNavigationItemSelectedListener { item ->
-//            when (item.itemId) {
-//                R.id.appSettings -> {
-//                    appSettingsFragment = AppSettings()
-//                    supportFragmentManager
-//                        .beginTransaction()
-//                        .replace(R.id.frame_layout, appSettingsFragment)
-//                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-//                        .commit()
-//                }
-//                R.id.profile -> {
-//                    profileFragment = Profile()
-//                    supportFragmentManager
-//                        .beginTransaction()
-//                        .replace(R.id.frame_layout, profileFragment)
-//                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-//                        .commit()
-//                }
-//                R.id.logout -> {
-//                    logoutFragment = Logout()
-//                    supportFragmentManager
-//                        .beginTransaction()
-//                        .replace(R.id.frame_layout, logoutFragment)
-//                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-//                        .commit()
-//                }
-//            }
-//            true
-//        }
 
         bottomNavigation.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {

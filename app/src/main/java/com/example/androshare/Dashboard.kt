@@ -1,8 +1,6 @@
 package com.example.androshare
 
-import EventAdapter
 import android.annotation.SuppressLint
-import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -14,27 +12,32 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.new_event_dialog.view.*
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment
+import EventAdapter
+import android.util.Log
+import android.widget.CheckBox
+import android.widget.Toast
+import com.google.android.gms.common.api.Status
+import com.google.android.libraries.places.api.Places
+import java.util.*
+import android.widget.EditText
+import com.google.firebase.firestore.FirebaseFirestore
 
 
-// TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [Dashboard.OnFragmentInteractionListener] interface
- * to handle interaction events.
- * Use the [Dashboard.newInstance] factory method to
- * create an instance of this fragment.
- */
-class Dashboard : Fragment() {
-    // TODO: Rename and change types of parameters
+class Dashboard : Fragment(),PlaceSelectionListener {
+
     private var param1: String? = null
     private var param2: String? = null
     private var listener: OnFragmentInteractionListener? = null
 
+    private lateinit var eventLocation: Place
+    private lateinit var database: FirebaseFirestore
     private lateinit var recyclerView: RecyclerView
     private lateinit var eventAdapter: EventAdapter
     private lateinit var events: Array<Event?>
@@ -42,75 +45,112 @@ class Dashboard : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+        this.arguments?.let {
+            this.param1 = it.getString(ARG_PARAM1)
+            this.param2 = it.getString(ARG_PARAM2)
         }
 
-        events = arrayOfNulls<Event>(2)
-        events[0] = Event(
-            "first event", "this is my first event",
+        // initialize places + DB
+        Places.initialize(this!!.context!!, this.getString(R.string.places_api_key))
+        database = FirebaseFirestore.getInstance()
+
+        // create list of the user's event_in_dashboard
+        this.events = arrayOfNulls<Event>(2)
+        this.events[0] = Event(
+            "first event_in_dashboard", "this is my first event_in_dashboard",
             User("Ola", "Awisat", "ola@gmail", "0"),
             Event.EventType.PUBLIC_EVENT
         )
 
-        events[1] = Event(
-            "second event", "this is my second event",
+        this.events[1] = Event(
+            "second event_in_dashboard", "this is my second event_in_dashboard",
             User("Ola", "Awisat", "ola@gmail", "0"),
             Event.EventType.PUBLIC_EVENT
         )
-
-
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_dashboard, container, false)
     }
 
     @SuppressLint("InflateParams")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        recyclerView = view.findViewById(R.id.recyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        eventAdapter = EventAdapter(context!!, events)
-        recyclerView.adapter = eventAdapter
-        newEventButton = view.findViewById(R.id.new_event_button)
-        // When new event button is clicked:
-        newEventButton.setOnClickListener {
+        this.recyclerView = view.findViewById(R.id.recyclerView)
+        this.recyclerView.layoutManager = LinearLayoutManager(this.context)
+        this.eventAdapter = EventAdapter(this.context!!, this.events)
+        this.recyclerView.adapter = this.eventAdapter
+        this.newEventButton = view.findViewById(R.id.new_event_button)
+        // When new event_in_dashboard button is clicked:
+        this.newEventButton.setOnClickListener {
             //Inflate the dialog with custom view
-            val newEventDialogView = LayoutInflater.from(activity).inflate(R.layout.new_event_dialog, null)
+            val newEventDialogView = LayoutInflater.from(this.activity).inflate(R.layout.new_event_dialog, null)
             //AlertDialogBuilder
-            val dialogBuilder = AlertDialog.Builder(activity!!)
+            val dialogBuilder = AlertDialog.Builder(this.activity!!)
                 .setView(newEventDialogView)
                 .setTitle("Create New Event")
+
+            // autocomplete location: place return fields
+            val locationAutocompleteFragment =
+                this.fragmentManager?.findFragmentById(R.id.event_location_autocomplete) as AutocompleteSupportFragment
+            locationAutocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME))
+            locationAutocompleteFragment.setOnPlaceSelectedListener(this)
+
             //show dialog
             val mAlertDialog = dialogBuilder.show()
-            //login button click of custom layout
+
+            //confirm new event
             newEventDialogView.confirm_button.setOnClickListener {
-                //dismiss dialog
+                val eventNameEditText = view.findViewById(R.id.new_event_name) as EditText
+                val eventName = eventNameEditText.getText().toString()
+                var eventType = Event.EventType.PUBLIC_EVENT
+                val evenTypeCheckBox = view.findViewById(R.id.event_type_check_box) as CheckBox
+                if(evenTypeCheckBox.isChecked){
+                    eventType = Event.EventType.PRIVATE_EVENT
+                }
+                val eventCreator = User("Hala", "Awisat", "email@gmail.com", "1234567890")
+                val event = Event(eventName, "WHY?", eventCreator, eventType)
+
+              //TODO: add event to DB + add event for user (admin)
+
+                database.collection("events").add(event)
+                    .addOnSuccessListener { documentReference ->
+                        Log.d(
+                            "newEvent",
+                            "Event added with ID: ${documentReference.id}"
+                        )
+                    }
+                    .addOnFailureListener { exception ->
+                        Log.w("newEvent", "Error adding event", exception)
+                    }
+
                 mAlertDialog.dismiss()
-                //get text from EditTexts of custom layout
-//                val name = newEventDialogView.dialogNameEt.text.toString()
-                //set the input text in TextView
-                // TODO: create event from given data
                 Snackbar.make(view, "Event created successfully!", Snackbar.LENGTH_LONG)
                     .setAction("Action", null)
                     .show()
             }
-            //cancel button click of custom layout
+            //cancel new event
             newEventDialogView.cancel_button.setOnClickListener {
-                //dismiss dialog
                 mAlertDialog.dismiss()
             }
         }
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
+    override fun onPlaceSelected(place: Place) {
+//        Toast.makeText(context,""+p0.name+p0.latLng, Toast.LENGTH_LONG).show()
+        this.eventLocation = place
+    }
+
+    override fun onError(status: Status) {
+        Toast.makeText(this.context,""+status.toString(),Toast.LENGTH_LONG).show()
+    }
+
+
+
     fun onButtonPressed(uri: Uri) {
-        listener?.onFragmentInteraction(uri)
+        this.listener?.onFragmentInteraction(uri)
     }
 
 //    override fun onAttach(context: Context) {
@@ -124,7 +164,7 @@ class Dashboard : Fragment() {
 
     override fun onDetach() {
         super.onDetach()
-        listener = null
+        this.listener = null
     }
 
     /**
@@ -139,7 +179,6 @@ class Dashboard : Fragment() {
      * for more information.
      */
     interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         fun onFragmentInteraction(uri: Uri)
     }
 
@@ -152,13 +191,13 @@ class Dashboard : Fragment() {
          * @param param2 Parameter 2.
          * @return A new instance of fragment Dashboard.
          */
-        // TODO: Rename and change types and number of parameters
+
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             Dashboard().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+                this.arguments = Bundle().apply {
+                    this.putString(ARG_PARAM1, param1)
+                    this.putString(ARG_PARAM2, param2)
                 }
             }
     }

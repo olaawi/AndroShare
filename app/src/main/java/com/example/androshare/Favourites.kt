@@ -22,7 +22,6 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class Favourites : Fragment() {
-    // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
     private var listener: OnFragmentInteractionListener? = null
@@ -43,7 +42,6 @@ class Favourites : Fragment() {
         return inflater.inflate(R.layout.fragment_favourites, container, false)
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
     fun onButtonPressed(uri: Uri) {
         listener?.onFragmentInteraction(uri)
     }
@@ -74,7 +72,6 @@ class Favourites : Fragment() {
      * for more information.
      */
     interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         fun onFragmentInteraction(uri: Uri)
     }
 
@@ -87,7 +84,6 @@ class Favourites : Fragment() {
          * @param param2 Parameter 2.
          * @return A new instance of fragment Favourites.
          */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             Favourites().apply {

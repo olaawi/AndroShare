@@ -8,6 +8,8 @@ class Event(title : String, description: String, creator: User, type: EventType)
     public var description : String = description
     public var creator: User = creator
 
+    // TODO: add start and end time
+
     public var type: EventType = type
         set(value) {
             require(value == EventType.PUBLIC_EVENT || value == EventType.PRIVATE_EVENT) { "Event must be public or private" }

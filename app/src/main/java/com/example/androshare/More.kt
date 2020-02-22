@@ -76,7 +76,6 @@ class More : Fragment(), NavigationView.OnNavigationItemSelectedListener {
 
 
 
-//    // TODO: Rename method, update argument and hook method into UI event
 //    fun onButtonPressed(uri: Uri) {
 //        listener?.onFragmentInteraction(uri)
 //    }
@@ -107,7 +106,6 @@ class More : Fragment(), NavigationView.OnNavigationItemSelectedListener {
      * for more information.
      */
     interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         fun onFragmentInteraction(uri: Uri)
     }
 
@@ -120,7 +118,6 @@ class More : Fragment(), NavigationView.OnNavigationItemSelectedListener {
 //         * @param param2 Parameter 2.
 //         * @return A new instance of fragment more.
 //         */
-//        // TODO: Rename and change types and number of parameters
 //        @JvmStatic
 //        fun newInstance(param1: String, param2: String) =
 //            More().apply {
