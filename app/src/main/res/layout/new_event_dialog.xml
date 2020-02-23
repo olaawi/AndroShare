@@ -1,93 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:fillViewport="true">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="10dp">
+        android:padding="24dp"
+        android:showDividers="middle"
+        android:divider="@drawable/spacer_medium">
 
-<!--        TODO: add event description-->
+        <!--        TODO: add event description-->
 
         <EditText
             android:id="@+id/new_event_name"
-            android:hint="Event's Name"
-            android:inputType="textPersonName"
-            android:textSize="14sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:autofillHints="" />
+            android:background="@android:color/transparent"
+            android:fontFamily="sans-serif-medium"
+            android:hint="Title"
+            android:inputType="textCapWords"
+            android:textSize="20sp" />
 
         <TextView
+            android:fontFamily="sans-serif-regular"
+            android:textSize="16sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Location:"/>
+            android:text="Location" />
+
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <fragment android:id="@+id/event_location_autocomplete"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+            <fragment
+                android:id="@+id/event_location_autocomplete"
                 android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
-                />
+                android:layout_width="match_parent"
+                android:layout_height="24dp" />
         </androidx.cardview.widget.CardView>
 
         <CheckBox
+            android:id="@+id/event_type_check_box"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Private Event"
-            android:id="@+id/event_type_check_box"/>
-        <TextView
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:text=" Start"
-            android:textSize="16sp" />
+            android:text="Private Event" />
 
-        <TimePicker
-            android:id="@+id/timePickerStart"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:timePickerMode="spinner"/>
+            android:id="@+id/start_date">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Start"
+                android:layout_alignParentLeft="true"
+                android:textSize="16sp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text=""
+                android:textSize="16sp"
+                android:id="@+id/chosen_start_date"/>
+        </RelativeLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text=" End"
-            android:textSize="16sp" />
-
-        <TimePicker
-            android:id="@+id/timePickerEnd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:timePickerMode="spinner"/>
+            android:id="@+id/end_date">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="End"
+                android:layout_alignParentLeft="true"
+                android:textSize="16sp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text=""
+                android:textSize="16sp"
+                android:id="@+id/chosen_end_date"/>
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="right">
+            android:gravity="right"
+            android:orientation="horizontal">
+
             <Button
                 android:id="@+id/confirm_button"
-                android:text="Confirm"
                 style="@style/Base.Widget.AppCompat.Button.Colored"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="Confirm" />
+
             <Button
                 android:id="@+id/cancel_button"
-                android:text="Cancel"
                 style="@style/Base.Widget.AppCompat.Button.Colored"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="Cancel" />
         </LinearLayout>
 
     </LinearLayout>
 
-</ScrollView>
+</RelativeLayout>

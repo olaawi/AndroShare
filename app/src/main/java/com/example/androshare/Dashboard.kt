@@ -16,6 +16,7 @@ import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 import EventAdapter
+import android.app.DatePickerDialog
 import android.util.Log
 import android.widget.CheckBox
 import android.widget.Toast
@@ -24,13 +25,14 @@ import com.google.android.libraries.places.api.Places
 import java.util.*
 import android.widget.EditText
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.android.synthetic.main.new_event_dialog.*
 
 
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-class Dashboard : Fragment(),PlaceSelectionListener {
+class Dashboard : Fragment(), PlaceSelectionListener {
 
     private var param1: String? = null
     private var param2: String? = null
@@ -86,7 +88,8 @@ class Dashboard : Fragment(),PlaceSelectionListener {
         // When new event_in_dashboard button is clicked:
         this.newEventButton.setOnClickListener {
             //Inflate the dialog with custom view
-            val newEventDialogView = LayoutInflater.from(this.activity).inflate(R.layout.new_event_dialog, null)
+            val newEventDialogView =
+                LayoutInflater.from(this.activity).inflate(R.layout.new_event_dialog, null)
             //AlertDialogBuilder
             val dialogBuilder = AlertDialog.Builder(this.activity!!)
                 .setView(newEventDialogView)
@@ -95,25 +98,70 @@ class Dashboard : Fragment(),PlaceSelectionListener {
             // autocomplete location: place return fields
             val locationAutocompleteFragment =
                 this.fragmentManager?.findFragmentById(R.id.event_location_autocomplete) as AutocompleteSupportFragment
-            locationAutocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME))
+            locationAutocompleteFragment.setPlaceFields(
+                Arrays.asList(
+                    Place.Field.ID,
+                    Place.Field.NAME
+                )
+            )
             locationAutocompleteFragment.setOnPlaceSelectedListener(this)
 
             //show dialog
             val mAlertDialog = dialogBuilder.show()
+
+            // show start date picker dialog
+            val c = Calendar.getInstance()
+            val currYear = c.get(Calendar.YEAR)
+            val currMonth = c.get(Calendar.MONTH)
+            val currMonthNormalized = c.get(Calendar.MONTH) + 1 // months are indexed starting at 0
+            val currDayOfMonth = c.get(Calendar.DAY_OF_MONTH)
+            newEventDialogView.chosen_start_date.text = "$currDayOfMonth/$currMonthNormalized/$currYear"
+            newEventDialogView.start_date.setOnClickListener {
+                val dpd = DatePickerDialog(
+                    this.activity!!,
+                    DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+                        val chosenMonth = month + 1 // months are indexed starting at 0
+                        newEventDialogView.chosen_start_date.text = "$dayOfMonth/$chosenMonth/$year"
+                        // TODO the following is necessary only if user chooses end date < start dat
+                        newEventDialogView.chosen_end_date.text = newEventDialogView.chosen_start_date.text
+                    },
+                    currYear,
+                    currMonth,
+                    currDayOfMonth
+                )
+                dpd.show()
+            }
+
+            // show end date picker dialog
+            newEventDialogView.chosen_end_date.text = newEventDialogView.chosen_start_date.text
+            newEventDialogView.end_date.setOnClickListener {
+                val dpd = DatePickerDialog(
+                    this.activity!!,
+                    DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+                        val chosenMonth = month + 1 // months are indexed starting at 0
+                        newEventDialogView.chosen_end_date.text = "$dayOfMonth/$chosenMonth/$year"
+                    },
+                    currYear,
+                    currMonth,
+                    currDayOfMonth
+                )
+                dpd.show()
+            }
 
             //confirm new event
             newEventDialogView.confirm_button.setOnClickListener {
                 val eventNameEditText = view.findViewById(R.id.new_event_name) as EditText
                 val eventName = eventNameEditText.getText().toString()
                 var eventType = Event.EventType.PUBLIC_EVENT
-                val evenTypeCheckBox = view.findViewById(R.id.event_type_check_box) as CheckBox
-                if(evenTypeCheckBox.isChecked){
+                val evenTypeCheckBox =
+                    view.findViewById(R.id.event_type_check_box) as CheckBox
+                if (evenTypeCheckBox.isChecked) {
                     eventType = Event.EventType.PRIVATE_EVENT
                 }
                 val eventCreator = User("Hala", "Awisat", "email@gmail.com", "1234567890")
                 val event = Event(eventName, "WHY?", eventCreator, eventType)
 
-              //TODO: add event to DB + add event for user (admin)
+                //TODO: add event to DB + add event for user (admin)
 
                 database.collection("events").add(event)
                     .addOnSuccessListener { documentReference ->
@@ -144,9 +192,8 @@ class Dashboard : Fragment(),PlaceSelectionListener {
     }
 
     override fun onError(status: Status) {
-        Toast.makeText(this.context,""+status.toString(),Toast.LENGTH_LONG).show()
+        Toast.makeText(this.context, "" + status.toString(), Toast.LENGTH_LONG).show()
     }
-
 
 
     fun onButtonPressed(uri: Uri) {
