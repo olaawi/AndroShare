@@ -6,11 +6,13 @@
     tools:context=".Favourites">
 
     <TextView
+        android:id="@+id/fav"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Favorites Fragment"
-        android:textSize="38sp"
+        android:layout_centerInParent="true"
+        android:fontFamily="sans-serif"
         android:gravity="center"
-        android:layout_centerInParent="true" />
+        android:text="Favorites Fragment"
+        android:textSize="38sp" />
 
 </RelativeLayout>

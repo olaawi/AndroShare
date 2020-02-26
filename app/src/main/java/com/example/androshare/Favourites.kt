@@ -1,12 +1,15 @@
 package com.example.androshare
 
-import android.content.Context
 import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.firebase.firestore.FirebaseFirestore
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -25,6 +28,7 @@ class Favourites : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     private var listener: OnFragmentInteractionListener? = null
+    private lateinit var database: FirebaseFirestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +36,7 @@ class Favourites : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+        database = FirebaseFirestore.getInstance()
     }
 
     override fun onCreateView(
@@ -40,6 +45,26 @@ class Favourites : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_favourites, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val acct = GoogleSignIn.getLastSignedInAccount(activity) // this is how we access account in fragment
+
+        if (acct != null) {
+            val personGivenName = acct.givenName
+            val personFamilyName = acct.familyName
+            val personEmail = acct.email
+            val personId = acct.id
+            Log.d("account", "name $personGivenName $personFamilyName $personEmail $personId ")
+        } else {
+            Log.d("account", "account is null")
+        }
+        val ola = database.collection("users").whereEqualTo("givenName", "Ola")
+        ola.get().addOnSuccessListener { documents ->
+            for (document in documents) {
+                Log.d("favs", "${document.id} => ${document.get("givenName")}")
+            }
+        }
     }
 
     fun onButtonPressed(uri: Uri) {

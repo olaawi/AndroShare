@@ -24,6 +24,8 @@ import com.google.android.gms.common.api.Status
 import com.google.android.libraries.places.api.Places
 import java.util.*
 import android.widget.EditText
+import android.widget.Switch
+import androidx.fragment.app.FragmentTransaction
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.new_event_dialog.*
 
@@ -32,7 +34,7 @@ import kotlinx.android.synthetic.main.new_event_dialog.*
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-class Dashboard : Fragment(), PlaceSelectionListener {
+class Dashboard : Fragment(), PlaceSelectionListener, CallbackListener {
 
     private var param1: String? = null
     private var param2: String? = null
@@ -44,6 +46,7 @@ class Dashboard : Fragment(), PlaceSelectionListener {
     private lateinit var eventAdapter: EventAdapter
     private lateinit var events: Array<Event?>
     private lateinit var newEventButton: View
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,6 +81,10 @@ class Dashboard : Fragment(), PlaceSelectionListener {
         return inflater.inflate(R.layout.fragment_dashboard, container, false)
     }
 
+    override fun onDataReceived(data: String) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     @SuppressLint("InflateParams")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         this.recyclerView = view.findViewById(R.id.recyclerView)
@@ -85,11 +92,21 @@ class Dashboard : Fragment(), PlaceSelectionListener {
         this.eventAdapter = EventAdapter(this.context!!, this.events)
         this.recyclerView.adapter = this.eventAdapter
         this.newEventButton = view.findViewById(R.id.new_event_button)
+
+
+        /* TODO DON'T DELETE THIS
+        val dialogFragment = NewEvent()
+        this.newEventButton.setOnClickListener{
+            dialogFragment.show(fragmentManager!!, "signature")
+        }
+        */
+
         // When new event_in_dashboard button is clicked:
         this.newEventButton.setOnClickListener {
             //Inflate the dialog with custom view
             val newEventDialogView =
                 LayoutInflater.from(this.activity).inflate(R.layout.new_event_dialog, null)
+
             //AlertDialogBuilder
             val dialogBuilder = AlertDialog.Builder(this.activity!!)
                 .setView(newEventDialogView)
@@ -99,7 +116,7 @@ class Dashboard : Fragment(), PlaceSelectionListener {
             val locationAutocompleteFragment =
                 this.fragmentManager?.findFragmentById(R.id.event_location_autocomplete) as AutocompleteSupportFragment
             locationAutocompleteFragment.setPlaceFields(
-                Arrays.asList(
+                listOf(
                     Place.Field.ID,
                     Place.Field.NAME
                 )
@@ -153,9 +170,9 @@ class Dashboard : Fragment(), PlaceSelectionListener {
                 val eventNameEditText = view.findViewById(R.id.new_event_name) as EditText
                 val eventName = eventNameEditText.getText().toString()
                 var eventType = Event.EventType.PUBLIC_EVENT
-                val evenTypeCheckBox =
-                    view.findViewById(R.id.event_type_check_box) as CheckBox
-                if (evenTypeCheckBox.isChecked) {
+                val evenTypeCheckSwitch =
+                    view.findViewById(R.id.event_type_switch) as Switch
+                if (evenTypeCheckSwitch.isChecked) {
                     eventType = Event.EventType.PRIVATE_EVENT
                 }
                 val eventCreator = User("Hala", "Awisat", "email@gmail.com", "1234567890")
