@@ -94,13 +94,13 @@ class Dashboard : Fragment(), PlaceSelectionListener, CallbackListener {
         this.newEventButton = view.findViewById(R.id.new_event_button)
 
 
-        /* TODO DON'T DELETE THIS
         val dialogFragment = NewEvent()
         this.newEventButton.setOnClickListener{
             dialogFragment.show(fragmentManager!!, "signature")
         }
-        */
 
+
+        /*
         // When new event_in_dashboard button is clicked:
         this.newEventButton.setOnClickListener {
             //Inflate the dialog with custom view
@@ -201,6 +201,7 @@ class Dashboard : Fragment(), PlaceSelectionListener, CallbackListener {
                 mAlertDialog.dismiss()
             }
         }
+        */
     }
 
     override fun onPlaceSelected(place: Place) {

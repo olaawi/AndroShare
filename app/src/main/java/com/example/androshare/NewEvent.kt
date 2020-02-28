@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.RelativeLayout
 import androidx.fragment.app.DialogFragment
 
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -33,6 +34,7 @@ class NewEvent : DialogFragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+        setStyle(STYLE_NORMAL,R.style.FullScreenDialogStyle)
     }
 
     override fun onCreateView(
@@ -40,7 +42,7 @@ class NewEvent : DialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_new_event, container, false)
+        return inflater.inflate(R.layout.new_event_dialog, container, false)
     }
 
     fun onButtonPressed(uri: Uri) {
