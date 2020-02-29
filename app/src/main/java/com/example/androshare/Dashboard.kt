@@ -56,7 +56,7 @@ class Dashboard : Fragment(), PlaceSelectionListener, CallbackListener {
         }
 
         // initialize places + DB
-        Places.initialize(this.context!!, this.getString(R.string.places_api_key))
+//        Places.initialize(this.context!!, this.getString(R.string.places_api_key))
         database = FirebaseFirestore.getInstance()
 
         // create list of the user's event_in_dashboard
