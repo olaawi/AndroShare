@@ -47,7 +47,7 @@
 
                 <EditText
                     android:id="@+id/new_event_name"
-                    style="@style/TextAppearance.MdcTypographyStyles.Headline5"
+                    style="@style/Headline5"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
@@ -56,7 +56,7 @@
                     android:textColor="#000000"/>
 
                 <TextView
-                    style="@style/TextAppearance.MdcTypographyStyles.Body2"
+                    style="@style/Body2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Location"
@@ -199,7 +199,7 @@
 
                 <Switch
                     android:id="@+id/event_type_switch"
-                    style="@style/TextAppearance.MdcTypographyStyles.Body2"
+                    style="@style/Body2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:checked="false"
@@ -214,7 +214,7 @@
 
                     <Button
                         android:id="@+id/cancel_button"
-                        style="@style/TextAppearance.MdcTypographyStyles.Button"
+                        style="@style/Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Cancel"
@@ -223,11 +223,11 @@
 
                     <Button
                         android:id="@+id/confirm_button"
-                        style="@style/TextAppearance.MdcTypographyStyles.Button"
+                        style="@style/Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Confirm"
-                        android:backgroundTint="@color/colorPrimary"/>
+                        android:backgroundTint="@color/primaryColor"/>
                 </LinearLayout>
 
             </LinearLayout>

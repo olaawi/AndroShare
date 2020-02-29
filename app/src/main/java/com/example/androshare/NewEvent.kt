@@ -1,5 +1,6 @@
 package com.example.androshare
 
+import android.app.Dialog
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
@@ -10,6 +11,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.RelativeLayout
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentTransaction
 
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
@@ -34,20 +36,25 @@ class NewEvent : DialogFragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
-        setStyle(STYLE_NORMAL,R.style.FullScreenDialogStyle)
+//        setStyle(STYLE_NORMAL,R.style.FullScreenDialogStyle)
     }
 
+    /** The system calls this to get the DialogFragment's layout, regardless
+    of whether it's being displayed as a dialog or an embedded fragment. */
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
+    ): View {
+        // Inflate the layout to use as dialog or embedded fragment
         return inflater.inflate(R.layout.new_event_dialog, container, false)
     }
+
 
     fun onButtonPressed(uri: Uri) {
         listener?.onFragmentInteraction(uri)
     }
+
 
 //    override fun onAttach(context: Context) {
 //        super.onAttach(context)

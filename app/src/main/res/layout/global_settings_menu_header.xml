@@ -3,7 +3,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="180dp"
-    android:background="@color/turkezeColor"
+    android:background="@color/secondaryColor"
     android:padding="16dp">
 
     <ImageView
@@ -16,7 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="My Name"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/primaryColor"
         android:textAlignment="center"
         android:textSize="20sp"
         android:textStyle="bold"

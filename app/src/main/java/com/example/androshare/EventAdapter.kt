@@ -12,7 +12,6 @@ class EventAdapter(var context: Context, val events: Array<Event?>) : RecyclerVi
 
 
     class EventHolder(val view: View) : RecyclerView.ViewHolder(view){
-        var image: ImageView = view.findViewById(R.id.imageId)
         var title: TextView = view.findViewById(R.id.titleId)
         var description: TextView = view.findViewById(R.id.descriptionId)
     }

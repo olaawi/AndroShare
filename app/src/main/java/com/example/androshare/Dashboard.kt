@@ -56,11 +56,11 @@ class Dashboard : Fragment(), PlaceSelectionListener, CallbackListener {
         }
 
         // initialize places + DB
-        Places.initialize(this!!.context!!, this.getString(R.string.places_api_key))
+        Places.initialize(this.context!!, this.getString(R.string.places_api_key))
         database = FirebaseFirestore.getInstance()
 
         // create list of the user's event_in_dashboard
-        this.events = arrayOfNulls<Event>(2)
+        this.events = arrayOfNulls<Event>(8)
         this.events[0] = Event(
             "first event_in_dashboard", "this is my first event_in_dashboard",
             User("Ola", "Awisat", "ola@gmail", "0"),
@@ -68,6 +68,42 @@ class Dashboard : Fragment(), PlaceSelectionListener, CallbackListener {
         )
 
         this.events[1] = Event(
+            "second event_in_dashboard", "this is my second event_in_dashboard",
+            User("Ola", "Awisat", "ola@gmail", "0"),
+            Event.EventType.PUBLIC_EVENT
+        )
+
+        this.events[2] = Event(
+            "second event_in_dashboard", "this is my second event_in_dashboard",
+            User("Ola", "Awisat", "ola@gmail", "0"),
+            Event.EventType.PUBLIC_EVENT
+        )
+
+        this.events[3] = Event(
+            "second event_in_dashboard", "this is my second event_in_dashboard",
+            User("Ola", "Awisat", "ola@gmail", "0"),
+            Event.EventType.PUBLIC_EVENT
+        )
+
+        this.events[4] = Event(
+            "second event_in_dashboard", "this is my second event_in_dashboard",
+            User("Ola", "Awisat", "ola@gmail", "0"),
+            Event.EventType.PUBLIC_EVENT
+        )
+
+        this.events[5] = Event(
+            "second event_in_dashboard", "this is my second event_in_dashboard",
+            User("Ola", "Awisat", "ola@gmail", "0"),
+            Event.EventType.PUBLIC_EVENT
+        )
+
+        this.events[6] = Event(
+            "second event_in_dashboard", "this is my second event_in_dashboard",
+            User("Ola", "Awisat", "ola@gmail", "0"),
+            Event.EventType.PUBLIC_EVENT
+        )
+
+        this.events[7] = Event(
             "second event_in_dashboard", "this is my second event_in_dashboard",
             User("Ola", "Awisat", "ola@gmail", "0"),
             Event.EventType.PUBLIC_EVENT
@@ -96,7 +132,18 @@ class Dashboard : Fragment(), PlaceSelectionListener, CallbackListener {
 
         val dialogFragment = NewEvent()
         this.newEventButton.setOnClickListener{
-            dialogFragment.show(fragmentManager!!, "signature")
+//            dialogFragment.show(fragmentManager!!, "signature")
+            val newFragment = NewEvent()
+            // The device is smaller, so show the fragment fullscreen
+            val transaction = fragmentManager?.beginTransaction()
+            // For a little polish, specify a transition animation
+            transaction?.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+            // To make it fullscreen, use the 'content' root view as the container
+            // for the fragment, which is always the root view for the activity
+            transaction
+                ?.add(android.R.id.content, newFragment)
+                ?.addToBackStack(null)
+                ?.commit()
         }
 
 
