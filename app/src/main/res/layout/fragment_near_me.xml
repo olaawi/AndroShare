@@ -11,6 +11,22 @@
         android:text="Near Me Fragment"
         android:textSize="38sp"
         android:gravity="center"
+        android:id="@+id/text_near"
         android:layout_centerInParent="true" />
+
+    <TextView
+        android:id="@+id/latitude_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textIsSelectable="true"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/longitude_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textIsSelectable="true"
+        android:layout_below="@+id/latitude_text"
+        android:textSize="30sp" />
 
 </RelativeLayout>
