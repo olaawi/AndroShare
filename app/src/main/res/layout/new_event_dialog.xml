@@ -17,13 +17,23 @@
         <!--        TODO: add event description-->
 
         <EditText
-            android:id="@+id/new_event_name"
+            android:id="@+id/new_event_title"
             style="@style/Headline5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:hint="Title"
             android:inputType="textCapWords" />
+
+        <EditText
+            android:padding="4dp"
+            android:id="@+id/new_event_descriptions"
+            style="@style/Body1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rectangle1"
+            android:hint="Enter event description..."
+            android:inputType="textCapSentences" />
 
         <TextView
             style="@style/Body2"
@@ -112,17 +122,42 @@
                 android:src="@drawable/ic_access_time_black_24dp"
                 android:tint="@color/accentColor"/>
 
-            <Button
-                android:id="@+id/start_time"
-                android:layout_width="150dp"
-                android:layout_height="24dp"
-                android:background="@drawable/rectangle1" />
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-            <Button
-                android:id="@+id/end_time"
-                android:layout_width="150dp"
-                android:layout_height="24dp"
-                android:background="@drawable/rectangle1" />
+                <Button
+                    android:id="@+id/start_time"
+                    android:layout_width="150dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/rectangle1" />
+
+                <TextView
+                    android:id="@+id/chosen_start_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:layout_gravity="center"/>
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Button
+                    android:id="@+id/end_time"
+                    android:layout_width="150dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/rectangle1" />
+
+                <TextView
+                    android:id="@+id/chosen_end_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:layout_gravity="center"/>
+            </FrameLayout>
+
         </LinearLayout>
 
 

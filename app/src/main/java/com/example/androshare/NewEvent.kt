@@ -1,6 +1,7 @@
 package com.example.androshare
 
 import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -20,6 +21,9 @@ import com.google.android.libraries.places.widget.listener.PlaceSelectionListene
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.new_event_dialog.*
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 import java.util.*
 
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -39,32 +43,22 @@ class NewEvent : DialogFragment(), PlaceSelectionListener {
     private lateinit var database: FirebaseFirestore
     private lateinit var eventLocation: Place
 
-//    private var param1: String? = null
-//    private var param2: String? = null
-//    private var listener: OnFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            //            param1 = it.getString(ARG_PARAM1)
-//            param2 = it.getString(ARG_PARAM2)
-        }
-//        setStyle(STYLE_NORMAL,R.style.FullScreenDialogStyle)
-        // initialize places + DB
+
+        // Initialize places + DB
         if (!Places.isInitialized()) {
             Places.initialize(context!!, getString(R.string.places_api_key))
         }
         database = FirebaseFirestore.getInstance()
     }
 
-    /** The system calls this to get the DialogFragment's layout, regardless
-    of whether it's being displayed as a dialog or an embedded fragment. */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout to use as dialog or embedded fragment
         return inflater.inflate(R.layout.new_event_dialog, container, false)
     }
 
@@ -83,59 +77,148 @@ class NewEvent : DialogFragment(), PlaceSelectionListener {
 //        locationAutocompleteFragment.setOnPlaceSelectedListener(this)
 
 
-        // show start date picker dialog
-        val c = Calendar.getInstance()
-        val currYear = c.get(Calendar.YEAR)
-        val currMonth = c.get(Calendar.MONTH)
-        val currMonthNormalized = c.get(Calendar.MONTH) + 1 // months are indexed starting at 0
-        val currDayOfMonth = c.get(Calendar.DAY_OF_MONTH)
-        chosen_start_date.text = "$currDayOfMonth/$currMonthNormalized/$currYear"
+        var startDate = LocalDateTime.now()
+        var endDate = LocalDateTime.now()
+
+        chosen_start_date.text =
+            startDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
+        chosen_end_date.text =
+            endDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
+
+        // Show start date picker dialog
         start_date.setOnClickListener {
             val dpd = DatePickerDialog(
                 this.activity!!,
                 DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
-                    val chosenMonth = month + 1 // months are indexed starting at 0
-                    chosen_start_date.text = "$dayOfMonth/$chosenMonth/$year"
-                    // TODO the following is necessary only if user chooses end date < start dat
-                    chosen_end_date.text = chosen_start_date.text
+                    startDate = LocalDateTime.of(year, month + 1, dayOfMonth, 0, 0)
+                    chosen_start_date.text =
+                        startDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
+                    if (startDate > endDate) {
+                        endDate = startDate
+                        chosen_end_date.text =
+                            endDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
+                    }
                 },
-                currYear,
-                currMonth,
-                currDayOfMonth
+                startDate.year,
+                startDate.monthValue - 1,
+                startDate.dayOfMonth
             )
             dpd.show()
         }
 
-        // show end date picker dialog
-        chosen_end_date.text = chosen_start_date.text
+        // Show end date picker dialog
         end_date.setOnClickListener {
             val dpd = DatePickerDialog(
                 this.activity!!,
                 DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
-                    val chosenMonth = month + 1 // months are indexed starting at 0
-                    chosen_end_date.text = "$dayOfMonth/$chosenMonth/$year"
+                    endDate = LocalDateTime.of(year, month + 1, dayOfMonth, 0, 0)
+                    chosen_end_date.text =
+                        endDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
+                    if (endDate < startDate) {
+                        startDate = endDate
+                        chosen_start_date.text =
+                            startDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
+                    }
                 },
-                currYear,
-                currMonth,
-                currDayOfMonth
+                endDate.year,
+                endDate.monthValue - 1,
+                endDate.dayOfMonth
             )
             dpd.show()
         }
 
-        //confirm new event
+        var startTime = LocalDateTime.of(startDate.year, startDate.month, startDate.dayOfMonth, 8, 0)
+        var endTime = LocalDateTime.of(endDate.year, endDate.month, endDate.dayOfMonth, 9, 0)
+
+        // In case time has already passed 8:00-9:00
+        val now = LocalDateTime.now()
+        if(startTime.toLocalTime() < now.toLocalTime()){
+            startTime = LocalDateTime.of(startDate.year, startDate.month, startDate.dayOfMonth, now.hour + 1, 0)
+            endTime = LocalDateTime.of(endDate.year, endDate.month, endDate.dayOfMonth, now.hour + 1, 0)
+        }
+
+        chosen_start_time.text =
+            startTime.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
+        chosen_end_time.text =
+            endTime.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
+
+        // Show start time picker dialog
+        start_time.setOnClickListener {
+            val tpd = TimePickerDialog(
+                this.activity!!,
+                2,
+                TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
+                    startTime = LocalDateTime.of(startDate.year, startDate.month, startDate.dayOfMonth, hourOfDay, minute)
+                    chosen_start_time.text =
+                        startTime.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
+                    if (startTime > endTime) {
+                        endTime = startTime
+                        chosen_end_time.text =
+                            endTime.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
+                    }
+                },
+                startTime.hour,
+                startTime.minute,
+                true
+            )
+            tpd.show()
+        }
+
+        // Show end time picker dialog
+        end_time.setOnClickListener {
+            val tpd = TimePickerDialog(
+                this.activity!!,
+                TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
+                    endTime = LocalDateTime.of(endDate.year, endDate.month, endDate.dayOfMonth, hourOfDay, minute)
+                    chosen_end_time.text =
+                        endTime.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
+                    if (endTime < startTime) {
+                        startTime = endTime
+                        chosen_start_time.text =
+                            startTime.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
+                    }
+                },
+                startTime.hour,
+                startTime.minute,
+                true
+            )
+            tpd.show()
+        }
+
+        // Confirm new event
         confirm_button.setOnClickListener {
-            val eventNameEditText = view.findViewById(R.id.new_event_name) as EditText
-            val eventName = eventNameEditText.getText().toString()
+            // Title
+            val eventTitleEditText = view.findViewById(R.id.new_event_title) as EditText
+            var eventTitle = eventTitleEditText.text.toString()
+            if (eventTitle == "")
+                eventTitle = "My event"
+
+            // Description
+            val eventDescriptionEditText = view.findViewById(R.id.new_event_title) as EditText
+            val eventDescription = eventDescriptionEditText.text.toString()
+
+            // Start Time
+
+
+            // End Time
+
+
+            // Type
             var eventType = Event.EventType.PUBLIC_EVENT
-            val evenTypeCheckSwitch =
+            val eventTypeCheckSwitch =
                 view.findViewById(R.id.event_type_switch) as Switch
-            if (evenTypeCheckSwitch.isChecked) {
+            if (eventTypeCheckSwitch.isChecked) {
                 eventType = Event.EventType.PRIVATE_EVENT
             }
-            val eventCreator = User("Hala", "Awisat", "email@gmail.com", "1234567890")
-            val event = Event(eventName, "WHY?", eventCreator, eventType)
 
-            //TODO: add event to DB + add event for user (admin)
+            // Creator
+            // TODO get current logged in user
+            val eventCreator = User("Hala", "Awisat", "email@gmail.com", "1234567890")
+
+            // And finally create the event ..
+            val event = Event(eventTitle, eventDescription, eventCreator, eventType)
+
+            //TODO add event for user (admin)
 
             database.collection("events").add(event)
                 .addOnSuccessListener { documentReference ->
@@ -153,13 +236,15 @@ class NewEvent : DialogFragment(), PlaceSelectionListener {
                 .setAction("Action", null)
                 .show()
         }
-        //cancel new event
+
+        // Cancel new event
         cancel_button.setOnClickListener {
             this.dismiss()
         }
     }
 
 
+    // Places methods
     override fun onPlaceSelected(place: Place) {
 //        Toast.makeText(context,""+p0.name+p0.latLng, Toast.LENGTH_LONG).show()
         this.eventLocation = place
@@ -170,57 +255,3 @@ class NewEvent : DialogFragment(), PlaceSelectionListener {
     }
 
 }
-
-//fun onButtonPressed(uri: Uri) {
-//    listener?.onFragmentInteraction(uri)
-//}
-
-
-//    override fun onAttach(context: Context) {
-//        super.onAttach(context)
-//        if (context is OnFragmentInteractionListener) {
-//            listener = context
-//        } else {
-//            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
-//        }
-//    }
-
-//override fun onDetach() {
-//    super.onDetach()
-//    listener = null
-//}
-
-/**
- * This interface must be implemented by activities that contain this
- * fragment to allow an interaction in this fragment to be communicated
- * to the activity and potentially other fragments contained in that
- * activity.
- *
- *
- * See the Android Training lesson [Communicating with Other Fragments]
- * (http://developer.android.com/training/basics/fragments/communicating.html)
- * for more information.
- */
-//interface OnFragmentInteractionListener {
-//    fun onFragmentInteraction(uri: Uri)
-//}
-
-//companion object {
-//    /**
-//     * Use this factory method to create a new instance of
-//     * this fragment using the provided parameters.
-//     *
-//     * @param param1 Parameter 1.
-//     * @param param2 Parameter 2.
-//     * @return A new instance of fragment NewEvent.
-//     */
-//    @JvmStatic
-//    fun newInstance(param1: String, param2: String) =
-//        NewEvent().apply {
-//            arguments = Bundle().apply {
-//                putString(ARG_PARAM1, param1)
-//                putString(ARG_PARAM2, param2)
-//            }
-//        }
-//}
-//}

@@ -1,12 +1,14 @@
 package com.example.androshare
 
 import java.io.FileDescriptor
+import java.time.LocalDateTime
 
 class Event(title : String, description: String, creator: User, type: EventType) {
 
     public var title : String = title
     public var description : String = description
     public var creator: User = creator
+//    public var startTime: LocalDateTime = startTime
 
     // TODO: add start and end time
 
