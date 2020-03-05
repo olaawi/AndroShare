@@ -115,6 +115,7 @@ class NearMe : Fragment() {
 
     /**
      * Shows a [] using `text`.
+
      * @param text The Snackbar text.
      */
     private fun showMessage(text: String) {
@@ -255,7 +256,7 @@ class NearMe : Fragment() {
 
 
     companion object {
-        //        private val TAG = "LocationProvider"
+//        private val TAG = "LocationProvider"
         private val REQUEST_PERMISSIONS_REQUEST_CODE = 34
         /**
          * Use this factory method to create a new instance of
