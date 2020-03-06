@@ -1,28 +1,68 @@
 package com.example.androshare
 
+import android.location.Location
+import android.sax.StartElementListener
 import java.io.FileDescriptor
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
-class Event(title : String, description: String, creator: User, type: EventType) {
+class Event(
+    title: String,
+    description: String,
+    creator: User,
+    type: EventType,
+    startTime: LocalDateTime,
+    endTime: LocalDateTime,
+    location: Location
+    ) {
 
-    public var title : String = title
-    public var description : String = description
-    public var creator: User = creator
-//    public var startTime: LocalDateTime = startTime
+    var title: String = title
+    var description: String = description
+    var creator: User = creator
+    var type: EventType = type
+    var startTime: LocalDateTime = startTime
+    var endTime: LocalDateTime = endTime
+    var location: Location = location
+    var id: Int = 0
+    val admins = mutableListOf<User>()
+    val participants = mutableListOf<User>()
 
-    // TODO: add start and end time
+    init {
+        idGenerator++
+        this.id = getNewId()
+    }
 
-    public var type: EventType = type
-        set(value) {
-            require(value == EventType.PUBLIC_EVENT || value == EventType.PRIVATE_EVENT) { "Event must be public or private" }
-            field = value
+    constructor(
+        title: String,
+        description: String,
+        creator: User,
+        type: EventType,
+        startTime: LocalDateTime,
+        endTime: LocalDateTime,
+        location: Location,
+        id: Int
+    ) : this(title, description, creator, type, startTime, endTime, location) {
+        this.id = id
+    }
+
+    companion object {
+        var idGenerator: Int = 0;
+
+        fun getNewId(): Int {
+            return idGenerator
         }
-
-    public val admins = mutableListOf<User>()
-    public val participants = mutableListOf<User>()
+    }
 
     public enum class EventType {
         PUBLIC_EVENT, PRIVATE_EVENT
+    }
+
+    fun getTime(): String {
+        val startTimeFormatted =
+            startTime.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
+        val endTimeFormatted = endTime.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
+        return "$startTimeFormatted - $endTimeFormatted"
     }
 
     init {
@@ -32,7 +72,7 @@ class Event(title : String, description: String, creator: User, type: EventType)
 
     public fun addAdmin(newAdmin: User) {
         admins.add(newAdmin)
-        if(!participants.contains(newAdmin))
+        if (!participants.contains(newAdmin))
             participants.add(newAdmin)
     }
 

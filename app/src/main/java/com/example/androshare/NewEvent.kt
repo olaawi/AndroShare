@@ -2,6 +2,7 @@ package com.example.androshare
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.location.Location
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -197,12 +198,6 @@ class NewEvent : DialogFragment(), PlaceSelectionListener {
             val eventDescriptionEditText = view.findViewById(R.id.new_event_title) as EditText
             val eventDescription = eventDescriptionEditText.text.toString()
 
-            // Start Time
-
-
-            // End Time
-
-
             // Type
             var eventType = Event.EventType.PUBLIC_EVENT
             val eventTypeCheckSwitch =
@@ -216,7 +211,8 @@ class NewEvent : DialogFragment(), PlaceSelectionListener {
             val eventCreator = User("Hala", "Awisat", "email@gmail.com", "1234567890")
 
             // And finally create the event ..
-            val event = Event(eventTitle, eventDescription, eventCreator, eventType)
+            // TODO location
+            val event = Event(eventTitle, eventDescription, eventCreator, eventType, startTime, endTime, Location("here"))
 
             //TODO add event for user (admin)
 

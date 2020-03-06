@@ -17,17 +17,19 @@ import com.google.android.libraries.places.widget.listener.PlaceSelectionListene
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 import EventAdapter
 import android.app.DatePickerDialog
+import android.location.Location
 import android.util.Log
 import android.widget.CheckBox
 import android.widget.Toast
 import com.google.android.gms.common.api.Status
 import com.google.android.libraries.places.api.Places
-import java.util.*
 import android.widget.EditText
 import android.widget.Switch
 import androidx.fragment.app.FragmentTransaction
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.new_event_dialog.*
+import java.time.LocalDateTime
+import kotlin.collections.*
 
 
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -44,7 +46,7 @@ class Dashboard : Fragment(), PlaceSelectionListener, CallbackListener {
     private lateinit var database: FirebaseFirestore
     private lateinit var recyclerView: RecyclerView
     private lateinit var eventAdapter: EventAdapter
-    private lateinit var events: Array<Event?>
+    private lateinit var events: ArrayList<Event?>
     private lateinit var newEventButton: View
 
 
@@ -60,55 +62,91 @@ class Dashboard : Fragment(), PlaceSelectionListener, CallbackListener {
         database = FirebaseFirestore.getInstance()
 
         // create list of the user's event_in_dashboard
-        this.events = arrayOfNulls<Event>(8)
-        this.events[0] = Event(
+        this.events = arrayListOf<Event?>()
+        this.events.add(Event(
             "first event_in_dashboard", "this is my first event_in_dashboard",
             User("Ola", "Awisat", "ola@gmail", "0"),
-            Event.EventType.PUBLIC_EVENT
-        )
+            Event.EventType.PUBLIC_EVENT,
+            LocalDateTime.now(),
+            LocalDateTime.now(),
+            Location("here")
+        ))
 
-        this.events[1] = Event(
+        this.events.add(Event(
             "second event_in_dashboard", "this is my second event_in_dashboard",
             User("Ola", "Awisat", "ola@gmail", "0"),
-            Event.EventType.PUBLIC_EVENT
-        )
+            Event.EventType.PUBLIC_EVENT,
+            LocalDateTime.now(),
+            LocalDateTime.now(),
+            Location("here")
+        ))
 
-        this.events[2] = Event(
+        this.events.add(Event(
             "second event_in_dashboard", "this is my second event_in_dashboard",
             User("Ola", "Awisat", "ola@gmail", "0"),
-            Event.EventType.PUBLIC_EVENT
-        )
+            Event.EventType.PUBLIC_EVENT,
+            LocalDateTime.now(),
+            LocalDateTime.now(),
+            Location("here")
+        ))
 
-        this.events[3] = Event(
+        this.events.add(Event(
             "second event_in_dashboard", "this is my second event_in_dashboard",
             User("Ola", "Awisat", "ola@gmail", "0"),
-            Event.EventType.PUBLIC_EVENT
-        )
+            Event.EventType.PUBLIC_EVENT,
+            LocalDateTime.now(),
+            LocalDateTime.now(),
+            Location("here")
+        ))
 
-        this.events[4] = Event(
+        this.events.add(Event(
             "second event_in_dashboard", "this is my second event_in_dashboard",
             User("Ola", "Awisat", "ola@gmail", "0"),
-            Event.EventType.PUBLIC_EVENT
-        )
+            Event.EventType.PUBLIC_EVENT,
+            LocalDateTime.now(),
+            LocalDateTime.now(),
+            Location("here")
+        ))
 
-        this.events[5] = Event(
+        this.events.add(Event(
             "second event_in_dashboard", "this is my second event_in_dashboard",
             User("Ola", "Awisat", "ola@gmail", "0"),
-            Event.EventType.PUBLIC_EVENT
-        )
+            Event.EventType.PUBLIC_EVENT,
+            LocalDateTime.now(),
+            LocalDateTime.now(),
+            Location("here")
+        ))
 
-        this.events[6] = Event(
+        this.events.add(Event(
             "second event_in_dashboard", "this is my second event_in_dashboard",
             User("Ola", "Awisat", "ola@gmail", "0"),
-            Event.EventType.PUBLIC_EVENT
-        )
+            Event.EventType.PUBLIC_EVENT,
+            LocalDateTime.now(),
+            LocalDateTime.now(),
+            Location("here")
+        ))
 
-        this.events[7] = Event(
+        this.events.add(Event(
             "second event_in_dashboard", "this is my second event_in_dashboard",
             User("Ola", "Awisat", "ola@gmail", "0"),
-            Event.EventType.PUBLIC_EVENT
-        )
+            Event.EventType.PUBLIC_EVENT,
+            LocalDateTime.now(),
+            LocalDateTime.now(),
+            Location("here")
+        ))
     }
+
+    private fun onEventClicked(event: Event){
+        val eventPageFragment = EventPage(event)
+        val transaction = fragmentManager!!.beginTransaction()
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+        transaction
+            .add(android.R.id.content, eventPageFragment)
+            .addToBackStack(null)
+            .commit()
+//        Toast.makeText(context, "Clicked: ${event.title}", Toast.LENGTH_LONG).show()
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -125,130 +163,22 @@ class Dashboard : Fragment(), PlaceSelectionListener, CallbackListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         this.recyclerView = view.findViewById(R.id.recyclerView)
         this.recyclerView.layoutManager = LinearLayoutManager(this.context)
-        this.eventAdapter = EventAdapter(this.context!!, this.events)
+        this.eventAdapter = EventAdapter(this.context!!, this.events) { event : Event -> onEventClicked(event) }
         this.recyclerView.adapter = this.eventAdapter
         this.newEventButton = view.findViewById(R.id.new_event_button)
 
-
-        val dialogFragment = NewEvent()
         this.newEventButton.setOnClickListener{
-//            dialogFragment.show(fragmentManager!!, "signature")
             val newFragment = NewEvent()
-            // The device is smaller, so show the fragment fullscreen
-            val transaction = fragmentManager?.beginTransaction()
-            // For a little polish, specify a transition animation
-            transaction?.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+            val transaction = fragmentManager!!.beginTransaction()
+            // TODO For a little polish, specify a transition animation
+            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
             // To make it fullscreen, use the 'content' root view as the container
             // for the fragment, which is always the root view for the activity
             transaction
-                ?.add(android.R.id.content, newFragment)
-                ?.addToBackStack(null)
-                ?.commit()
+                .add(android.R.id.content, newFragment)
+                .addToBackStack(null)
+                .commit()
         }
-
-
-        /*
-        // When new event_in_dashboard button is clicked:
-        this.newEventButton.setOnClickListener {
-            //Inflate the dialog with custom view
-            val newEventDialogView =
-                LayoutInflater.from(this.activity).inflate(R.layout.new_event_dialog, null)
-
-            //AlertDialogBuilder
-            val dialogBuilder = AlertDialog.Builder(this.activity!!)
-                .setView(newEventDialogView)
-                .setTitle("Create New Event")
-
-            // autocomplete location: place return fields
-            val locationAutocompleteFragment =
-                this.fragmentManager?.findFragmentById(R.id.event_location_autocomplete) as AutocompleteSupportFragment
-            locationAutocompleteFragment.setPlaceFields(
-                listOf(
-                    Place.Field.ID,
-                    Place.Field.NAME
-                )
-            )
-            locationAutocompleteFragment.setOnPlaceSelectedListener(this)
-
-            //show dialog
-            val mAlertDialog = dialogBuilder.show()
-
-            // show start date picker dialog
-            val c = Calendar.getInstance()
-            val currYear = c.get(Calendar.YEAR)
-            val currMonth = c.get(Calendar.MONTH)
-            val currMonthNormalized = c.get(Calendar.MONTH) + 1 // months are indexed starting at 0
-            val currDayOfMonth = c.get(Calendar.DAY_OF_MONTH)
-            newEventDialogView.chosen_start_date.text = "$currDayOfMonth/$currMonthNormalized/$currYear"
-            newEventDialogView.start_date.setOnClickListener {
-                val dpd = DatePickerDialog(
-                    this.activity!!,
-                    DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
-                        val chosenMonth = month + 1 // months are indexed starting at 0
-                        newEventDialogView.chosen_start_date.text = "$dayOfMonth/$chosenMonth/$year"
-                        // TODO the following is necessary only if user chooses end date < start dat
-                        newEventDialogView.chosen_end_date.text = newEventDialogView.chosen_start_date.text
-                    },
-                    currYear,
-                    currMonth,
-                    currDayOfMonth
-                )
-                dpd.show()
-            }
-
-            // show end date picker dialog
-            newEventDialogView.chosen_end_date.text = newEventDialogView.chosen_start_date.text
-            newEventDialogView.end_date.setOnClickListener {
-                val dpd = DatePickerDialog(
-                    this.activity!!,
-                    DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
-                        val chosenMonth = month + 1 // months are indexed starting at 0
-                        newEventDialogView.chosen_end_date.text = "$dayOfMonth/$chosenMonth/$year"
-                    },
-                    currYear,
-                    currMonth,
-                    currDayOfMonth
-                )
-                dpd.show()
-            }
-
-            //confirm new event
-            newEventDialogView.confirm_button.setOnClickListener {
-                val eventNameEditText = view.findViewById(R.id.new_event_name) as EditText
-                val eventName = eventNameEditText.getText().toString()
-                var eventType = Event.EventType.PUBLIC_EVENT
-                val evenTypeCheckSwitch =
-                    view.findViewById(R.id.event_type_switch) as Switch
-                if (evenTypeCheckSwitch.isChecked) {
-                    eventType = Event.EventType.PRIVATE_EVENT
-                }
-                val eventCreator = User("Hala", "Awisat", "email@gmail.com", "1234567890")
-                val event = Event(eventName, "WHY?", eventCreator, eventType)
-
-                //TODO: add event to DB + add event for user (admin)
-
-                database.collection("events").add(event)
-                    .addOnSuccessListener { documentReference ->
-                        Log.d(
-                            "newEvent",
-                            "Event added with ID: ${documentReference.id}"
-                        )
-                    }
-                    .addOnFailureListener { exception ->
-                        Log.w("newEvent", "Error adding event", exception)
-                    }
-
-                mAlertDialog.dismiss()
-                Snackbar.make(view, "Event created successfully!", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null)
-                    .show()
-            }
-            //cancel new event
-            newEventDialogView.cancel_button.setOnClickListener {
-                mAlertDialog.dismiss()
-            }
-        }
-        */
     }
 
     override fun onPlaceSelected(place: Place) {
@@ -260,10 +190,6 @@ class Dashboard : Fragment(), PlaceSelectionListener, CallbackListener {
         Toast.makeText(this.context, "" + status.toString(), Toast.LENGTH_LONG).show()
     }
 
-
-    fun onButtonPressed(uri: Uri) {
-        this.listener?.onFragmentInteraction(uri)
-    }
 
 //    override fun onAttach(context: Context) {
 //        super.onAttach(context)

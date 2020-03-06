@@ -1,9 +1,9 @@
 package com.example.androshare
 
+import EventAdapter
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
@@ -18,44 +18,52 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.fragment.app.FragmentTransaction
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.libraries.places.internal.db
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.android.synthetic.main.fragment_dashboard.*
+import java.lang.reflect.Type
+import java.time.LocalDateTime
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
+// maximum radius to search events near me - in meters
+private const val MAX_RADIUS = 500
 
 class NearMe : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     private var listener: Dashboard.OnFragmentInteractionListener? = null
 
-//    private val REQUEST_PERMISSIONS_REQUEST_CODE = 99
-    /**
-     * Provides the entry point to the Fused Location Provider API.
-     */
+    //Provides the entry point to the Fused Location Provider API.
     private var mFusedLocationClient: FusedLocationProviderClient? = null
+    //Represents a geographical location.
+    private var currentLocation: Location? = null
+    private lateinit var database: FirebaseFirestore
+    private lateinit var events: ArrayList<Event?>
+    private lateinit var currentEvent: Event
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var eventAdapter: EventAdapter
 
-    /**
-     * Represents a geographical location.
-     */
-    protected var mLastLocation: Location? = null
-
-    private var mLatitudeLabel: String? = null
-    private var mLongitudeLabel: String? = null
-    private var mLatitudeText: TextView? = null
-    private var mLongitudeText: TextView? = null
+//    private var mLatitudeLabel: String? = null
+//    private var mLongitudeLabel: String? = null
+//    private var mLatitudeText: TextView? = null
+//    private var mLongitudeText: TextView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mLatitudeLabel = "Latitude"
-        mLongitudeLabel = "Longitude"
-//        mLatitudeText = view!!.findViewById<View>(R.id.latitude_text) as TextView
-//        mLongitudeText = view!!.findViewById<View>(R.id.longitude_text) as TextView
-
+//        mLatitudeLabel = "Latitude"
+//        mLongitudeLabel = "Longitude"
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this.activity!!)
+        database = FirebaseFirestore.getInstance()
+        this.events = arrayListOf<Event?>()
 
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
@@ -71,11 +79,28 @@ class NearMe : Fragment() {
         return inflater.inflate(R.layout.fragment_near_me, container, false)
     }
 
+    @SuppressLint("InflateParams")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        mLatitudeText = view.findViewById<View>(R.id.latitude_text) as TextView
-        mLongitudeText = view.findViewById<View>(R.id.longitude_text) as TextView
+//        super.onViewCreated(view, savedInstanceState)
+        this.recyclerView = view.findViewById(R.id.recyclerViewNearMe)
+        this.recyclerView.layoutManager = LinearLayoutManager(this.context)
+        this.eventAdapter =
+            EventAdapter(this.context!!, this.events) { event: Event -> onEventClicked(event) }
+        this.recyclerView.adapter = this.eventAdapter
+//        mLatitudeText = view.findViewById<View>(R.id.latitude_text) as TextView
+//        mLongitudeText = view.findViewById<View>(R.id.longitude_text) as TextView
+    }
 
+    private fun onEventClicked(event: Event) {
+        // TODO implement
+//        val eventPageFragment = EventPage(event)
+//        val transaction = fragmentManager!!.beginTransaction()
+//        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+//        transaction
+//            .add(android.R.id.content, eventPageFragment)
+//            .addToBackStack(null)
+//            .commit()
+//        Toast.makeText(context, "Clicked: ${event.title}", Toast.LENGTH_LONG).show()
     }
 
     override fun onStart() {
@@ -87,13 +112,50 @@ class NearMe : Fragment() {
         }
     }
 
+//    double queryValues() async {
+//        total = 0.0;
+//
+//        docs = await Firestore.instance
+//                .collection('myCollection')
+//            .snapshots()
+//            .documents((snapshot);
+//        docs.forEach((doc) => this.total += doc.data['amount']));
+//        debugPrint(this.total.toString());
+//        return total;
+//    }
+
+    private fun findEventsNearMe() {
+        database.collection("events")
+            .get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    Log.d("findEventsNearMe", "${document.id} => ${document.data}")
+                    if (currentLocation!!.distanceTo(document.get("location") as Location?) <= MAX_RADIUS) {
+                        currentEvent = Event(
+                            (document.get("title") as String?)!!,
+                            (document.get("description") as String?)!!,
+                            (document.get("creator") as User?)!!,
+                            (document.get("type") as Event.EventType?)!!,
+                            (document.get("startTime") as LocalDateTime?)!!,
+                            (document.get("endTime") as LocalDateTime?)!!,
+                            (document.get("location") as Location?)!!,
+                            document.get("id") as Int
+                        )
+                        events.add(currentEvent)
+                    }
+                }
+                // TODO: add fun to view items
+            }
+            .addOnFailureListener { exception ->
+                Log.d("findEventsNearMe", "Error getting documents: ", exception)
+            }
+    }
+
     /**
      * Provides a simple way of getting a device's location and is well suited for
      * applications that do not require a fine-grained location and that do not need location
      * updates. Gets the best and most recent location currently available, which may be null
      * in rare cases when a location is not available.
-     *
-     *
      * Note: this method should be called after location permission has been granted.
      */
     @SuppressLint("MissingPermission", "SetTextI18n")
@@ -101,29 +163,30 @@ class NearMe : Fragment() {
         mFusedLocationClient!!.lastLocation
             .addOnCompleteListener(this.activity!!) { task ->
                 if (task.isSuccessful && task.result != null) {
-                    mLastLocation = task.result
-                    mLatitudeText!!.text = mLatitudeLabel+":   "+
-                            (mLastLocation )!!.latitude
-                    mLongitudeText!!.text = mLongitudeLabel+":   "+
-                            (mLastLocation )!!.longitude
+                    currentLocation = task.result
+                    findEventsNearMe()
+//                    mLatitudeText!!.text = mLatitudeLabel+":   "+
+//                            (currentLocation )!!.latitude
+//                    mLongitudeText!!.text = mLongitudeLabel+":   "+
+//                            (currentLocation )!!.longitude
                 } else {
                     Log.w("getLastLocation", "getLastLocation:exception", task.exception)
-                    showMessage("no location detected")
+                    Toast.makeText(context, "no location detected", Toast.LENGTH_LONG).show()
+
                 }
             }
     }
 
-    /**
-     * Shows a [] using `text`.
-
-     * @param text The Snackbar text.
-     */
-    private fun showMessage(text: String) {
-        val container = view!!.findViewById<View>(R.id.container)
-        if (container != null) {
-            Toast.makeText(context, text, Toast.LENGTH_LONG).show()
-        }
-    }
+//    /**
+//     * Shows a [] using `text`.
+//     * @param text The Snackbar text.
+//     */
+//    private fun showMessage(text: String) {
+//        val container = view!!.findViewById<View>(R.id.container)
+//        if (container != null) {
+//            Toast.makeText(context, text, Toast.LENGTH_LONG).show()
+//        }
+//    }
 
     /**
      * Shows a [].
@@ -133,8 +196,10 @@ class NearMe : Fragment() {
      * *
      * @param listener         The listener associated with the Snackbar action.
      */
-    private fun showSnackbar(mainTextStringId: String, actionStringId: Int,
-                             listener: View.OnClickListener) {
+    private fun showSnackbar(
+        mainTextStringId: String, actionStringId: Int,
+        listener: View.OnClickListener
+    ) {
 
         Toast.makeText(context, mainTextStringId, Toast.LENGTH_LONG).show()
     }
@@ -143,7 +208,8 @@ class NearMe : Fragment() {
     private fun checkPermissions(): Boolean {
         val permissionState = ActivityCompat.checkSelfPermission(
             this.context!!,
-            Manifest.permission.ACCESS_FINE_LOCATION)
+            Manifest.permission.ACCESS_FINE_LOCATION
+        )
         return permissionState == PackageManager.PERMISSION_GRANTED
     }
 
@@ -151,17 +217,23 @@ class NearMe : Fragment() {
         ActivityCompat.requestPermissions(
             this.activity!!,
             arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-            REQUEST_PERMISSIONS_REQUEST_CODE)
+            REQUEST_PERMISSIONS_REQUEST_CODE
+        )
     }
 
     private fun requestPermissions() {
-        val shouldProvideRationale = ActivityCompat.shouldShowRequestPermissionRationale(this.activity!!,
-            Manifest.permission.ACCESS_FINE_LOCATION)
+        val shouldProvideRationale = ActivityCompat.shouldShowRequestPermissionRationale(
+            this.activity!!,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        )
 
         // Provide an additional rationale to the user. This would happen if the user denied the
         // request previously, but didn't check the "Don't ask again" checkbox.
         if (shouldProvideRationale) {
-            Log.i("requestPermissions", "Displaying permission rationale to provide additional context.")
+            Log.i(
+                "requestPermissions",
+                "Displaying permission rationale to provide additional context."
+            )
             showSnackbar("permission_rationale", android.R.string.ok,
                 View.OnClickListener {
                     // Request permission
@@ -180,8 +252,10 @@ class NearMe : Fragment() {
     /**
      * Callback received when a permissions request has been completed.
      */
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
-                                            grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int, permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         Log.i("onRequestPermissionsResult", "onRequestPermissionResult")
         if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
             if (grantResults.isEmpty()) {
@@ -222,7 +296,7 @@ class NearMe : Fragment() {
     ////////////////////
 
     fun onButtonPressed(uri: Uri) {
-        listener?.onFragmentInteraction(uri)
+        this.listener?.onFragmentInteraction(uri)
     }
 
 //    override fun onAttach(context: Context) {
@@ -256,8 +330,9 @@ class NearMe : Fragment() {
 
 
     companion object {
-//        private val TAG = "LocationProvider"
+        //        private val TAG = "LocationProvider"
         private val REQUEST_PERMISSIONS_REQUEST_CODE = 34
+
         /**
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.

@@ -19,14 +19,22 @@
             android:id="@+id/titleId"
             android:text="Title"
             style="@style/Subtitle1"/>
-        
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/timeId"
+            android:text="Time"
+            android:layout_below="@id/titleId"
+            style="@style/Overline"/>
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/descriptionId"
             android:text="Description"
-            style="@style/Body1"
-            android:layout_below="@id/titleId"/>
+            android:layout_below="@id/timeId"
+            style="@style/Body1"/>
 
     </RelativeLayout>
 
