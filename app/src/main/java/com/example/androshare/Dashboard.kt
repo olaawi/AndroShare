@@ -63,80 +63,110 @@ class Dashboard : Fragment(), PlaceSelectionListener, CallbackListener {
 
         // create list of the user's event_in_dashboard
         this.events = arrayListOf<Event?>()
-        this.events.add(Event(
-            "first event_in_dashboard", "this is my first event_in_dashboard",
-            User("Ola", "Awisat", "ola@gmail", "0"),
-            Event.EventType.PUBLIC_EVENT,
-            LocalDateTime.now(),
-            LocalDateTime.now(),
-            Location("here")
-        ))
+        this.events.add(
+            Event(
+                "Event 1", "this is my first event_in_dashboard",
+                User("Ola", "Awisat", "ola@gmail", "0"),
+                Event.EventType.PUBLIC_EVENT,
+                LocalDateTime.now(),
+                LocalDateTime.now(),
+                Location("here")
+            )
+        )
 
-        this.events.add(Event(
-            "second event_in_dashboard", "this is my second event_in_dashboard",
-            User("Ola", "Awisat", "ola@gmail", "0"),
-            Event.EventType.PUBLIC_EVENT,
-            LocalDateTime.now(),
-            LocalDateTime.now(),
-            Location("here")
-        ))
+        this.events.add(
+            Event(
+                "Event 2", "this is my second event_in_dashboard",
+                User("Ola", "Awisat", "ola@gmail", "0"),
+                Event.EventType.PUBLIC_EVENT,
+                LocalDateTime.now(),
+                LocalDateTime.now(),
+                Location("here")
+            )
+        )
 
-        this.events.add(Event(
-            "second event_in_dashboard", "this is my second event_in_dashboard",
-            User("Ola", "Awisat", "ola@gmail", "0"),
-            Event.EventType.PUBLIC_EVENT,
-            LocalDateTime.now(),
-            LocalDateTime.now(),
-            Location("here")
-        ))
+        this.events.add(
+            Event(
+                "Event 3", "this is my second event_in_dashboard",
+                User("Ola", "Awisat", "ola@gmail", "0"),
+                Event.EventType.PUBLIC_EVENT,
+                LocalDateTime.now(),
+                LocalDateTime.now(),
+                Location("here")
+            )
+        )
 
-        this.events.add(Event(
-            "second event_in_dashboard", "this is my second event_in_dashboard",
-            User("Ola", "Awisat", "ola@gmail", "0"),
-            Event.EventType.PUBLIC_EVENT,
-            LocalDateTime.now(),
-            LocalDateTime.now(),
-            Location("here")
-        ))
+        this.events.add(
+            Event(
+                "Event 4", "this is my second event_in_dashboard",
+                User("Ola", "Awisat", "ola@gmail", "0"),
+                Event.EventType.PUBLIC_EVENT,
+                LocalDateTime.now(),
+                LocalDateTime.now(),
+                Location("here")
+            )
+        )
 
-        this.events.add(Event(
-            "second event_in_dashboard", "this is my second event_in_dashboard",
-            User("Ola", "Awisat", "ola@gmail", "0"),
-            Event.EventType.PUBLIC_EVENT,
-            LocalDateTime.now(),
-            LocalDateTime.now(),
-            Location("here")
-        ))
+        this.events.add(
+            Event(
+                "Event 5", "this is my second event_in_dashboard",
+                User("Ola", "Awisat", "ola@gmail", "0"),
+                Event.EventType.PUBLIC_EVENT,
+                LocalDateTime.now(),
+                LocalDateTime.now(),
+                Location("here")
+            )
+        )
 
-        this.events.add(Event(
-            "second event_in_dashboard", "this is my second event_in_dashboard",
-            User("Ola", "Awisat", "ola@gmail", "0"),
-            Event.EventType.PUBLIC_EVENT,
-            LocalDateTime.now(),
-            LocalDateTime.now(),
-            Location("here")
-        ))
+        this.events.add(
+            Event(
+                "Event 6", "this is my second event_in_dashboard",
+                User("Ola", "Awisat", "ola@gmail", "0"),
+                Event.EventType.PUBLIC_EVENT,
+                LocalDateTime.now(),
+                LocalDateTime.now(),
+                Location("here")
+            )
+        )
 
-        this.events.add(Event(
-            "second event_in_dashboard", "this is my second event_in_dashboard",
-            User("Ola", "Awisat", "ola@gmail", "0"),
-            Event.EventType.PUBLIC_EVENT,
-            LocalDateTime.now(),
-            LocalDateTime.now(),
-            Location("here")
-        ))
+        this.events.add(
+            Event(
+                "Event 7", "this is my second event_in_dashboard",
+                User("Ola", "Awisat", "ola@gmail", "0"),
+                Event.EventType.PUBLIC_EVENT,
+                LocalDateTime.now(),
+                LocalDateTime.now(),
+                Location("here")
+            )
+        )
 
-        this.events.add(Event(
-            "second event_in_dashboard", "this is my second event_in_dashboard",
-            User("Ola", "Awisat", "ola@gmail", "0"),
-            Event.EventType.PUBLIC_EVENT,
-            LocalDateTime.now(),
-            LocalDateTime.now(),
-            Location("here")
-        ))
+        this.events.add(
+            Event(
+                "Event 8", "this is my second event_in_dashboard",
+                User("Ola", "Awisat", "ola@gmail", "0"),
+                Event.EventType.PUBLIC_EVENT,
+                LocalDateTime.now(),
+                LocalDateTime.now(),
+                Location("here")
+            )
+        )
+
+        val user1 = User("name", "family", "email", "1")
+        val user2 = User("name", "family", "email", "2")
+        val user3 = User("name", "family", "email", "3")
+        val user4 = User("name", "family", "email", "4")
+        user1.avatar = R.drawable.avatar3
+        user2.avatar = R.drawable.avatar4
+        user3.avatar = R.drawable.avatar5
+        user4.avatar = R.drawable.avatar6
+        events[0]!!.addParticipant(user1)
+        events[0]!!.addParticipant(user2)
+        events[0]!!.addParticipant(user3)
+        events[0]!!.addParticipant(user4)
+
     }
 
-    private fun onEventClicked(event: Event){
+    private fun onEventClicked(event: Event) {
         val eventPageFragment = EventPage(event)
         val transaction = fragmentManager!!.beginTransaction()
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
@@ -163,11 +193,12 @@ class Dashboard : Fragment(), PlaceSelectionListener, CallbackListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         this.recyclerView = view.findViewById(R.id.recyclerView)
         this.recyclerView.layoutManager = LinearLayoutManager(this.context)
-        this.eventAdapter = EventAdapter(this.context!!, this.events) { event : Event -> onEventClicked(event) }
+        this.eventAdapter =
+            EventAdapter(this.context!!, this.events) { event: Event -> onEventClicked(event) }
         this.recyclerView.adapter = this.eventAdapter
         this.newEventButton = view.findViewById(R.id.new_event_button)
 
-        this.newEventButton.setOnClickListener{
+        this.newEventButton.setOnClickListener {
             val newFragment = NewEvent()
             val transaction = fragmentManager!!.beginTransaction()
             // TODO For a little polish, specify a transition animation

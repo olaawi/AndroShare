@@ -16,6 +16,7 @@
     <color name="primaryTextColor">#000000</color>
     <color name="secondaryTextColor">#000000</color>
     <color name="accentColor">#36b3b7</color>
+    <color name="darkGreyColor">#333333</color>
 
     <!--    <color name="colorPrimary">#6200EE</color>-->
     <!--    <color name="colorPrimaryVariant">#3700B3</color>-->
