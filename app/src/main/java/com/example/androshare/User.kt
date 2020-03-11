@@ -10,5 +10,5 @@ class User constructor(
     public var familyName: String? = familyName
     public var email: String = email
     public var id: String = id
-
+    public var events : ArrayList<String>? = null
 }

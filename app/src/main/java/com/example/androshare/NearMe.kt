@@ -81,7 +81,7 @@ class NearMe : Fragment() {
 
     @SuppressLint("InflateParams")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-//        super.onViewCreated(view, savedInstanceState)
+        super.onViewCreated(view, savedInstanceState)
         this.recyclerView = view.findViewById(R.id.recyclerViewNearMe)
         this.recyclerView.layoutManager = LinearLayoutManager(this.context)
         this.eventAdapter =
@@ -112,17 +112,6 @@ class NearMe : Fragment() {
         }
     }
 
-//    double queryValues() async {
-//        total = 0.0;
-//
-//        docs = await Firestore.instance
-//                .collection('myCollection')
-//            .snapshots()
-//            .documents((snapshot);
-//        docs.forEach((doc) => this.total += doc.data['amount']));
-//        debugPrint(this.total.toString());
-//        return total;
-//    }
 
     private fun findEventsNearMe() {
         database.collection("events")
