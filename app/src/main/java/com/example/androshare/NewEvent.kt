@@ -3,7 +3,6 @@ package com.example.androshare
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.location.Location
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -27,18 +26,12 @@ import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.util.*
 
+
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [NewEvent.OnFragmentInteractionListener] interface
- * to handle interaction events.
- * Use the [NewEvent.newInstance] factory method to
- * create an instance of this fragment.
- */
+
 class NewEvent : DialogFragment(), PlaceSelectionListener {
 
     private lateinit var database: FirebaseFirestore
@@ -49,9 +42,9 @@ class NewEvent : DialogFragment(), PlaceSelectionListener {
         super.onCreate(savedInstanceState)
 
         // Initialize places + DB
-        if (!Places.isInitialized()) {
+//        if (!Places.isInitialized()) {
             Places.initialize(context!!, getString(R.string.places_api_key))
-        }
+//        }
         database = FirebaseFirestore.getInstance()
     }
 
@@ -64,18 +57,12 @@ class NewEvent : DialogFragment(), PlaceSelectionListener {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
         // TODO the following causes null pointer exception fix it
         // autocomplete location: place return fields
-//        val locationAutocompleteFragment =
-//            fragmentManager!!.findFragmentById(R.id.event_location_autocomplete) as AutocompleteSupportFragment
-//        locationAutocompleteFragment.setPlaceFields(
-//            listOf(
-//                Place.Field.ID,
-//                Place.Field.NAME
-//            )
-//        )
-//        locationAutocompleteFragment.setOnPlaceSelectedListener(this)
+        val locationAutocompleteFragment =
+            this.childFragmentManager.findFragmentById(R.id.event_location_autocomplete) as AutocompleteSupportFragment
+        locationAutocompleteFragment?.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME))
+        locationAutocompleteFragment?.setOnPlaceSelectedListener(this)
 
 
         var startDate = LocalDateTime.now()
