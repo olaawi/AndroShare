@@ -163,6 +163,14 @@ class Dashboard : Fragment(), PlaceSelectionListener, CallbackListener {
         events[0]!!.addParticipant(user2)
         events[0]!!.addParticipant(user3)
         events[0]!!.addParticipant(user4)
+        events[0]!!.addParticipant(user4)
+        events[0]!!.addParticipant(user4)
+        events[0]!!.addParticipant(user4)
+        events[0]!!.addParticipant(user4)
+        events[0]!!.addParticipant(user4)
+        events[0]!!.addParticipant(user4)
+        events[0]!!.addParticipant(user4)
+
 
     }
 

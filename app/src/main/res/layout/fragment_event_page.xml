@@ -89,55 +89,16 @@
                 android:text="Description"
                 style="@style/Body1"/>
 
-            <!--            <ImageView-->
-            <!--                android:layout_width="100dp"-->
-            <!--                android:layout_height="100dp"-->
-            <!--                android:src="@drawable/ic_arrow_back_black_24dp"-->
-            <!--                android:id="@+id/nyc"/>-->
 
-<!--            <LinearLayout-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:orientation="horizontal"-->
-<!--                android:layout_gravity="center">-->
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:id="@+id/img1"/>
 
-<!--                <androidx.cardview.widget.CardView-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    app:cardCornerRadius="100dp">-->
-
-<!--                    <ImageView-->
-<!--                        android:layout_width="100dp"-->
-<!--                        android:layout_height="100dp"-->
-<!--                        android:src="@drawable/avatar7" />-->
-
-<!--                </androidx.cardview.widget.CardView>-->
-
-<!--                <androidx.cardview.widget.CardView-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    app:cardCornerRadius="100dp">-->
-
-<!--                    <ImageView-->
-<!--                        android:layout_width="100dp"-->
-<!--                        android:layout_height="100dp"-->
-<!--                        android:src="@drawable/avatar3" />-->
-
-<!--                </androidx.cardview.widget.CardView>-->
-
-<!--                <androidx.cardview.widget.CardView-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    app:cardCornerRadius="100dp">-->
-
-<!--                    <ImageView-->
-<!--                        android:layout_width="100dp"-->
-<!--                        android:layout_height="100dp"-->
-<!--                        android:src="@drawable/avatar10" />-->
-
-<!--                </androidx.cardview.widget.CardView>-->
-
-<!--            </LinearLayout>-->
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:id="@+id/img2"/>
 
             <GridView
                 android:id="@+id/photo_grid"
