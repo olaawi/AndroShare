@@ -2,10 +2,8 @@ package com.example.androshare
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.location.Location
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,7 +33,7 @@ private const val ARG_PARAM2 = "param2"
 class NewEvent : DialogFragment(), PlaceSelectionListener {
 
     private lateinit var database: FirebaseFirestore
-    private lateinit var eventLocation: Place
+    private lateinit var eventLocation: EventLocation
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,12 +55,11 @@ class NewEvent : DialogFragment(), PlaceSelectionListener {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        // TODO the following causes null pointer exception fix it
         // autocomplete location: place return fields
         val locationAutocompleteFragment =
             this.childFragmentManager.findFragmentById(R.id.event_location_autocomplete) as AutocompleteSupportFragment
-        locationAutocompleteFragment?.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME))
-        locationAutocompleteFragment?.setOnPlaceSelectedListener(this)
+        locationAutocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.LAT_LNG, Place.Field.ID, Place.Field.NAME))
+        locationAutocompleteFragment.setOnPlaceSelectedListener(this)
 
 
         var startDate = LocalDateTime.now()
@@ -198,8 +195,7 @@ class NewEvent : DialogFragment(), PlaceSelectionListener {
             val eventCreator = User("Hala", "Awisat", "email@gmail.com", "1234567890")
 
             // And finally create the event ..
-            // TODO location
-            val event = Event(eventTitle, eventDescription, eventCreator, eventType, startTime, endTime, Location("here"))
+            val event = Event(eventTitle, eventDescription, eventCreator, eventType, startTime, endTime, eventLocation)
 
             //TODO add event for user (admin)
 
@@ -229,8 +225,8 @@ class NewEvent : DialogFragment(), PlaceSelectionListener {
 
     // Places methods
     override fun onPlaceSelected(place: Place) {
-//        Toast.makeText(context,""+p0.name+p0.latLng, Toast.LENGTH_LONG).show()
-        this.eventLocation = place
+        Log.d("NewEvent-OnPlaceSelectedListener", "lng= " + place.latLng!!.longitude + " lat= " + place.latLng!!.latitude)
+        eventLocation = EventLocation(place.name!!, place.latLng!!.latitude, place.latLng!!.longitude)
     }
 
     override fun onError(status: Status) {

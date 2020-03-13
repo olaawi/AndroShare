@@ -3,7 +3,6 @@ package com.example.androshare
 import EventAdapter
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.ContentValues.TAG
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
@@ -15,27 +14,23 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
-import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.android.libraries.places.internal.db
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.android.synthetic.main.fragment_dashboard.*
-import java.lang.reflect.Type
 import java.time.LocalDateTime
 
-// TODO: Rename parameter arguments, choose names that match
+
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
+// TODO: change max radius
 // maximum radius to search events near me - in meters
-private const val MAX_RADIUS = 500
+private const val MAX_RADIUS = 5000
 
 class NearMe : Fragment() {
     private var param1: String? = null
@@ -84,9 +79,9 @@ class NearMe : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         this.recyclerView = view.findViewById(R.id.recyclerViewNearMe)
         this.recyclerView.layoutManager = LinearLayoutManager(this.context)
-        this.eventAdapter =
-            EventAdapter(this.context!!, this.events) { event: Event -> onEventClicked(event) }
-        this.recyclerView.adapter = this.eventAdapter
+//        this.eventAdapter =
+//            EventAdapter(this.context!!, this.events) { event: Event -> onEventClicked(event) }
+//        this.recyclerView.adapter = this.eventAdapter
 //        mLatitudeText = view.findViewById<View>(R.id.latitude_text) as TextView
 //        mLongitudeText = view.findViewById<View>(R.id.longitude_text) as TextView
     }
@@ -112,28 +107,76 @@ class NearMe : Fragment() {
         }
     }
 
-
     private fun findEventsNearMe() {
+        events.clear()
         database.collection("events")
             .get()
             .addOnSuccessListener { result ->
                 for (document in result) {
-                    Log.d("findEventsNearMe", "${document.id} => ${document.data}")
-                    if (currentLocation!!.distanceTo(document.get("location") as Location?) <= MAX_RADIUS) {
+                    Log.d("findEventsNearMe 1", "${document.id} => ${document.data}")
+                    val eventLng: Double = document.get("location.longitude")!! as Double
+                    val eventLat: Double = document.get("location.latitude")!! as Double
+                    val distance = FloatArray(1)
+                    Location.distanceBetween(
+                        eventLat,
+                        eventLng,
+                        this.currentLocation!!.latitude,
+                        this.currentLocation!!.longitude,
+                        distance
+                    )
+                    if (distance[0] <= MAX_RADIUS) {
+                        Log.d("findEventsNearMe 2", "Checked Distance")
+                        var eventType: Event.EventType = Event.EventType.PUBLIC_EVENT
+                        if (document.get("type")!! == "PRIVATE_EVENT") {
+                            eventType = Event.EventType.PRIVATE_EVENT
+                        }
+                        val startTime = LocalDateTime.of(
+                            (document.get("startTime.year")!! as Long).toInt(),
+                            (document.get("startTime.monthValue")!! as Long).toInt(),
+                            (document.get("startTime.dayOfMonth")!! as Long).toInt(),
+                            (document.get("startTime.hour")!! as Long).toInt(),
+                            (document.get("startTime.minute")!! as Long).toInt()
+                        )
+                        val endTime = LocalDateTime.of(
+                            (document.get("endTime.year")!! as Long).toInt(),
+                            (document.get("endTime.monthValue")!! as Long).toInt(),
+                            (document.get("endTime.dayOfMonth")!! as Long).toInt(),
+                            (document.get("endTime.hour")!! as Long).toInt(),
+                            (document.get("endTime.minute")!! as Long).toInt()
+                        )
                         currentEvent = Event(
                             (document.get("title") as String?)!!,
                             (document.get("description") as String?)!!,
-                            (document.get("creator") as User?)!!,
-                            (document.get("type") as Event.EventType?)!!,
-                            (document.get("startTime") as LocalDateTime?)!!,
-                            (document.get("endTime") as LocalDateTime?)!!,
-                            (document.get("location") as Location?)!!,
-                            document.get("id") as Int
+                            User(
+                                document.get("creator.givenName") as String,
+                                document.get("creator.familyName") as String,
+                                document.get("creator.email") as String,
+                                document.get("creator.id") as String
+                            ),
+                            eventType,
+                            startTime,
+                            endTime,
+                            EventLocation(
+                                document.get("location.name")!! as String,
+                                document.get("location.latitude")!! as Double,
+                                document.get("location.longitude")!! as Double
+                            ),
+                            (document.get("id")!! as Long).toInt()
                         )
                         events.add(currentEvent)
+                        Log.d(
+                            "findEventsNearMe 3",
+                            events[0]!!.title + " " + events[0]!!.creator.email
+                        )
                     }
                 }
                 // TODO: add fun to view items
+                this.eventAdapter =
+                    EventAdapter(
+                        this.context!!,
+                        this.events
+                    ) { event: Event -> onEventClicked(event) }
+                this.recyclerView.adapter = this.eventAdapter
             }
             .addOnFailureListener { exception ->
                 Log.d("findEventsNearMe", "Error getting documents: ", exception)
@@ -154,28 +197,20 @@ class NearMe : Fragment() {
                 if (task.isSuccessful && task.result != null) {
                     currentLocation = task.result
                     findEventsNearMe()
-//                    mLatitudeText!!.text = mLatitudeLabel+":   "+
+//                    mLatitudeText!!.text = "Lognitude"+":   "+
 //                            (currentLocation )!!.latitude
-//                    mLongitudeText!!.text = mLongitudeLabel+":   "+
+//                    mLongitudeText!!.text = "Latitude"+":   "+
 //                            (currentLocation )!!.longitude
+                    Log.d("getLastLocation - Longitude", (currentLocation)!!.longitude.toString())
+                    Log.d("getLastLocation - Latitude", (currentLocation)!!.latitude.toString())
                 } else {
-                    Log.w("getLastLocation", "getLastLocation:exception", task.exception)
-                    Toast.makeText(context, "no location detected", Toast.LENGTH_LONG).show()
+                    Log.d("getLastLocation", "getLastLocation:exception", task.exception)
+                    Toast.makeText(context, "No location detected", Toast.LENGTH_LONG).show()
 
                 }
             }
     }
 
-//    /**
-//     * Shows a [] using `text`.
-//     * @param text The Snackbar text.
-//     */
-//    private fun showMessage(text: String) {
-//        val container = view!!.findViewById<View>(R.id.container)
-//        if (container != null) {
-//            Toast.makeText(context, text, Toast.LENGTH_LONG).show()
-//        }
-//    }
 
     /**
      * Shows a [].

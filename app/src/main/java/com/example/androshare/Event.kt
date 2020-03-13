@@ -2,6 +2,7 @@ package com.example.androshare
 
 import android.location.Location
 import android.sax.StartElementListener
+import com.google.android.libraries.places.api.model.Place
 import java.io.FileDescriptor
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -14,7 +15,7 @@ class Event(
     type: EventType,
     startTime: LocalDateTime,
     endTime: LocalDateTime,
-    location: Location
+    location: EventLocation
     ) {
 
     var title: String = title
@@ -23,7 +24,7 @@ class Event(
     var type: EventType = type
     var startTime: LocalDateTime = startTime
     var endTime: LocalDateTime = endTime
-    var location: Location = location
+    var location: EventLocation = location
     var id: Int = 0
     val admins = mutableListOf<User>()
     val participants = mutableListOf<User>()
@@ -40,7 +41,7 @@ class Event(
         type: EventType,
         startTime: LocalDateTime,
         endTime: LocalDateTime,
-        location: Location,
+        location: EventLocation,
         id: Int
     ) : this(title, description, creator, type, startTime, endTime, location) {
         this.id = id
