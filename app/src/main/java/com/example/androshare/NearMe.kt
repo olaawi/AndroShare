@@ -22,11 +22,12 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.firebase.firestore.FirebaseFirestore
 import java.time.LocalDateTime
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
 
 
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+
 
 // TODO: change max radius
 // maximum radius to search events near me - in meters
@@ -60,10 +61,25 @@ class NearMe : Fragment() {
         database = FirebaseFirestore.getInstance()
         this.events = arrayListOf<Event?>()
 
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+        // TODO: check where to do fisrt location request to not get null later
+//        val mLocationRequest = LocationRequest.create()
+//        mLocationRequest.interval = 60000
+//        mLocationRequest.fastestInterval = 5000
+//        mLocationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+//        val mLocationCallback = object : LocationCallback() {
+//            override fun onLocationResult(locationResult: LocationResult?) {
+//                if (locationResult == null) {
+//                    return
+//                }
+//                for (location in locationResult.locations) {
+//                    if(location != null) {
+//                        Log.d("NearMe - onCreate", "first location request")
+//                    }
+//                }
+//            }
+//        }
+//        LocationServices.getFusedLocationProviderClient(context!!)
+//            .requestLocationUpdates(mLocationRequest, mLocationCallback, null)
     }
 
     override fun onCreateView(
@@ -204,7 +220,7 @@ class NearMe : Fragment() {
                     Log.d("getLastLocation - Longitude", (currentLocation)!!.longitude.toString())
                     Log.d("getLastLocation - Latitude", (currentLocation)!!.latitude.toString())
                 } else {
-                    Log.d("getLastLocation", "getLastLocation:exception", task.exception)
+                    Log.d("getLastLocation", "Task failed or result=null")
                     Toast.makeText(context, "No location detected", Toast.LENGTH_LONG).show()
 
                 }
@@ -254,18 +270,18 @@ class NearMe : Fragment() {
         // Provide an additional rationale to the user. This would happen if the user denied the
         // request previously, but didn't check the "Don't ask again" checkbox.
         if (shouldProvideRationale) {
-            Log.i(
+            Log.d(
                 "requestPermissions",
-                "Displaying permission rationale to provide additional context."
+                "shouldProvideRationale = true"
             )
-            showSnackbar("permission_rationale", android.R.string.ok,
+            showSnackbar("Please allow access to location to activate this service", android.R.string.ok,
                 View.OnClickListener {
                     // Request permission
                     startLocationPermissionRequest()
                 })
 
         } else {
-            Log.i("requestPermissions", "Requesting permission")
+            Log.d("requestPermissions", "Requesting permission")
             // Request permission. It's possible this can be auto answered if device policy
             // sets the permission in a given state or the user denied the permission
             // previously and checked "Never ask again".
@@ -356,22 +372,5 @@ class NearMe : Fragment() {
     companion object {
         //        private val TAG = "LocationProvider"
         private val REQUEST_PERMISSIONS_REQUEST_CODE = 34
-
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment NearMe.
-         */
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            NearMe().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
     }
 }

@@ -10,4 +10,6 @@
     <string name="close">close</string>
     <string name="myEvents">My Events</string>
     <string name="participants">Participants</string>
+    <string name="avatar">Avatar</string>
+    <string name="editAvatar">Edit avatar</string>
 </resources>

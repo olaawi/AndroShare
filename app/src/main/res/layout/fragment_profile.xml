@@ -1,63 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     tools:context=".Profile">
 
     <!--    Action bar-->
-    <com.google.android.material.appbar.AppBarLayout android:layout_width="match_parent"
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="3dp">
+
         <androidx.appcompat.widget.Toolbar
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_scrollFlags="scroll|enterAlways" >
+            app:layout_scrollFlags="scroll|enterAlways">
+
             <TextView
+                style="@style/Headline5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/profile"
-                style="@style/Headline5"/>
+                android:text="@string/profile" />
         </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+<!--    <androidx.core.widget.NestedScrollView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
 
         <!-- Your scrolling content -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+<!--    <RelativeLayout-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="550dp"-->
+<!--        android:layout_gravity="center"-->
+<!--        >-->
+
+        <RelativeLayout
+            android:layout_width="270dp"
+            android:layout_height="450dp"
+            android:layout_gravity="center"
+            android:background="@drawable/rectangle1">
 
             <ImageView
+                android:id="@+id/profile_avatar"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:layout_gravity="center_horizontal"/>
+                android:layout_centerHorizontal="true"
+                android:contentDescription="@string/avatar" />
 
             <TextView
+                android:id="@+id/profile_edit_avatar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/profile_avatar"
+                android:layout_centerHorizontal="true"
+                android:text="@string/editAvatar" />
+
+            <TextView
+                android:id="@+id/blank1"
+                style="@style/Body1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/profile_edit_avatar"
+                android:layout_centerHorizontal="true" />
+
+            <TextView
                 android:id="@+id/profile_name"
-                android:layout_gravity="center"/>
-
-            <TextView
+                style="@style/Headline5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/myEvents"
-                />
+                android:layout_below="@+id/blank1"
+                android:layout_centerHorizontal="true" />
 
             <TextView
+                android:id="@+id/blank2"
+                style="@style/Body1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/profile_my_events"
-                />
+                android:layout_below="@+id/profile_name"
+                android:layout_centerHorizontal="true" />
 
-        </LinearLayout>
+            <TextView
+                android:id="@+id/profile_my_events_text"
+                style="@style/Body1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/blank2"
+                android:layout_centerHorizontal="true"
+                android:text="@string/myEvents" />
 
-    </androidx.core.widget.NestedScrollView>
+            <TextView
+                android:id="@+id/profile_my_events_count"
+                style="@style/Body1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/profile_my_events_text"
+                android:layout_centerHorizontal="true" />
+
+            <TextView
+                android:id="@+id/profile_logout"
+                style="@style/Headline6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:text="@string/logout"/>
+
+        </RelativeLayout>
+
+
+
+<!--    </RelativeLayout>-->
+<!--    </androidx.core.widget.NestedScrollView>-->
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
