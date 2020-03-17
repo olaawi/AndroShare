@@ -16,6 +16,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -104,14 +105,14 @@ class NearMe : Fragment() {
 
     private fun onEventClicked(event: Event) {
         // TODO implement
-//        val eventPageFragment = EventPage(event)
-//        val transaction = fragmentManager!!.beginTransaction()
-//        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-//        transaction
-//            .add(android.R.id.content, eventPageFragment)
-//            .addToBackStack(null)
-//            .commit()
-//        Toast.makeText(context, "Clicked: ${event.title}", Toast.LENGTH_LONG).show()
+        val eventPageFragment = JoinEvent(event)
+        val transaction = fragmentManager!!.beginTransaction()
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+        transaction
+            .add(android.R.id.content, eventPageFragment)
+            .addToBackStack(null)
+            .commit()
+        Toast.makeText(context, "Clicked: ${event.title}", Toast.LENGTH_LONG).show()
     }
 
     override fun onStart() {
@@ -143,8 +144,10 @@ class NearMe : Fragment() {
                     if (distance[0] <= MAX_RADIUS) {
                         Log.d("findEventsNearMe 2", "Checked Distance")
                         var eventType: Event.EventType = Event.EventType.PUBLIC_EVENT
+                        var pin: String = "-1-1"
                         if (document.get("type")!! == "PRIVATE_EVENT") {
                             eventType = Event.EventType.PRIVATE_EVENT
+                            pin = document.get("pin")!! as String
                         }
                         val startTime = LocalDateTime.of(
                             (document.get("startTime.year")!! as Long).toInt(),
@@ -177,7 +180,8 @@ class NearMe : Fragment() {
                                 document.get("location.latitude")!! as Double,
                                 document.get("location.longitude")!! as Double
                             ),
-                            (document.get("id")!! as Long).toInt()
+                            (document.get("id")!! as Long).toInt(),
+                            pin
                         )
                         events.add(currentEvent)
                         Log.d(

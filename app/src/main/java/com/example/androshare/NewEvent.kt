@@ -25,11 +25,6 @@ import java.time.format.FormatStyle
 import java.util.*
 
 
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-
 class NewEvent : DialogFragment(), PlaceSelectionListener {
 
     private lateinit var database: FirebaseFirestore
@@ -191,11 +186,11 @@ class NewEvent : DialogFragment(), PlaceSelectionListener {
             }
 
             // Creator
-            // TODO get current logged in user
+            // TODO get current logged in user + add pin if private
             val eventCreator = User("Hala", "Awisat", "email@gmail.com", "1234567890")
 
             // And finally create the event ..
-            val event = Event(eventTitle, eventDescription, eventCreator, eventType, startTime, endTime, eventLocation)
+            val event = Event(eventTitle, eventDescription, eventCreator, eventType, startTime, endTime, eventLocation, "1556")
 
             //TODO add event for user (admin)
 
