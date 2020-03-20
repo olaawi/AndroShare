@@ -24,6 +24,8 @@ import androidx.fragment.app.FragmentTransaction
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.fragment_event_page.*
 import kotlinx.android.synthetic.main.fragment_event_page.view.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class EventPage(private val event: Event) : Fragment() {
@@ -152,7 +154,8 @@ class EventPage(private val event: Event) : Fragment() {
 
             for (img in pickedImages) {
                 // Upload to storage
-                val storageRef = storage.getReference("images/my_photo.jpg")
+//                val storageRef = storage.getReference("images/my_photo.jpg")
+                val storageRef = storage.getReference(event.id + "/" + UUID.randomUUID().toString() + ".jpg")
                 storageRef.putFile(imageUri!!).addOnSuccessListener {
                     Log.d("upload", "image added successfully!")
                 }

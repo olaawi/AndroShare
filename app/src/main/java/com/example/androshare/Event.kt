@@ -7,6 +7,7 @@ import java.io.FileDescriptor
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
+import java.util.*
 
 class Event(
     title: String,
@@ -25,13 +26,14 @@ class Event(
     var startTime: LocalDateTime = startTime
     var endTime: LocalDateTime = endTime
     var location: EventLocation = location
-    var id: Int = 0
+    var id: String = ""
     val admins = mutableListOf<User>()
     val participants = mutableListOf<User>()
 
     init {
-        idGenerator++
-        this.id = getNewId()
+//        idGenerator++
+//        this.id = getNewId()
+        UUID.randomUUID().toString()
     }
 
     constructor(
@@ -42,20 +44,20 @@ class Event(
         startTime: LocalDateTime,
         endTime: LocalDateTime,
         location: EventLocation,
-        id: Int
+        id: String
     ) : this(title, description, creator, type, startTime, endTime, location) {
         this.id = id
     }
 
-    companion object {
-        var idGenerator: Int = 0;
+//    companion object {
+//        var idGenerator: Int = 0;
+//
+//        fun getNewId(): Int {
+//            return idGenerator
+//        }
+//    }
 
-        fun getNewId(): Int {
-            return idGenerator
-        }
-    }
-
-    public enum class EventType {
+    enum class EventType {
         PUBLIC_EVENT, PRIVATE_EVENT
     }
 
