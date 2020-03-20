@@ -71,8 +71,8 @@ class Dashboard : Fragment(), PlaceSelectionListener, CallbackListener {
                 LocalDateTime.now(),
                 LocalDateTime.now(),
                 EventLocation("dummy 1", 0.0, 0.0),
-                "111",
-                "0000"
+                "1111",
+                "1111"
             )
         )
 
@@ -84,8 +84,8 @@ class Dashboard : Fragment(), PlaceSelectionListener, CallbackListener {
                 LocalDateTime.now(),
                 LocalDateTime.now(),
                 EventLocation("dummy 2", 0.0, 0.0),
-                "222",
-                "0000"
+                "2222",
+                "2222"
             )
         )
 
@@ -97,8 +97,8 @@ class Dashboard : Fragment(), PlaceSelectionListener, CallbackListener {
                 LocalDateTime.now(),
                 LocalDateTime.now(),
                 EventLocation("dummy 3", 0.0, 0.0),
-                "333",
-                "0000"
+                "3333",
+                "3333"
             )
         )
 
@@ -110,8 +110,8 @@ class Dashboard : Fragment(), PlaceSelectionListener, CallbackListener {
                 LocalDateTime.now(),
                 LocalDateTime.now(),
                 EventLocation("dummy 4", 0.0, 0.0),
-                "444",
-                "0000"
+                "4444",
+                "4444"
             )
         )
 
@@ -123,8 +123,8 @@ class Dashboard : Fragment(), PlaceSelectionListener, CallbackListener {
                 LocalDateTime.now(),
                 LocalDateTime.now(),
                 EventLocation("dummy 5", 0.0, 0.0),
-                "555",
-                "0000"
+                "5555",
+                "5555"
             )
         )
 
@@ -136,8 +136,8 @@ class Dashboard : Fragment(), PlaceSelectionListener, CallbackListener {
                 LocalDateTime.now(),
                 LocalDateTime.now(),
                 EventLocation("dummy 6", 0.0, 0.0),
-                "666",
-                "0000"
+                "6666",
+                "6666"
             )
         )
 
@@ -149,8 +149,8 @@ class Dashboard : Fragment(), PlaceSelectionListener, CallbackListener {
                 LocalDateTime.now(),
                 LocalDateTime.now(),
                 EventLocation("dummy 7", 0.0, 0.0),
-                "777",
-                "0000"
+                "7777",
+                "7777"
             )
         )
 
@@ -162,8 +162,8 @@ class Dashboard : Fragment(), PlaceSelectionListener, CallbackListener {
                 LocalDateTime.now(),
                 LocalDateTime.now(),
                 EventLocation("dummy 8", 0.0, 0.0),
-                "888",
-                "0000"
+                "8888",
+                "8888"
             )
         )
 
