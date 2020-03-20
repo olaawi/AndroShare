@@ -16,7 +16,8 @@ class Event(
     type: EventType,
     startTime: LocalDateTime,
     endTime: LocalDateTime,
-    location: EventLocation
+    location: EventLocation,
+    pin: String
     ) {
 
     var title: String = title
@@ -29,6 +30,7 @@ class Event(
     var id: String = ""
     val admins = mutableListOf<User>()
     val participants = mutableListOf<User>()
+    val pin = pin
 
     init {
 //        idGenerator++
@@ -44,8 +46,9 @@ class Event(
         startTime: LocalDateTime,
         endTime: LocalDateTime,
         location: EventLocation,
+        pin: String,
         id: String
-    ) : this(title, description, creator, type, startTime, endTime, location) {
+    ) : this(title, description, creator, type, startTime, endTime, location, pin) {
         this.id = id
     }
 

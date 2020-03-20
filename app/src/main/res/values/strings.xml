@@ -10,4 +10,13 @@
     <string name="close">close</string>
     <string name="myEvents">My Events</string>
     <string name="participants">Participants</string>
+    <string name="avatar">Avatar</string>
+    <string name="editAvatar">Edit avatar</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="enterPin">Enter Pin:</string>
+    <string name="join">Join</string>
+    <string name="pin">PIN</string>
+    <string name="this_is_a_private_event_please_enter_pin_to_join">This is a private event, please enter PIN to join:</string>
+    <string name="cancel">Cancel</string>
 </resources>
