@@ -1,6 +1,7 @@
 package com.example.androshare
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -73,5 +74,14 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+
+    override fun onBackPressed() {
+        val fragment = supportFragmentManager.findFragmentById(android.R.id.content)
+
+        if (!(fragment is IOnBackPressed && fragment.customOnBackPressed())) {
+            super.onBackPressed()
+        }
+    }
+
 }
 

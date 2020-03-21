@@ -180,7 +180,7 @@ class NearMe : Fragment() {
                                 document.get("location.latitude")!! as Double,
                                 document.get("location.longitude")!! as Double
                             ),
-                            (document.get("id")!! as Long).toInt(),
+                            document.get("id")!! as String,
                             pin
                         )
                         events.add(currentEvent)

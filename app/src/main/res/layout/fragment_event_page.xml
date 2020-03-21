@@ -2,10 +2,10 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/event_page_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/primaryColor"
-    android:id="@+id/event_page_root"
     tools:context=".EventPage">
 
     <!--    Action bar-->
@@ -38,7 +38,17 @@
                     android:layout_height="wrap_content"
                     android:layout_toStartOf="@id/event_more"
                     android:backgroundTint="@color/accentColor"
-                    android:src="@drawable/ic_add_a_photo_black_24dp" />
+                    android:src="@drawable/ic_add_a_photo_black_24dp"
+                    android:visibility="visible"/>
+
+                <ImageView
+                    android:id="@+id/event_download"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toStartOf="@id/event_more"
+                    android:backgroundTint="@color/accentColor"
+                    android:src="@drawable/ic_file_download_black_24dp"
+                    android:visibility="invisible"/>
 
                 <ImageView
                     android:id="@+id/event_more"
@@ -65,53 +75,67 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+
         <LinearLayout
+            android:id="@+id/event_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:id="@+id/event_bar">
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="8dp"/>
 
             <TextView
                 android:id="@+id/event_title"
+                style="@style/Headline5"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:scrollHorizontally="false"
                 android:layout_gravity="center"
+                android:scrollHorizontally="false"
                 android:text="Title"
-                android:textAlignment="center"
-                style="@style/Headline5"/>
+                android:textAlignment="center" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="8dp"/>
 
             <TextView
                 android:id="@+id/event_description"
+                style="@style/Body1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="Description"
-                style="@style/Body1"/>
+                android:text="Description" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="8dp"/>
 
-            <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:id="@+id/img1"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="8dp"/>
 
-            <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:id="@+id/img2"/>
+            <View
+                android:layout_width="396dp"
+                android:layout_height="1dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@color/primaryDarkColor"/>
 
-            <GridView
-                android:id="@+id/photo_grid"
-                android:layout_width="wrap_content"
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="8dp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/images_grid"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:horizontalSpacing="24dp"
-                android:numColumns="auto_fit"
-                android:verticalSpacing="24dp" />
-
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="8dp" />
 
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

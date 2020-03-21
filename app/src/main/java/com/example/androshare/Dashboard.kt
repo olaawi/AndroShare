@@ -48,6 +48,7 @@ class Dashboard : Fragment(), PlaceSelectionListener, CallbackListener {
     private lateinit var eventAdapter: EventAdapter
     private lateinit var events: ArrayList<Event?>
     private lateinit var newEventButton: View
+    lateinit var eventPageFragment : EventPage
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -191,7 +192,7 @@ class Dashboard : Fragment(), PlaceSelectionListener, CallbackListener {
     }
 
     private fun onEventClicked(event: Event) {
-        val eventPageFragment = EventPage(event)
+        eventPageFragment = EventPage(event)
         val transaction = fragmentManager!!.beginTransaction()
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
         transaction

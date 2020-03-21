@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/grid_image"
+        android:layout_width="96dp"
+        android:layout_height="96dp" />
+
+    <View
+        android:id="@+id/select_overlay"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:foreground="#55000000"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/image_checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:src="@drawable/ic_check_circle_black_24dp"
+        android:tint="@color/primaryColor"
+        android:visibility="invisible" />
+
+</androidx.cardview.widget.CardView>
