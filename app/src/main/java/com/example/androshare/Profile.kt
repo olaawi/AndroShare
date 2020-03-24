@@ -45,7 +45,7 @@ class Profile : Fragment() {
 //            nameTextView!!.text = acct.givenName + acct.familyName
 //            val user =  database.collection("users").whereEqualTo("id", acct.id)
 //        val user = database.collection("users").whereEqualTo("id", "RHofcmS36qEcPIihjqwe")
-        database.collection("users").whereEqualTo("givenName", "Hala-man")
+        database.collection("users").whereEqualTo("givenName", acct!!.givenName)
             .get()
             .addOnSuccessListener { result ->
                 for (document in result) {

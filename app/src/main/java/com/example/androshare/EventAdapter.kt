@@ -1,8 +1,8 @@
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.androshare.Event
@@ -21,6 +21,7 @@ class EventAdapter(var context: Context, val events: ArrayList<Event?>, private 
         }
     }
 
+    @SuppressLint("InflateParams")
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventHolder {
         val view: View = LayoutInflater.from(parent.context).inflate(R.layout.event_in_dashboard, null)
         return EventHolder(view)

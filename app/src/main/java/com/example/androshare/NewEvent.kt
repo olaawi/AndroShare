@@ -22,7 +22,6 @@ import kotlinx.android.synthetic.main.new_event_dialog.*
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
-import java.util.*
 
 
 class NewEvent : DialogFragment(), PlaceSelectionListener {
@@ -54,7 +53,7 @@ class NewEvent : DialogFragment(), PlaceSelectionListener {
         val locationAutocompleteFragment =
             this.childFragmentManager.findFragmentById(R.id.event_location_autocomplete) as AutocompleteSupportFragment
         locationAutocompleteFragment.setPlaceFields(
-            Arrays.asList(
+            listOf(
                 Place.Field.LAT_LNG,
                 Place.Field.ID,
                 Place.Field.NAME
@@ -243,7 +242,6 @@ class NewEvent : DialogFragment(), PlaceSelectionListener {
                     Snackbar.make(view, "Event created successfully!", Snackbar.LENGTH_LONG)
                         .setAction("Action", null)
                         .show()
-
 //                    }
                 }
                 .addOnFailureListener { exception ->

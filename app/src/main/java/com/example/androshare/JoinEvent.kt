@@ -25,8 +25,7 @@ class JoinEvent(private val event: Event) : DialogFragment() {
     private lateinit var confirmButton: Button
     private lateinit var cancelButton: Button
     private lateinit var database: FirebaseFirestore
-
-
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         database = FirebaseFirestore.getInstance()
@@ -88,7 +87,6 @@ class JoinEvent(private val event: Event) : DialogFragment() {
                             }
                             .addOnFailureListener {
                                 Log.e("JoinEvent", "Error adding event to user")
-
                             }
                     }
                     .addOnFailureListener { exception ->

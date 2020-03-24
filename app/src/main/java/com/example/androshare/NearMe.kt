@@ -23,11 +23,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.firebase.firestore.FirebaseFirestore
 import java.time.LocalDateTime
-import com.google.android.gms.location.LocationResult
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
-
-
+import com.google.android.material.snackbar.Snackbar
 
 
 // TODO: change max radius
@@ -35,9 +31,6 @@ import com.google.android.gms.location.LocationRequest
 private const val MAX_RADIUS = 5000
 
 class NearMe : Fragment() {
-    private var param1: String? = null
-    private var param2: String? = null
-    private var listener: Dashboard.OnFragmentInteractionListener? = null
 
     //Provides the entry point to the Fused Location Provider API.
     private var mFusedLocationClient: FusedLocationProviderClient? = null
@@ -104,7 +97,6 @@ class NearMe : Fragment() {
     }
 
     private fun onEventClicked(event: Event) {
-        // TODO implement
         val eventPageFragment = JoinEvent(event)
         Log.d("NearMe - onEventClicked", event.id)
         val transaction = fragmentManager!!.beginTransaction()
@@ -113,7 +105,7 @@ class NearMe : Fragment() {
             .add(android.R.id.content, eventPageFragment)
             .addToBackStack(null)
             .commit()
-        Toast.makeText(context, "Clicked: ${event.title}", Toast.LENGTH_LONG).show()
+//        Toast.makeText(context, "Clicked: ${event.title}", Toast.LENGTH_LONG).show()
     }
 
     override fun onStart() {
@@ -144,7 +136,7 @@ class NearMe : Fragment() {
                     )
                     if (distance[0] <= MAX_RADIUS) {
                         var eventType: Event.EventType = Event.EventType.PUBLIC_EVENT
-                        var pin: String = "-1-1"
+                        var pin = "0000"
                         if (document.get("type")!! == "PRIVATE_EVENT") {
                             eventType = Event.EventType.PRIVATE_EVENT
                             pin = document.get("pin")!! as String
@@ -184,14 +176,6 @@ class NearMe : Fragment() {
                         )
                         currentEvent.id = document.get("id")!! as String
                         events.add(currentEvent)
-                        Log.d(
-                            "NearMe-findEventsNearMe2",
-                            document.get("id")!! as String
-                        )
-                        Log.d(
-                            "NearMe-findEventsNearMe3",
-                            events[0]!!.title + ", " + events[0]!!.id
-                        )
                     }
                 }
                 // TODO: add fun to view items
@@ -236,21 +220,13 @@ class NearMe : Fragment() {
     }
 
 
-    /**
-     * Shows a [].
-     * @param mainTextStringId The id for the string resource for the Snackbar text.
-     * *
-     * @param actionStringId   The text of the action item.
-     * *
-     * @param listener         The listener associated with the Snackbar action.
-     */
-    private fun showSnackbar(
-        mainTextStringId: String, actionStringId: Int,
-        listener: View.OnClickListener
-    ) {
-
-        Toast.makeText(context, mainTextStringId, Toast.LENGTH_LONG).show()
-    }
+//    private fun showSnackbar(
+//        mainTextStringId: String, actionStringId: Int,
+//        listener: View.OnClickListener
+//    ) {
+//
+//        Toast.makeText(context, mainTextStringId, Toast.LENGTH_LONG).show()
+//    }
 
     ////////////////////
     private fun checkPermissions(): Boolean {
@@ -282,11 +258,19 @@ class NearMe : Fragment() {
                 "requestPermissions",
                 "shouldProvideRationale = true"
             )
-            showSnackbar("Please allow access to location to activate this service", android.R.string.ok,
-                View.OnClickListener {
-                    // Request permission
-                    startLocationPermissionRequest()
-                })
+            Snackbar.make(
+                this.view!!,
+                "Please allow access to location to activate this service",
+                Snackbar.LENGTH_LONG
+            ).setAction(android.R.string.ok) {
+                // Request permission
+                startLocationPermissionRequest()
+            }
+//            showSnackbar("Please allow access to location to activate this service", android.R.string.ok,
+//                View.OnClickListener {
+//                    // Request permission
+//                    startLocationPermissionRequest()
+//                })
 
         } else {
             Log.d("requestPermissions", "Requesting permission")
@@ -325,27 +309,45 @@ class NearMe : Fragment() {
                 // again" prompts). Therefore, a user interface affordance is typically implemented
                 // when permissions are denied. Otherwise, your app could appear unresponsive to
                 // touches or interactions which have required permissions.
-                showSnackbar("permission_denied_explanation", R.string.settings,
-                    View.OnClickListener {
-                        // Build intent that displays the App settings screen.
-                        val intent = Intent()
-                        intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-                        val uri = Uri.fromParts(
-                            "package",
-                            BuildConfig.APPLICATION_ID, null
-                        )
-                        intent.data = uri
-                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                        startActivity(intent)
-                    })
+
+                Snackbar.make(
+                    this.view!!,
+                    "permission_denied_explanation",
+                    Snackbar.LENGTH_LONG
+                ).setAction(R.string.settings) {
+                    // Build intent that displays the App settings screen.
+                    val intent = Intent()
+                    intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                    val uri = Uri.fromParts(
+                        "package",
+                        BuildConfig.APPLICATION_ID, null
+                    )
+                    intent.data = uri
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    startActivity(intent)
+                }
+
+//                showSnackbar("permission_denied_explanation", R.string.settings,
+//                    View.OnClickListener {
+//                        // Build intent that displays the App settings screen.
+//                        val intent = Intent()
+//                        intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+//                        val uri = Uri.fromParts(
+//                            "package",
+//                            BuildConfig.APPLICATION_ID, null
+//                        )
+//                        intent.data = uri
+//                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+//                        startActivity(intent)
+//                    })
             }
         }
     }
     ////////////////////
 
-    fun onButtonPressed(uri: Uri) {
-        this.listener?.onFragmentInteraction(uri)
-    }
+//    fun onButtonPressed(uri: Uri) {
+//        this.listener?.onFragmentInteraction(uri)
+//    }
 
 //    override fun onAttach(context: Context) {
 //        super.onAttach(context)
@@ -358,7 +360,6 @@ class NearMe : Fragment() {
 
     override fun onDetach() {
         super.onDetach()
-        listener = null
     }
 
     /**
@@ -372,13 +373,13 @@ class NearMe : Fragment() {
      * (http://developer.android.com/training/basics/fragments/communicating.html)
      * for more information.
      */
-    interface OnFragmentInteractionListener {
-        fun onFragmentInteraction(uri: Uri)
-    }
+//    interface OnFragmentInteractionListener {
+//        fun onFragmentInteraction(uri: Uri)
+//    }
 
 
     companion object {
         //        private val TAG = "LocationProvider"
-        private val REQUEST_PERMISSIONS_REQUEST_CODE = 34
+        private const val REQUEST_PERMISSIONS_REQUEST_CODE = 34
     }
 }

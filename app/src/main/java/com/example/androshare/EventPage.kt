@@ -1,6 +1,7 @@
 package com.example.androshare
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -31,7 +32,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.fragment_event_page.*
 import kotlinx.android.synthetic.main.fragment_event_page.view.*
-import java.text.ParsePosition
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -84,7 +84,7 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
         view.event_description.text = event.description
         initParticipantsList()
         initGrid(view)
-        ViewCompat.setNestedScrollingEnabled(view.findViewById(R.id.event_bar), true);
+        ViewCompat.setNestedScrollingEnabled(view.findViewById(R.id.event_bar), true)
     }
 
     private fun uploadImage() {
@@ -138,7 +138,7 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
         intent.addCategory(Intent.CATEGORY_OPENABLE)
         intent.type = "image/*"
-        startActivityForResult(intent, IMAGE_PICK_CODE);
+        startActivityForResult(intent, IMAGE_PICK_CODE)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -202,6 +202,7 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun initParticipantsList() {
         val linearLayout = LinearLayout(context)
         val linearLayoutParams = LinearLayout.LayoutParams(
