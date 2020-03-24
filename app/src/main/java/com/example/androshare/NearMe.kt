@@ -106,6 +106,7 @@ class NearMe : Fragment() {
     private fun onEventClicked(event: Event) {
         // TODO implement
         val eventPageFragment = JoinEvent(event)
+        Log.d("NearMe - onEventClicked", event.id)
         val transaction = fragmentManager!!.beginTransaction()
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
         transaction
@@ -130,7 +131,7 @@ class NearMe : Fragment() {
             .get()
             .addOnSuccessListener { result ->
                 for (document in result) {
-                    Log.d("findEventsNearMe 1", "${document.id} => ${document.data}")
+                    Log.d("NearMe-findEventsNearMe1", "${document.id} => ${document.data}")
                     val eventLng: Double = document.get("location.longitude")!! as Double
                     val eventLat: Double = document.get("location.latitude")!! as Double
                     val distance = FloatArray(1)
@@ -142,7 +143,6 @@ class NearMe : Fragment() {
                         distance
                     )
                     if (distance[0] <= MAX_RADIUS) {
-                        Log.d("findEventsNearMe 2", "Checked Distance")
                         var eventType: Event.EventType = Event.EventType.PUBLIC_EVENT
                         var pin: String = "-1-1"
                         if (document.get("type")!! == "PRIVATE_EVENT") {
@@ -180,13 +180,17 @@ class NearMe : Fragment() {
                                 document.get("location.latitude")!! as Double,
                                 document.get("location.longitude")!! as Double
                             ),
-                            document.get("id")!! as String,
                             pin
                         )
+                        currentEvent.id = document.get("id")!! as String
                         events.add(currentEvent)
                         Log.d(
-                            "findEventsNearMe 3",
-                            events[0]!!.title + " " + events[0]!!.creator.email
+                            "NearMe-findEventsNearMe2",
+                            document.get("id")!! as String
+                        )
+                        Log.d(
+                            "NearMe-findEventsNearMe3",
+                            events[0]!!.title + ", " + events[0]!!.id
                         )
                     }
                 }

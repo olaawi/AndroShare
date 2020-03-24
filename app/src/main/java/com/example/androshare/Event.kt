@@ -2,6 +2,7 @@ package com.example.androshare
 
 import android.location.Location
 import android.sax.StartElementListener
+import android.util.Log
 import com.google.android.libraries.places.api.model.Place
 import java.io.FileDescriptor
 import java.time.LocalDateTime
@@ -27,7 +28,7 @@ class Event(
     var startTime: LocalDateTime = startTime
     var endTime: LocalDateTime = endTime
     var location: EventLocation = location
-    var id: String = ""
+    var id: String
     val admins = mutableListOf<User>()
     val participants = mutableListOf<User>()
     val pin = pin
@@ -35,22 +36,23 @@ class Event(
     init {
 //        idGenerator++
 //        this.id = getNewId()
-        UUID.randomUUID().toString()
+        id = UUID.randomUUID().toString()
     }
 
-    constructor(
-        title: String,
-        description: String,
-        creator: User,
-        type: EventType,
-        startTime: LocalDateTime,
-        endTime: LocalDateTime,
-        location: EventLocation,
-        pin: String,
-        id: String
-    ) : this(title, description, creator, type, startTime, endTime, location, pin) {
-        this.id = id
-    }
+//    constructor(
+//        title: String,
+//        description: String,
+//        creator: User,
+//        type: EventType,
+//        startTime: LocalDateTime,
+//        endTime: LocalDateTime,
+//        location: EventLocation,
+//        pin: String,
+//        id: String
+//    ) : this(title, description, creator, type, startTime, endTime, location, pin) {
+//        this.id = id
+//        Log.d("Event-Constructor", "id= " + this.id)
+//    }
 
 //    companion object {
 //        var idGenerator: Int = 0;

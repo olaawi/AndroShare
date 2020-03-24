@@ -1,7 +1,7 @@
 package com.example.androshare
 
-import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -39,6 +40,7 @@ class JoinEvent(private val event: Event) : DialogFragment() {
         return inflater.inflate(R.layout.fragment_join_event, container, false)
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         titleTextView = view.findViewById(R.id.join_event_title) as TextView
@@ -60,36 +62,71 @@ class JoinEvent(private val event: Event) : DialogFragment() {
         }
 
         confirmButton.setOnClickListener {
-            //            if (event.pin != pinEditText.text) {
-//                Snackbar.make(view, "Wrong PIN, try again!", Snackbar.LENGTH_LONG)
-//                    .setAction("Action", null)
-//                    .show()
-//            } else {
-//                //TODO add event for user + add user as participant
-//                database.collection("events").get(event)
-//                    .addOnSuccessListener { documentReference ->
-//                        Log.d(
-//                            "newEvent",
-//                            "Event added with ID: ${documentReference.id}"
-//                        )
-//                    }
-//                    .addOnFailureListener { exception ->
-//                        Log.w("newEvent", "Error adding event", exception)
-//                    }
-//
-            this.dismiss()
-            Snackbar.make(view, "Successfully joined event!", Snackbar.LENGTH_LONG)
-                .setAction("Action", null)
-                .show()
-//            }
+            if (event.type == Event.EventType.PRIVATE_EVENT && event.pin != pinEditText.text) {
+                Snackbar.make(view, "Wrong PIN, try again!", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null)
+                    .show()
+            } else {
+                //TODO add event for user + add user as participant
+                val account = GoogleSignIn.getLastSignedInAccount(context)
+                val user = User(
+                    account!!.givenName!!,
+                    account.familyName!!,
+                    account.email!!,
+                    account.id!!
+                )
+                // add event to user
+                val doc1 = database.collection("users").document(account.id!!)
+                doc1.get()
+                    .addOnSuccessListener { document ->
+                        val eventsList = document.get("events") as ArrayList<String>
+                        eventsList.add(event.id)
+                        database.collection("users").document(account.id!!)
+                            .update("events", eventsList)
+                            .addOnSuccessListener {
+                                Log.d("JoinEvent", "Added event to user")
+                            }
+                            .addOnFailureListener {
+                                Log.e("JoinEvent", "Error adding event to user")
 
+                            }
+                    }
+                    .addOnFailureListener { exception ->
+                        Log.e("JoinEvent", "Error adding event to user", exception)
+                    }
+                // add user as participant
+                val doc = database.collection("events").document(event.id)
+                doc.get()
+                    .addOnSuccessListener { document ->
+                        val usersList = document.get("participants") as ArrayList<User>
+                        usersList.add(user)
+                        database.collection("events").document(event.id)
+                            .update("participants", usersList)
+                            .addOnSuccessListener {
+                                Log.d("JoinEvent", "Joined event with ID: ${document.id}")
+                                this.dismiss()
+                                Snackbar.make(
+                                    view,
+                                    "Successfully joined event!",
+                                    Snackbar.LENGTH_LONG
+                                )
+                                    .setAction("Action", null)
+                                    .show()
+                            }
+                            .addOnFailureListener {
+                                Log.e("JoinEvent", "Error joining event")
+                                this.dismiss()
+                            }
+                    }
+                    .addOnFailureListener { exception ->
+                        Log.e("JoinEvent", "Error joining event", exception)
+                        this.dismiss()
+                    }
+            }
         }
-
         cancelButton.setOnClickListener {
             this.dismiss()
         }
-
-
     }
 
 //    override fun onAttach(context: Context) {
@@ -106,20 +143,9 @@ class JoinEvent(private val event: Event) : DialogFragment() {
 //        listener = null
 //    }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     *
-     *
-     * See the Android Training lesson [Communicating with Other Fragments]
-     * (http://developer.android.com/training/basics/fragments/communicating.html)
-     * for more information.
-     */
-    interface OnFragmentInteractionListener {
-        fun onFragmentInteraction(uri: Uri)
-    }
+//    interface OnFragmentInteractionListener {
+//        fun onFragmentInteraction(uri: Uri)
+//    }
 
 //companion object {
 //}

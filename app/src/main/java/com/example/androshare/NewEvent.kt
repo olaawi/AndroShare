@@ -36,7 +36,7 @@ class NewEvent : DialogFragment(), PlaceSelectionListener {
 
         // Initialize places + DB
 //        if (!Places.isInitialized()) {
-            Places.initialize(context!!, getString(R.string.places_api_key))
+        Places.initialize(context!!, getString(R.string.places_api_key))
 //        }
         database = FirebaseFirestore.getInstance()
     }
@@ -53,7 +53,13 @@ class NewEvent : DialogFragment(), PlaceSelectionListener {
         // autocomplete location: place return fields
         val locationAutocompleteFragment =
             this.childFragmentManager.findFragmentById(R.id.event_location_autocomplete) as AutocompleteSupportFragment
-        locationAutocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.LAT_LNG, Place.Field.ID, Place.Field.NAME))
+        locationAutocompleteFragment.setPlaceFields(
+            Arrays.asList(
+                Place.Field.LAT_LNG,
+                Place.Field.ID,
+                Place.Field.NAME
+            )
+        )
         locationAutocompleteFragment.setOnPlaceSelectedListener(this)
 
 
@@ -107,14 +113,22 @@ class NewEvent : DialogFragment(), PlaceSelectionListener {
             dpd.show()
         }
 
-        var startTime = LocalDateTime.of(startDate.year, startDate.month, startDate.dayOfMonth, 8, 0)
+        var startTime =
+            LocalDateTime.of(startDate.year, startDate.month, startDate.dayOfMonth, 8, 0)
         var endTime = LocalDateTime.of(endDate.year, endDate.month, endDate.dayOfMonth, 9, 0)
 
         // In case time has already passed 8:00-9:00
         val now = LocalDateTime.now()
-        if(startTime.toLocalTime() < now.toLocalTime()){
-            startTime = LocalDateTime.of(startDate.year, startDate.month, startDate.dayOfMonth, now.hour + 1, 0)
-            endTime = LocalDateTime.of(endDate.year, endDate.month, endDate.dayOfMonth, now.hour + 1, 0)
+        if (startTime.toLocalTime() < now.toLocalTime()) {
+            startTime = LocalDateTime.of(
+                startDate.year,
+                startDate.month,
+                startDate.dayOfMonth,
+                now.hour + 1,
+                0
+            )
+            endTime =
+                LocalDateTime.of(endDate.year, endDate.month, endDate.dayOfMonth, now.hour + 1, 0)
         }
 
         chosen_start_time.text =
@@ -128,7 +142,13 @@ class NewEvent : DialogFragment(), PlaceSelectionListener {
                 this.activity!!,
                 2,
                 TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
-                    startTime = LocalDateTime.of(startDate.year, startDate.month, startDate.dayOfMonth, hourOfDay, minute)
+                    startTime = LocalDateTime.of(
+                        startDate.year,
+                        startDate.month,
+                        startDate.dayOfMonth,
+                        hourOfDay,
+                        minute
+                    )
                     chosen_start_time.text =
                         startTime.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
                     if (startTime > endTime) {
@@ -149,7 +169,13 @@ class NewEvent : DialogFragment(), PlaceSelectionListener {
             val tpd = TimePickerDialog(
                 this.activity!!,
                 TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
-                    endTime = LocalDateTime.of(endDate.year, endDate.month, endDate.dayOfMonth, hourOfDay, minute)
+                    endTime = LocalDateTime.of(
+                        endDate.year,
+                        endDate.month,
+                        endDate.dayOfMonth,
+                        hourOfDay,
+                        minute
+                    )
                     chosen_end_time.text =
                         endTime.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
                     if (endTime < startTime) {
@@ -174,7 +200,8 @@ class NewEvent : DialogFragment(), PlaceSelectionListener {
                 eventTitle = "My event"
 
             // Description
-            val eventDescriptionEditText = view.findViewById(R.id.new_event_title) as EditText
+            val eventDescriptionEditText =
+                view.findViewById(R.id.new_event_descriptions) as EditText
             val eventDescription = eventDescriptionEditText.text.toString()
 
             // Type
@@ -190,25 +217,55 @@ class NewEvent : DialogFragment(), PlaceSelectionListener {
             val eventCreator = User("Hala", "Awisat", "email@gmail.com", "1234567890")
 
             // And finally create the event ..
-            val event = Event(eventTitle, eventDescription, eventCreator, eventType, startTime, endTime, eventLocation, "1556")
+            val event = Event(
+                eventTitle,
+                eventDescription,
+                eventCreator,
+                eventType,
+                startTime,
+                endTime,
+                eventLocation,
+                "0000"
+            )
 
             //TODO add event for user (admin)
 
-            database.collection("events").add(event)
-                .addOnSuccessListener { documentReference ->
+            val doc = database.collection("events").document(event.id)
+            doc.get()
+                .addOnSuccessListener { document ->
+                    //                    if (document.exists()) {
+                    database.collection("events").document(event.id).set(event)
                     Log.d(
                         "newEvent",
-                        "Event added with ID: ${documentReference.id}"
+                        "Event added with ID: ${document.id}"
                     )
+                    this.dismiss()
+                    Snackbar.make(view, "Event created successfully!", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null)
+                        .show()
+
+//                    }
                 }
                 .addOnFailureListener { exception ->
-                    Log.w("newEvent", "Error adding event", exception)
+                    Log.e("newEvent", "Error adding event", exception)
+                    Snackbar.make(
+                        view,
+                        "Failed creating event, please try again",
+                        Snackbar.LENGTH_LONG
+                    )
+                        .setAction("Action", null)
+                        .show()
                 }
-
-            this.dismiss()
-            Snackbar.make(view, "Event created successfully!", Snackbar.LENGTH_LONG)
-                .setAction("Action", null)
-                .show()
+//            database.collection("events").add(event)
+//                .addOnSuccessListener { documentReference ->
+//                    Log.d(
+//                        "newEvent",
+//                        "Event added with ID: ${documentReference.id}"
+//                    )
+//                }
+//                .addOnFailureListener { exception ->
+//                    Log.w("newEvent", "Error adding event", exception)
+//                }
         }
 
         // Cancel new event
@@ -220,8 +277,12 @@ class NewEvent : DialogFragment(), PlaceSelectionListener {
 
     // Places methods
     override fun onPlaceSelected(place: Place) {
-        Log.d("NewEvent-OnPlaceSelectedListener", "lng= " + place.latLng!!.longitude + " lat= " + place.latLng!!.latitude)
-        eventLocation = EventLocation(place.name!!, place.latLng!!.latitude, place.latLng!!.longitude)
+        Log.d(
+            "NewEvent-OnPlaceSelectedListener",
+            "lng= " + place.latLng!!.longitude + " lat= " + place.latLng!!.latitude
+        )
+        eventLocation =
+            EventLocation(place.name!!, place.latLng!!.latitude, place.latLng!!.longitude)
     }
 
     override fun onError(status: Status) {

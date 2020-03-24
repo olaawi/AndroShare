@@ -10,7 +10,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Your croud sourced album"
+        android:text="Your crowd sourced album"
         android:layout_centerInParent="true"
         style="@style/Headline5"
         android:textColor="@color/accentColor"/>
