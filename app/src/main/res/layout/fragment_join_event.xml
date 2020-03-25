@@ -74,7 +74,7 @@
         android:id="@+id/join_event_pin"
         style="@style/Body1"
         android:layout_width="80dp"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:autofillHints="@string/pin"
         android:gravity="center"
         android:inputType="numberPassword"

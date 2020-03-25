@@ -25,7 +25,7 @@ class JoinEvent(private val event: Event) : DialogFragment() {
     private lateinit var confirmButton: Button
     private lateinit var cancelButton: Button
     private lateinit var database: FirebaseFirestore
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         database = FirebaseFirestore.getInstance()

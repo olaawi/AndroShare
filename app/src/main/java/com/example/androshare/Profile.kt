@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 
@@ -45,7 +46,7 @@ class Profile : Fragment() {
 //            nameTextView!!.text = acct.givenName + acct.familyName
 //            val user =  database.collection("users").whereEqualTo("id", acct.id)
 //        val user = database.collection("users").whereEqualTo("id", "RHofcmS36qEcPIihjqwe")
-        database.collection("users").whereEqualTo("givenName", acct!!.givenName)
+        database.collection("users").whereEqualTo("id", acct!!.id)
             .get()
             .addOnSuccessListener { result ->
                 for (document in result) {
@@ -60,10 +61,20 @@ class Profile : Fragment() {
             .addOnFailureListener { exception ->
                 Log.d("Profile", "Error getting documents: ", exception)
             }
+        val signOutButton = view.findViewById<TextView>(R.id.profile_signout)
+        signOutButton.setOnClickListener {
+            signOut()
+        }
 //        }
 
 
     }
+
+    private fun signOut() {
+        startActivity(SignInActivity.getLaunchIntent(this.context!!))
+        FirebaseAuth.getInstance().signOut()
+    }
+
 //    override fun onAttach(context: Context) {
 //        super.onAttach(context)
 //        if (context is OnFragmentInteractionListener) {

@@ -101,13 +101,13 @@
                 android:layout_centerHorizontal="true" />
 
             <TextView
-                android:id="@+id/profile_logout"
+                android:id="@+id/profile_signout"
                 style="@style/Headline6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:text="@string/logout"/>
+                android:text="@string/sign_out"/>
 
         </RelativeLayout>
 

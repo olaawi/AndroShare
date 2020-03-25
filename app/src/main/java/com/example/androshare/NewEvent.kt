@@ -11,6 +11,7 @@ import android.widget.EditText
 import android.widget.Switch
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.Status
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
@@ -60,7 +61,6 @@ class NewEvent : DialogFragment(), PlaceSelectionListener {
             )
         )
         locationAutocompleteFragment.setOnPlaceSelectedListener(this)
-
 
         var startDate = LocalDateTime.now()
         var endDate = LocalDateTime.now()
@@ -190,6 +190,21 @@ class NewEvent : DialogFragment(), PlaceSelectionListener {
             tpd.show()
         }
 
+        val eventTypeCheckSwitch =
+            view.findViewById(R.id.event_type_switch) as Switch
+        val eventPinEditText =
+            view.findViewById(R.id.new_event_pin) as EditText
+
+        eventTypeCheckSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                // The switch is enabled/checked
+                eventPinEditText.visibility = View.VISIBLE
+            } else {
+                // The switch is disabled
+                eventPinEditText.visibility = View.INVISIBLE
+            }
+        }
+
         // Confirm new event
         confirm_button.setOnClickListener {
             // Title
@@ -205,15 +220,26 @@ class NewEvent : DialogFragment(), PlaceSelectionListener {
 
             // Type
             var eventType = Event.EventType.PUBLIC_EVENT
-            val eventTypeCheckSwitch =
-                view.findViewById(R.id.event_type_switch) as Switch
             if (eventTypeCheckSwitch.isChecked) {
                 eventType = Event.EventType.PRIVATE_EVENT
             }
 
+            // TODO add pin
+            var pin = "0000"
+            if (eventType == Event.EventType.PRIVATE_EVENT) {
+                pin = eventPinEditText.text.toString()
+            }
+
             // Creator
-            // TODO get current logged in user + add pin if private
-            val eventCreator = User("Hala", "Awisat", "email@gmail.com", "1234567890")
+            // TODO get current logged in user (DONE)
+//            val eventCreator = User("Hala", "Awisat", "email@gmail.com", "1234567890")
+            val account = GoogleSignIn.getLastSignedInAccount(context)
+            val eventCreator = User(
+                account!!.givenName!!,
+                account.familyName!!,
+                account.email!!,
+                account.id!!
+            )
 
             // And finally create the event ..
             val event = Event(
@@ -224,11 +250,12 @@ class NewEvent : DialogFragment(), PlaceSelectionListener {
                 startTime,
                 endTime,
                 eventLocation,
-                "0000"
+                pin
             )
 
             //TODO add event for user (admin)
 
+            // add event to DB
             val doc = database.collection("events").document(event.id)
             doc.get()
                 .addOnSuccessListener { document ->
