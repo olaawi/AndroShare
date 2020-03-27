@@ -21,4 +21,8 @@
     <string name="cancel">Cancel</string>
     <string name="private_event">Private Event</string>
     <string name="sign_out">Sign Out</string>
+    <string name="back_arrow">Back Arrow</string>
+    <string name="done">DONE</string>
+    <string name="more">More</string>
+    <string name="choose_avatar">Choose Avatar:</string>
 </resources>

@@ -1,0 +1,136 @@
+package com.example.androshare
+
+
+import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.GridView
+import androidx.fragment.app.Fragment
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.firestore.FirebaseFirestore
+
+
+class ChooseAvatar : Fragment() {
+
+    private lateinit var grid: GridView
+    private lateinit var avatars: ArrayList<Int>
+    private lateinit var database: FirebaseFirestore
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        database = FirebaseFirestore.getInstance()
+        // Initialize a list of string values
+        avatars = arrayListOf<Int>()
+        avatars.add(R.drawable.avatar1)
+        avatars.add(R.drawable.avatar2)
+        avatars.add(R.drawable.avatar3)
+        avatars.add(R.drawable.avatar4)
+        avatars.add(R.drawable.avatar5)
+        avatars.add(R.drawable.avatar6)
+        avatars.add(R.drawable.avatar7)
+        avatars.add(R.drawable.avatar8)
+        avatars.add(R.drawable.avatar9)
+        avatars.add(R.drawable.avatar10)
+        avatars.add(R.drawable.avatar11)
+        avatars.add(R.drawable.avatar12)
+        avatars.add(R.drawable.avatar13)
+        avatars.add(R.drawable.avatar14)
+        avatars.add(R.drawable.avatar15)
+        avatars.add(R.drawable.avatar16)
+        avatars.add(R.drawable.avatar17)
+        avatars.add(R.drawable.avatar18)
+        avatars.add(R.drawable.avatar19)
+        avatars.add(R.drawable.avatar20)
+        avatars.add(R.drawable.avatar21)
+        avatars.add(R.drawable.avatar22)
+        avatars.add(R.drawable.avatar23)
+        avatars.add(R.drawable.avatar24)
+        avatars.add(R.drawable.avatar25)
+        avatars.add(R.drawable.avatar26)
+        avatars.add(R.drawable.avatar27)
+        avatars.add(R.drawable.avatar28)
+        avatars.add(R.drawable.avatar29)
+        avatars.add(R.drawable.avatar30)
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_choose_avatar, container, false)
+    }
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        grid = view.findViewById(R.id.choose_avatar_grid)
+        val adapter = AvatarAdapter(this.context!!, R.layout.avatar_image_view, avatars)
+        grid.adapter = adapter
+
+
+        grid.onItemClickListener = AdapterView.OnItemClickListener { parent, v, position, id ->
+            // Write code to perform action when item is clicked.
+            val acct = GoogleSignIn.getLastSignedInAccount(activity)
+            database.collection("users").document(acct!!.id!!)
+                .update("avatar", this.avatars!![position])
+                .addOnSuccessListener {
+                    Log.d("ChooseAvatar", "")
+                    Snackbar.make(
+                        view,
+                        "Successfully updated avatar!",
+                        Snackbar.LENGTH_LONG
+                    )
+                        .setAction("Action", null)
+                        .show()
+                }
+                .addOnFailureListener {
+                    Log.e("ChooseAvatar", "Error updating avatar")
+                }
+
+        }
+
+    }
+
+//    fun onButtonPressed(uri: Uri) {
+//        listener?.onFragmentInteraction(uri)
+//    }
+
+//    override fun onAttach(context: Context) {
+//        super.onAttach(context)
+//        if (context is OnFragmentInteractionListener) {
+//            listener = context
+//        } else {
+//            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
+//        }
+//    }
+
+//    override fun onDetach() {
+//        super.onDetach()
+//        listener = null
+//    }
+
+
+//    interface OnFragmentInteractionListener {
+//        fun onFragmentInteraction(uri: Uri)
+//    }
+//
+//    companion object {
+//        /**
+//         * Use this factory method to create a new instance of
+//         * this fragment using the provided parameters.
+//         *
+//         * @param param1 Parameter 1.
+//         * @param param2 Parameter 2.
+//         * @return A new instance of fragment ChooseAvatar.
+//         */
+//        @JvmStatic
+//        fun newInstance(param1: String, param2: String) =
+//            ChooseAvatar().apply {
+//            }
+//    }
+}
