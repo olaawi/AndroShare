@@ -7,20 +7,52 @@
     android:orientation="vertical"
     tools:context=".SplashActivity">
 
-    <TextView
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Your crowd sourced album"
         android:layout_centerInParent="true"
-        style="@style/Headline5"
-        android:textColor="@color/accentColor"/>
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal">
+
+            <TextView
+                style="@style/Headline3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Photo"
+                android:textColor="@android:color/black"
+                android:textStyle="bold"/>
+
+            <TextView
+                style="@style/Headline3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Share"
+                android:textColor="@color/accentColor"
+                android:textStyle="bold"/>
+
+        </LinearLayout>
+
+        <TextView
+            style="@style/Headline5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Your crowd sourced album"
+            android:textColor="@color/accentColor" />
+
+    </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Developed by Hala and Ola ©"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"/>
+        android:text="Developed by Hala and Ola ©" />
 
 
 </RelativeLayout>

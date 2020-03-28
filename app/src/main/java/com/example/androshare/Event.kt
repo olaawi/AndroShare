@@ -28,7 +28,7 @@ class Event(
     var startTime: LocalDateTime = startTime
     var endTime: LocalDateTime = endTime
     var location: EventLocation = location
-    var id: String
+    var id: String = UUID.randomUUID().toString()
     val admins = mutableListOf<User>()
     val participants = mutableListOf<User>()
     val pin = pin
@@ -36,7 +36,6 @@ class Event(
     init {
 //        idGenerator++
 //        this.id = getNewId()
-        id = UUID.randomUUID().toString()
     }
 
 //    constructor(
@@ -78,21 +77,21 @@ class Event(
         participants.add(creator)
     }
 
-    public fun addAdmin(newAdmin: User) {
+    fun addAdmin(newAdmin: User) {
         admins.add(newAdmin)
         if (!participants.contains(newAdmin))
             participants.add(newAdmin)
     }
 
-    public fun isAdmin(user: User): Boolean {
+    fun isAdmin(user: User): Boolean {
         return admins.contains(user)
     }
 
-    public fun addParticipant(newParticipant: User) {
+    fun addParticipant(newParticipant: User) {
         participants.add(newParticipant)
     }
 
-    public fun isParticipant(user: User): Boolean {
+    fun isParticipant(user: User): Boolean {
         return participants.contains(user)
     }
 
