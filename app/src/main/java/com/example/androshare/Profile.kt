@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.fragment.app.FragmentTransaction
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -46,27 +47,40 @@ class Profile : Fragment() {
 //            nameTextView!!.text = acct.givenName + acct.familyName
 //            val user =  database.collection("users").whereEqualTo("id", acct.id)
 //        val user = database.collection("users").whereEqualTo("id", "RHofcmS36qEcPIihjqwe")
-        database.collection("users").whereEqualTo("id", acct!!.id)
-            .get()
-            .addOnSuccessListener { result ->
-                for (document in result) {
-                    nameTextView!!.text =
-                        (document.get("givenName") as String) + " " + (document.get("familyName") as String)
-                    val eventsCount = (document.get("events") as ArrayList<*>).size
-                    myEventsCountTextView!!.text = eventsCount.toString()
-                    val avatarImage = view.findViewById<ImageView>(R.id.profile_avatar)
-                    avatarImage.setImageResource((document.get("avatar") as Long).toInt())
-                }
-            }
-            .addOnFailureListener { exception ->
-                Log.d("Profile", "Error getting documents: ", exception)
-            }
-        val signOutButton = view.findViewById<TextView>(R.id.profile_signout)
-        signOutButton.setOnClickListener {
-            signOut()
-        }
-//        }
 
+
+        // TODO uncomment below this
+//        database.collection("users").whereEqualTo("id", acct!!.id)
+//            .get()
+//            .addOnSuccessListener { result ->
+//                for (document in result) {
+//                    nameTextView!!.text =
+//                        (document.get("givenName") as String) + " " + (document.get("familyName") as String)
+//                    val eventsCount = (document.get("events") as ArrayList<*>).size
+//                    myEventsCountTextView!!.text = eventsCount.toString()
+//                    val avatarImage = view.findViewById<ImageView>(R.id.profile_avatar)
+//                    avatarImage.setImageResource((document.get("avatar") as Long).toInt())
+//                }
+//            }
+//            .addOnFailureListener { exception ->
+//                Log.d("Profile", "Error getting documents: ", exception)
+//            }
+//        val signOutButton = view.findViewById<TextView>(R.id.profile_signout)
+//        signOutButton.setOnClickListener {
+//            signOut()
+//        }
+        // end TODO
+//        }
+        val editAvatarTextView = view.findViewById<TextView>(R.id.profile_edit_avatar)
+        editAvatarTextView.setOnClickListener {
+            val chooseAvatarFragement = ChooseAvatar()
+            val transaction = fragmentManager!!.beginTransaction()
+            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+            transaction
+                .add(android.R.id.content, chooseAvatarFragement)
+                .addToBackStack(null)
+                .commit()
+        }
 
     }
 
