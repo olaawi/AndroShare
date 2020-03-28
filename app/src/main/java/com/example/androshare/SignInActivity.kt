@@ -13,8 +13,6 @@ import com.google.firebase.auth.*
 import com.google.firebase.firestore.*
 import kotlinx.android.synthetic.main.activity_sign_in.*
 
-// hala wants to commit
-
 class SignInActivity : AppCompatActivity() {
 
     private val signInRequest: Int = 1
@@ -85,16 +83,15 @@ class SignInActivity : AppCompatActivity() {
                 if (account != null) {
                     val id = account.id!!
                     val doc = database.collection("users").document(id)
-                    doc.get().addOnSuccessListener { document->
-                        if(!document.exists()){
+                    doc.get().addOnSuccessListener { document ->
+                        if (!document.exists()) {
                             Log.d("signIn", "the user does not exist")
                             val givenName = account.givenName
                             val familyName = account.familyName
                             val email = account.email
                             val user = User(givenName!!, familyName!!, email!!, id)
                             database.collection("users").document(id).set(user)
-                        }
-                        else{
+                        } else {
                             Log.d("signIn", "the user already exists")
                         }
                     }
@@ -107,9 +104,8 @@ class SignInActivity : AppCompatActivity() {
         }
     }
 
-    // TODO debug this
     companion object {
-        fun getLaunchIntent(from: Context) = Intent(from, MainActivity::class.java).apply {
+        fun getLaunchIntent(from: Context) = Intent(from, SignInActivity::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         }
     }

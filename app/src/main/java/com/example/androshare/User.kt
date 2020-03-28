@@ -7,5 +7,5 @@ class User constructor(
     var id: String
 ) {
     var avatar: Int = R.drawable.avatar1 // default avatar
-    var events : ArrayList<String>? = null
+    var events: ArrayList<String> = ArrayList()
 }

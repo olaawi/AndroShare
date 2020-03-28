@@ -34,11 +34,8 @@ class NewEvent : Fragment(), PlaceSelectionListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         // Initialize places + DB
-//        if (!Places.isInitialized()) {
         Places.initialize(context!!, getString(R.string.places_api_key))
-//        }
         database = FirebaseFirestore.getInstance()
     }
 
@@ -51,7 +48,7 @@ class NewEvent : Fragment(), PlaceSelectionListener {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        // autocomplete location: place return fields
+        // Autocomplete location: place return fields
         val locationAutocompleteFragment =
             this.childFragmentManager.findFragmentById(R.id.event_location_autocomplete) as AutocompleteSupportFragment
         locationAutocompleteFragment.setPlaceFields(
@@ -140,7 +137,6 @@ class NewEvent : Fragment(), PlaceSelectionListener {
         start_time.setOnClickListener {
             val tpd = TimePickerDialog(
                 this.activity!!,
-                2,
                 TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
                     startTime = LocalDateTime.of(
                         startDate.year,
@@ -191,12 +187,6 @@ class NewEvent : Fragment(), PlaceSelectionListener {
             tpd.show()
         }
 
-//        val eventTypeCheckSwitch =
-//            view.findViewById(R.id.event_type_switch) as Switch
-
-//        val eventPinEditText =
-//            view.findViewById(R.id.new_event_pin) as EditText
-
         event_type_switch.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 // The switch is enabled/checked
@@ -212,7 +202,7 @@ class NewEvent : Fragment(), PlaceSelectionListener {
 
             // Title
             val eventTitleEditText = view.findViewById(R.id.new_event_title) as EditText
-            var eventTitle = eventTitleEditText.text.toString()
+            val eventTitle = eventTitleEditText.text.toString()
 
             // Description
             val eventDescriptionEditText =
@@ -225,7 +215,7 @@ class NewEvent : Fragment(), PlaceSelectionListener {
                 eventType = Event.EventType.PRIVATE_EVENT
             }
 
-            // TODO add pin
+            // Password
             var pin = ""
             var confirmPin = ""
             if (eventType == Event.EventType.PRIVATE_EVENT) {
@@ -233,16 +223,10 @@ class NewEvent : Fragment(), PlaceSelectionListener {
                 confirmPin = new_event_confirm_pin_text.text.toString()
             }
 
-            // Creator
-            // TODO get current logged in user (DONE)
-//            val eventCreator = User("Hala", "Awisat", "email@gmail.com", "1234567890")
+            // Creator is current logged in user
             val account = GoogleSignIn.getLastSignedInAccount(context)
-            val eventCreator = User(
-                account!!.givenName!!,
-                account.familyName!!,
-                account.email!!,
-                account.id!!
-            )
+            val eventCreator =
+                User(account!!.givenName!!, account.familyName!!, account.email!!, account.id!!)
 
             // Check if all okay
             val warnings = ArrayList<String>()
@@ -252,9 +236,9 @@ class NewEvent : Fragment(), PlaceSelectionListener {
                 warnings.add("* Please fill description.\n")
             if (!::eventLocation.isInitialized)
                 warnings.add("* Please fill location.\n")
-            if(pin.length < 8)
+            if (eventType == Event.EventType.PRIVATE_EVENT && pin.length < 8)
                 warnings.add("* Password must be at least 8 characters.\n")
-            if(eventType == Event.EventType.PRIVATE_EVENT && pin != confirmPin)
+            if (eventType == Event.EventType.PRIVATE_EVENT && pin != confirmPin)
                 warnings.add("* Passwords don't match.")
 
             var warning = ""
@@ -279,28 +263,41 @@ class NewEvent : Fragment(), PlaceSelectionListener {
                     pin
                 )
 
-                //TODO add event for user (admin)
+                // Add event for user
+                val userDoc = database.collection("users").document(eventCreator.id)
+                userDoc.get()
+                    .addOnSuccessListener { document ->
+                        val eventsList = document.get("events") as ArrayList<String>
+                        eventsList.add(event.id)
+                        database.collection("users").document(eventCreator.id)
+                            .update("events", eventsList)
+                            .addOnSuccessListener {
+                                Log.d("NewEvent", "Added event to user")
+                            }
+                            .addOnFailureListener {
+                                Log.e("NewEvent", "Error adding event to user")
+                            }
+                    }
+                    .addOnFailureListener { exception ->
+                        Log.e("NewEvent", "Error adding event to user", exception)
+                    }
 
-                // add event to DB
+                // Add event to DB
                 val doc = database.collection("events").document(event.id)
                 doc.get()
                     .addOnSuccessListener { document ->
-                        //                    if (document.exists()) {
                         database.collection("events").document(event.id).set(event)
                         Log.d(
-                            "newEvent",
+                            "NewEvent",
                             "Event added with ID: ${document.id}"
                         )
-//                    this.dismiss()
-                        fragmentManager!!.popBackStack()
-
-                        Snackbar.make(view, "Event created successfully!", Snackbar.LENGTH_LONG)
+                        Snackbar.make(activity!!.findViewById(android.R.id.content), "Event created successfully!", Snackbar.LENGTH_SHORT)
                             .setAction("Action", null)
                             .show()
-//                    }
+                        fragmentManager!!.popBackStack()
                     }
                     .addOnFailureListener { exception ->
-                        Log.e("newEvent", "Error adding event", exception)
+                        Log.e("NewEvent", "Error adding event", exception)
                         Snackbar.make(
                                 view,
                                 "Failed creating event, please try again",
@@ -309,16 +306,6 @@ class NewEvent : Fragment(), PlaceSelectionListener {
                             .setAction("Action", null)
                             .show()
                     }
-//            database.collection("events").add(event)
-//                .addOnSuccessListener { documentReference ->
-//                    Log.d(
-//                        "newEvent",
-//                        "Event added with ID: ${documentReference.id}"
-//                    )
-//                }
-//                .addOnFailureListener { exception ->
-//                    Log.w("newEvent", "Error adding event", exception)
-//                }
             }
         }
         // Cancel new event
@@ -326,7 +313,6 @@ class NewEvent : Fragment(), PlaceSelectionListener {
             fragmentManager!!.popBackStack()
         }
     }
-
 
     // Places methods
     override fun onPlaceSelected(place: Place) {

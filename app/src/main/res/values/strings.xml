@@ -16,8 +16,8 @@
     <string name="description">Description</string>
     <string name="enterPin">Enter Pin:</string>
     <string name="join">Join</string>
-    <string name="pin">PIN</string>
-    <string name="this_is_a_private_event_please_enter_pin_to_join">This is a private event, please enter PIN to join:</string>
+    <string name="pin">Password</string>
+    <string name="this_is_a_private_event_please_enter_pin_to_join">This is a private event, please enter password to join:</string>
     <string name="cancel">Cancel</string>
     <string name="private_event">Private Event</string>
     <string name="sign_out">Sign Out</string>

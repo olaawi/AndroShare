@@ -50,25 +50,25 @@ class Profile : Fragment() {
 
 
         // TODO uncomment below this
-//        database.collection("users").whereEqualTo("id", acct!!.id)
-//            .get()
-//            .addOnSuccessListener { result ->
-//                for (document in result) {
-//                    nameTextView!!.text =
-//                        (document.get("givenName") as String) + " " + (document.get("familyName") as String)
-//                    val eventsCount = (document.get("events") as ArrayList<*>).size
-//                    myEventsCountTextView!!.text = eventsCount.toString()
-//                    val avatarImage = view.findViewById<ImageView>(R.id.profile_avatar)
-//                    avatarImage.setImageResource((document.get("avatar") as Long).toInt())
-//                }
-//            }
-//            .addOnFailureListener { exception ->
-//                Log.d("Profile", "Error getting documents: ", exception)
-//            }
-//        val signOutButton = view.findViewById<TextView>(R.id.profile_signout)
-//        signOutButton.setOnClickListener {
-//            signOut()
-//        }
+        database.collection("users").whereEqualTo("id", acct!!.id)
+            .get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    nameTextView!!.text =
+                        (document.get("givenName") as String) + " " + (document.get("familyName") as String)
+                    val eventsCount = (document.get("events") as ArrayList<*>).size
+                    myEventsCountTextView!!.text = eventsCount.toString()
+                    val avatarImage = view.findViewById<ImageView>(R.id.profile_avatar)
+                    avatarImage.setImageResource((document.get("avatar") as Long).toInt())
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d("Profile", "Error getting documents: ", exception)
+            }
+        val signOutButton = view.findViewById<TextView>(R.id.profile_signout)
+        signOutButton.setOnClickListener {
+            signOut()
+        }
         // end TODO
 //        }
         val editAvatarTextView = view.findViewById<TextView>(R.id.profile_edit_avatar)
