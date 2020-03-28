@@ -29,11 +29,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.fragment_event_page.*
 import kotlinx.android.synthetic.main.fragment_event_page.view.*
-import java.util.*
-import kotlin.collections.ArrayList
 
 
 class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
@@ -148,7 +147,7 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
         if (requestCode == IMAGE_PICK_CODE && resultCode == Activity.RESULT_OK
             && null != data
         ) {
-            val pickedImages = ArrayList<Uri>()
+            val pickedImages = ArrayList<Image>()
             var imageUri: Uri? = null
 
             if (data.clipData != null) {
@@ -156,19 +155,20 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
                 val count = data.clipData!!.itemCount
                 for (i in 0 until count) {
                     imageUri = data.clipData!!.getItemAt(i).uri
-                    pickedImages.add(imageUri)
+                    pickedImages.add(Image(imageUri))
                 }
             } else if (data.data != null) {
                 // One image was picked
                 imageUri = data.data
-                pickedImages.add(imageUri!!)
+                pickedImages.add(Image(imageUri!!))
             }
 
-            for (img in pickedImages) {
+            for (image in pickedImages) {
                 // Upload to storage
+                // TODO check if location ok
                 val storageRef =
-                    storage.getReference(event.id + "/" + UUID.randomUUID().toString() + ".jpg")
-                storageRef.putFile(imageUri!!).addOnSuccessListener {
+                    storage.getReference(event.id + "/" + image.id + ".jpg")
+                storageRef.putFile(image.uri).addOnSuccessListener {
                     Log.d("upload", "image added successfully!")
                 }
             }
@@ -241,14 +241,6 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
     }
 
     private fun initGrid(view: View) {
-//        grid = view.findViewById(R.id.photo_grid)
-//        val storageRef = storage.reference
-
-        // TODO get urls of all images in event
-//        storageRef.child("images/NYC.jpg").downloadUrl.addOnSuccessListener { url ->
-//            Log.d("image", "Got the download URL '$url")
-
-//            images.add(url)
 
         val grid = view.findViewById<RecyclerView>(R.id.images_grid)
         grid.layoutManager = GridLayoutManager(this.context, 4)
@@ -256,7 +248,33 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
         grid.adapter = imageAdapter
         grid.addItemDecoration(GridItemDecorator(4))
 
+        val storageRef = storage.reference
+        val eventFolder = storageRef.child(event.id)
+        eventFolder.listAll().addOnSuccessListener { listResult ->
+                listResult.items.forEach { item ->
+                    item.downloadUrl.addOnSuccessListener { url ->
+                        images.add(Image(url))
+                        Log.e("images", url.toString())
+                        imageAdapter.notifyItemInserted(images.size - 1)
+                    }
+                }
+            }
+            .addOnFailureListener {
+                Log.e("images", "failed to get images from storage")
+            }
 
+//        val swipeContainer : SwipeRefreshLayout = view.findViewById(R.id.swipeContainer)
+//        swipeContainer.setOnRefreshListener {
+//            // Your code to refresh the list here.
+//            // Make sure you call swipeContainer.setRefreshing(false)
+//            // once the network request has completed successfully.
+//            Log.d("ref","refresh")
+//        }
+
+//        view.findViewById<SwipeRefreshLayout>(R.id.event_page_refresh).setOnRefreshListener {
+//            Log.e("ref","refreshed")
+//        }
+/*
         val im1 = Image()
         im1.drawable = R.drawable.avatar1
         images.add(im1)
@@ -320,8 +338,9 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
         val im16 = Image()
         im16.drawable = R.drawable.avatar16
         images.add(im16)
-
+*/
     }
+
 
     fun setSelectLayout() {
         view!!.findViewById<ImageView>(R.id.event_add).visibility = View.INVISIBLE

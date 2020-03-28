@@ -59,7 +59,7 @@ class ImageAdapter(private val images: ArrayList<Image>, var eventPage: EventPag
     }
 
     override fun onBindViewHolder(holder: ImageHolder, position: Int) {
-        Glide.with(holder.itemView.context).load(images[position].drawable).into(holder.img)
+        Glide.with(holder.itemView.context).load(images[position].uri).into(holder.img)
         if (mode == MODE.SELECT) {
             holder.checkBox.visibility = View.VISIBLE
             if (images[position].isSelected) {

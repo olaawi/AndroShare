@@ -39,7 +39,7 @@
                     android:layout_toStartOf="@id/event_more"
                     android:backgroundTint="@color/accentColor"
                     android:src="@drawable/ic_add_a_photo_black_24dp"
-                    android:visibility="visible"/>
+                    android:visibility="visible" />
 
                 <ImageView
                     android:id="@+id/event_download"
@@ -48,7 +48,7 @@
                     android:layout_toStartOf="@id/event_more"
                     android:backgroundTint="@color/accentColor"
                     android:src="@drawable/ic_file_download_black_24dp"
-                    android:visibility="invisible"/>
+                    android:visibility="invisible" />
 
                 <ImageView
                     android:id="@+id/event_more"
@@ -84,7 +84,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="8dp"/>
+                android:layout_height="8dp" />
 
             <TextView
                 android:id="@+id/event_title"
@@ -98,7 +98,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="8dp"/>
+                android:layout_height="8dp" />
 
             <TextView
                 android:id="@+id/event_description"
@@ -110,28 +110,35 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="8dp"/>
+                android:layout_height="8dp" />
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="8dp"/>
+                android:layout_height="8dp" />
 
             <View
                 android:layout_width="396dp"
                 android:layout_height="1dp"
                 android:layout_gravity="center_horizontal"
-                android:background="@color/primaryDarkColor"/>
+                android:background="@color/primaryDarkColor" />
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="8dp"/>
+                android:layout_height="8dp" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/images_grid"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="8dp" />
+<!--            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout-->
+<!--                android:id="@+id/swipeContainer"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent">-->
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/images_grid"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="8dp" />
+
+<!--            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>-->
 
         </LinearLayout>
 

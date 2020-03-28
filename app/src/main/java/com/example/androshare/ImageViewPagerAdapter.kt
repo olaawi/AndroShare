@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.viewpager.widget.PagerAdapter
+import com.bumptech.glide.Glide
 
 class ImageViewPagerAdapter(val context: Context, private val images: List<Image>) :
     PagerAdapter() {
@@ -13,8 +14,8 @@ class ImageViewPagerAdapter(val context: Context, private val images: List<Image
     override fun instantiateItem(collection: ViewGroup, position: Int): Any {
         val inflater = LayoutInflater.from(context)
         val layout = inflater.inflate(R.layout.image_in_viewer, collection, false) as View
-        layout.findViewById<ImageView>(R.id.viewer_image)
-            .setImageResource(images[position].drawable)
+        val imView = layout.findViewById<ImageView>(R.id.viewer_image)
+        Glide.with(context).load(images[position].uri).into(imView)
         collection.addView(layout)
         return layout
     }

@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 
 class SplashActivity : AppCompatActivity() {
 
@@ -12,16 +13,20 @@ class SplashActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash)
 
         Handler().postDelayed({
-
-            // TODO check if user already signed in
-
-            val i = Intent(this, MainActivity::class.java)
-            startActivity(i)
+            val intent: Intent = if (GoogleSignIn.getLastSignedInAccount(this) != null){
+                // User already signed in, go to main
+                Intent(this, MainActivity::class.java)
+            } else {
+                // User didn't sign in, go to sign in
+                Intent(this, SignInActivity::class.java)
+            }
+            startActivity(intent)
             finish()
         }, SPLASH_DURATION)
     }
 
-    companion object{
+    companion object {
         const val SPLASH_DURATION: Long = 2000 // 1 sec
     }
+
 }

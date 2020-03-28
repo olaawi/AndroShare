@@ -1,15 +1,20 @@
 package com.example.androshare
 
-class Image {
+import android.net.Uri
+import java.util.*
 
-    var drawable : Int = R.drawable.avatar3
-    var isSelected : Boolean = false
+class Image(var uri: Uri) {
 
-    fun toggleSelect(){
+    var drawable: Int = R.drawable.avatar3
+    var id: String = UUID.randomUUID().toString()
+
+    var isSelected: Boolean = false
+
+    fun toggleSelect() {
         isSelected = !isSelected
     }
 
-    fun unselect(){
+    fun unselect() {
         isSelected = false
     }
 }
