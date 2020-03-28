@@ -127,15 +127,15 @@ class Dashboard : Fragment() {
                             )
                             currentEvent.id = document.get("id")!! as String
                             currentEvent.participants.clear() // Annoying bug
-                            val usersHash = document.get("participants") as ArrayList<*>
+                            val userIds = document.get("participants") as ArrayList<*>
 
-                            for (userHash in usersHash) {
-                                val avatar = ((userHash as HashMap<*, *>)["avatar"] as Long).toInt()
-                                val givenName = (userHash as HashMap<*, *>)["givenName"] as String
-                                val familyName = (userHash as HashMap<*, *>)["familyName"] as String
-                                val currUser = User(givenName, familyName, "", "")
-                                currUser.avatar = avatar
-                                currentEvent.participants.add(currUser)
+                            for (userId in userIds) {
+//                                val avatar = ((userHash as HashMap<*, *>)["avatar"] as Long).toInt()
+//                                val givenName = (userHash as HashMap<*, *>)["givenName"] as String
+//                                val familyName = (userHash as HashMap<*, *>)["familyName"] as String
+//                                val currUser = User(givenName, familyName, "", "")
+//                                currUser.avatar = avatar
+                                currentEvent.participants.add(userId as String)
                                 Log.d("Dash","added user " + user.givenName)
                             }
 

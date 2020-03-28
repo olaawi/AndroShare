@@ -38,6 +38,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.fragment_event_page.*
 import kotlinx.android.synthetic.main.fragment_event_page.view.*
@@ -49,11 +50,13 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
     private lateinit var storage: FirebaseStorage
     private lateinit var images: ArrayList<Image>
     lateinit var imageAdapter: ImageAdapter
+    private lateinit var database: FirebaseFirestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         storage = FirebaseStorage.getInstance()
         images = ArrayList()
+        database = FirebaseFirestore.getInstance()
     }
 
     override fun onCreateView(
@@ -310,7 +313,12 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
 
             val avatar = ImageView(context)
             avatar.layoutParams = ViewGroup.LayoutParams(64, 64)
-            avatar.setImageResource(event.participants[i].avatar)
+            database.collection("users").document(event.participants[i])
+                .get()
+                .addOnSuccessListener { document ->
+                    avatar.setImageResource((document.get("avatar") as Long).toInt())
+                }
+//            avatar.setImageResource(event.participants[i].avatar)
             card.addView(avatar)
             linearLayout.addView(card)
 
