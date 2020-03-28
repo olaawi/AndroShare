@@ -47,7 +47,7 @@ class JoinEvent(private val event: Event) : DialogFragment() {
         timeTextView = view.findViewById(R.id.join_event_time) as TextView
         locationTextView = view.findViewById(R.id.join_event_location) as TextView
         pinTextView = view.findViewById(R.id.join_event_enter_pin) as TextView
-        pinEditText = view.findViewById(R.id.join_event_pin) as EditText
+        pinEditText = view.findViewById(R.id.join_event_password) as EditText
         confirmButton = view.findViewById(R.id.join_event_join_button) as Button
         cancelButton = view.findViewById(R.id.join_event_cancel_button) as Button
 

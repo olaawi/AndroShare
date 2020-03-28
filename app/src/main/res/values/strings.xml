@@ -1,6 +1,5 @@
 <resources>
-    <string name="app_name">AndroShare</string>
-
+    <string name="app_name">PhotoShare</string>
     <string name="places_api_key" translatable="false">AIzaSyDbEvxm-4H0Vg4DWwKxZS02-_SQcCReEv0</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="profile">Profile</string>

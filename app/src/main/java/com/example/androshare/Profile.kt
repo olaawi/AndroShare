@@ -48,7 +48,6 @@ class Profile : Fragment() {
 //            val user =  database.collection("users").whereEqualTo("id", acct.id)
 //        val user = database.collection("users").whereEqualTo("id", "RHofcmS36qEcPIihjqwe")
 
-
         // TODO uncomment below this
         database.collection("users").whereEqualTo("id", acct!!.id)
             .get()

@@ -29,127 +29,6 @@ class Dashboard : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         database = FirebaseFirestore.getInstance()
-
-
-        /*
-        this.events = arrayListOf()
-        this.events.add(
-            Event(
-                "Event 1", "this is my first event_in_dashboard",
-                User("Ola", "Awisat", "ola@gmail", "0"),
-                Event.EventType.PUBLIC_EVENT,
-                LocalDateTime.now(),
-                LocalDateTime.now(),
-                EventLocation("dummy 1", 0.0, 0.0),
-                "1111"
-            )
-        )
-
-        this.events.add(
-            Event(
-                "Event 2", "this is my second event_in_dashboard",
-                User("Ola", "Awisat", "ola@gmail", "0"),
-                Event.EventType.PUBLIC_EVENT,
-                LocalDateTime.now(),
-                LocalDateTime.now(),
-                EventLocation("dummy 2", 0.0, 0.0),
-                "2222"
-            )
-        )
-
-        this.events.add(
-            Event(
-                "Event 3", "this is my second event_in_dashboard",
-                User("Ola", "Awisat", "ola@gmail", "0"),
-                Event.EventType.PUBLIC_EVENT,
-                LocalDateTime.now(),
-                LocalDateTime.now(),
-                EventLocation("dummy 3", 0.0, 0.0),
-                "3333"
-            )
-        )
-
-        this.events.add(
-            Event(
-                "Event 4", "this is my second event_in_dashboard",
-                User("Ola", "Awisat", "ola@gmail", "0"),
-                Event.EventType.PUBLIC_EVENT,
-                LocalDateTime.now(),
-                LocalDateTime.now(),
-                EventLocation("dummy 4", 0.0, 0.0),
-                "4444"
-            )
-        )
-
-        this.events.add(
-            Event(
-                "Event 5", "this is my second event_in_dashboard",
-                User("Ola", "Awisat", "ola@gmail", "0"),
-                Event.EventType.PUBLIC_EVENT,
-                LocalDateTime.now(),
-                LocalDateTime.now(),
-                EventLocation("dummy 5", 0.0, 0.0),
-                "5555"
-            )
-        )
-
-        this.events.add(
-            Event(
-                "Event 6", "this is my second event_in_dashboard",
-                User("Ola", "Awisat", "ola@gmail", "0"),
-                Event.EventType.PUBLIC_EVENT,
-                LocalDateTime.now(),
-                LocalDateTime.now(),
-                EventLocation("dummy 6", 0.0, 0.0),
-                "6666"
-            )
-        )
-
-        this.events.add(
-            Event(
-                "Event 7", "this is my second event_in_dashboard",
-                User("Ola", "Awisat", "ola@gmail", "0"),
-                Event.EventType.PUBLIC_EVENT,
-                LocalDateTime.now(),
-                LocalDateTime.now(),
-                EventLocation("dummy 7", 0.0, 0.0),
-                "7777"
-            )
-        )
-
-        this.events.add(
-            Event(
-                "Event 8", "this is my second event_in_dashboard",
-                User("Ola", "Awisat", "ola@gmail", "0"),
-                Event.EventType.PUBLIC_EVENT,
-                LocalDateTime.now(),
-                LocalDateTime.now(),
-                EventLocation("dummy 8", 0.0, 0.0),
-                "8888"
-            )
-        )
-
-        val user1 = User("name", "family", "email", "1")
-        val user2 = User("name", "family", "email", "2")
-        val user3 = User("name", "family", "email", "3")
-        val user4 = User("name", "family", "email", "4")
-        user1.avatar = R.drawable.avatar3
-        user2.avatar = R.drawable.avatar4
-        user3.avatar = R.drawable.avatar5
-        user4.avatar = R.drawable.avatar6
-        events[0]!!.addParticipant(user1)
-        events[0]!!.addParticipant(user2)
-        events[0]!!.addParticipant(user3)
-        events[0]!!.addParticipant(user4)
-        events[0]!!.addParticipant(user4)
-        events[0]!!.addParticipant(user4)
-        events[0]!!.addParticipant(user4)
-        events[0]!!.addParticipant(user4)
-        events[0]!!.addParticipant(user4)
-        events[0]!!.addParticipant(user4)
-        events[0]!!.addParticipant(user4)
-        */
-
     }
 
     private fun onEventClicked(event: Event) {
@@ -254,9 +133,9 @@ class Dashboard : Fragment() {
                                 val avatar = ((userHash as HashMap<*, *>)["avatar"] as Long).toInt()
                                 val givenName = (userHash as HashMap<*, *>)["givenName"] as String
                                 val familyName = (userHash as HashMap<*, *>)["familyName"] as String
-                                var user = User(givenName, familyName, "", "")
-                                user.avatar = avatar
-                                currentEvent.participants.add(user)
+                                val currUser = User(givenName, familyName, "", "")
+                                currUser.avatar = avatar
+                                currentEvent.participants.add(currUser)
                                 Log.d("Dash","added user " + user.givenName)
                             }
 

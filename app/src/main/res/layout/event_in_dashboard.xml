@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardCornerRadius="5dp"
     app:cardElevation="3dp"
     app:cardUseCompatPadding="true">
-    
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,27 +14,66 @@
         android:padding="16dp">
 
         <TextView
+            android:id="@+id/titleId"
+            style="@style/Subtitle1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/titleId"
-            android:text="Title"
-            style="@style/Subtitle1"/>
+            android:text="Title" />
 
-        <TextView
+        <LinearLayout
+            android:id="@+id/event_in_dash_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/timeId"
-            android:text="Time"
+            android:orientation="horizontal"
             android:layout_below="@id/titleId"
-            style="@style/Overline"/>
+            android:layout_marginTop="8dp">
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/ic_access_time_black_24dp"
+                android:layout_marginEnd="8dp"/>
+
+            <TextView
+                android:id="@+id/timeId"
+                style="@style/Overline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Time" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/event_in_dash_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@id/event_in_dash_time">
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/ic_location_on_black_24dp"
+                android:layout_marginEnd="8dp"/>
+
+            <TextView
+                android:id="@+id/locationId"
+                style="@style/Overline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Location" />
+
+        </LinearLayout>
 
         <TextView
+            android:id="@+id/descriptionId"
+            style="@style/Body2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/descriptionId"
+            android:layout_below="@id/event_in_dash_location"
             android:text="Description"
-            android:layout_below="@id/timeId"
-            style="@style/Body1"/>
+            android:layout_marginTop="8dp"/>
 
     </RelativeLayout>
 

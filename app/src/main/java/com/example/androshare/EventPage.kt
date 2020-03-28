@@ -3,12 +3,18 @@ package com.example.androshare
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.ContentResolver
+import android.content.ContentUris
+import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Rect
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -29,10 +35,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.fragment_event_page.*
 import kotlinx.android.synthetic.main.fragment_event_page.view.*
+import java.io.OutputStream
 
 
 class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
@@ -68,7 +77,17 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
         }
         view.findViewById<ImageView>(R.id.event_download).setOnClickListener {
             // TODO implement
-            Toast.makeText(context, "Download here", Toast.LENGTH_SHORT).show()
+            for (image in images) {
+                if (image.isSelected) {
+                    downloadImage(image.uri)
+                    image.toggleSelect()
+                }
+            }
+
+            imageAdapter.mode = ImageAdapter.MODE.REGULAR
+            imageAdapter.notifyDataSetChanged()
+            setRegularLayout()
+
         }
         view.findViewById<LinearLayout>(R.id.event_bar).setOnClickListener {
             val eventPageFragment = ParticipantsList(event)
@@ -85,6 +104,65 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
         initGrid(view)
         ViewCompat.setNestedScrollingEnabled(view.findViewById(R.id.event_bar), true)
     }
+
+    private fun downloadImage(uri: Uri) {
+        Glide.with(this).asBitmap().load(uri)
+            .into(object : CustomTarget<Bitmap?>() {
+
+                override fun onResourceReady(
+                    resource: Bitmap,
+                    transition: Transition<in Bitmap?>?
+                ) {
+                    insertImage(context!!.contentResolver, resource, "ttt", "ddd")
+                }
+
+                override fun onLoadCleared(placeholder: Drawable?) {
+//                    TODO("Not yet implemented")
+                }
+            })
+    }
+
+    private fun insertImage(
+        cr: ContentResolver,
+        source: Bitmap?,
+        title: String?,
+        description: String?
+    ): String? {
+        val values = ContentValues()
+        values.put(MediaStore.Images.Media.TITLE, title)
+        values.put(MediaStore.Images.Media.DISPLAY_NAME, title)
+        values.put(MediaStore.Images.Media.DESCRIPTION, description)
+        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+        // Add the date meta data to ensure the image is added at the front of the gallery
+        values.put(MediaStore.Images.Media.DATE_ADDED, System.currentTimeMillis())
+        values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis())
+        var url: Uri? = null
+        var stringUrl: String? = null /* value to be returned */
+        try {
+            url = cr.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+            if (source != null) {
+                val imageOut: OutputStream? = cr.openOutputStream(url!!)
+                try {
+                    source.compress(Bitmap.CompressFormat.JPEG, 50, imageOut)
+                } finally {
+                    imageOut!!.close()
+                }
+            } else {
+                cr.delete(url!!, null, null)
+                url = null
+            }
+        } catch (e: Exception) {
+            if (url != null) {
+                cr.delete(url, null, null)
+                url = null
+            }
+        }
+        if (url != null) {
+            stringUrl = url.toString()
+        }
+        return stringUrl
+    }
+
 
     private fun uploadImage() {
         if (ContextCompat.checkSelfPermission(

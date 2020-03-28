@@ -71,13 +71,13 @@
         android:visibility="invisible" />
 
     <EditText
-        android:id="@+id/join_event_pin"
+        android:id="@+id/join_event_password"
         style="@style/Body1"
-        android:layout_width="80dp"
+        android:layout_width="100dp"
         android:layout_height="30dp"
         android:autofillHints="@string/pin"
         android:gravity="center"
-        android:inputType="numberPassword"
+        android:inputType="textPassword"
         android:visibility="invisible" />
 
     <Space

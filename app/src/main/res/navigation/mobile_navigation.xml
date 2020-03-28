@@ -18,11 +18,6 @@
         android:label="fragment_near_me"
         tools:layout="@layout/fragment_near_me" />
     <fragment
-        android:id="@+id/favourites"
-        android:name="com.example.androshare.Favourites"
-        android:label="fragment_favourites"
-        tools:layout="@layout/fragment_favourites" />
-    <fragment
         android:id="@+id/appSettings"
         android:name="com.example.androshare.AppSettings"
         android:label="fragment_settings"

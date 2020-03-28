@@ -91,13 +91,18 @@ class SignInActivity : AppCompatActivity() {
                             val email = account.email
                             val user = User(givenName!!, familyName!!, email!!, id)
                             database.collection("users").document(id).set(user)
+                                .addOnSuccessListener {
+                                    val intent = Intent(this, MainActivity::class.java)
+                                    startActivity(intent)
+                                }
                         } else {
                             Log.d("signIn", "the user already exists")
                         }
                     }
+                } else {
+                    Log.e("signIn", "Null account")
                 }
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
+
             } else {
                 Toast.makeText(this, "Google sign in failed:(", Toast.LENGTH_LONG).show()
             }

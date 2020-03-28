@@ -15,6 +15,7 @@ class EventAdapter(var context: Context, val events: ArrayList<Event?>, private 
         var title: TextView = view.findViewById(R.id.titleId)
         var description: TextView = view.findViewById(R.id.descriptionId)
         var time : TextView = view.findViewById(R.id.timeId)
+        var location : TextView = view.findViewById(R.id.locationId)
 
         fun bind(event: Event, clickListener: (Event) -> Unit) {
             itemView.setOnClickListener { clickListener(event)}
@@ -27,16 +28,11 @@ class EventAdapter(var context: Context, val events: ArrayList<Event?>, private 
         return EventHolder(view)
     }
 
-
-    override fun onViewRecycled(holder: EventHolder) {
-        // TODO implement
-        super.onViewRecycled(holder)
-    }
-
     override fun onBindViewHolder(holder: EventHolder, position: Int) {
         holder.title.text = events[position]!!.title
         holder.description.text = events[position]!!.description
         holder.time.text = events[position]!!.getTime()
+        holder.location.text = events[position]!!.location.name
         holder.bind(events[position]!!, clickListener)
     }
 

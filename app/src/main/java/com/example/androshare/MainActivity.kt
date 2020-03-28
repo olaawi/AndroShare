@@ -50,15 +50,15 @@ class MainActivity : AppCompatActivity() {
 //                        .addToBackStack(null)
                         .commit()
                 }
-                R.id.navigation_favourites -> {
-                    favouritesFragment = Favourites()
-                    supportFragmentManager
-                        .beginTransaction()
-                        .replace(R.id.frame_layout, favouritesFragment)
-                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-//                        .addToBackStack(null)
-                        .commit()
-                }
+//                R.id.navigation_favourites -> {
+//                    favouritesFragment = Favourites()
+//                    supportFragmentManager
+//                        .beginTransaction()
+//                        .replace(R.id.frame_layout, favouritesFragment)
+//                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+////                        .addToBackStack(null)
+//                        .commit()
+//                }
                 R.id.navigation_more -> {
                     moreFragment = More()
                     supportFragmentManager

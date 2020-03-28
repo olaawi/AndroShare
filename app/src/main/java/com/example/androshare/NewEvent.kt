@@ -117,15 +117,16 @@ class NewEvent : Fragment(), PlaceSelectionListener {
         // In case time has already passed 8:00-9:00
         val now = LocalDateTime.now()
         if (startTime.toLocalTime() < now.toLocalTime()) {
+
             startTime = LocalDateTime.of(
                 startDate.year,
                 startDate.month,
                 startDate.dayOfMonth,
-                now.hour + 1,
+                now.hour,
                 0
             )
             endTime =
-                LocalDateTime.of(endDate.year, endDate.month, endDate.dayOfMonth, now.hour + 1, 0)
+                LocalDateTime.of(endDate.year, endDate.month, endDate.dayOfMonth, now.hour, 0)
         }
 
         chosen_start_time.text =
@@ -291,7 +292,11 @@ class NewEvent : Fragment(), PlaceSelectionListener {
                             "NewEvent",
                             "Event added with ID: ${document.id}"
                         )
-                        Snackbar.make(activity!!.findViewById(android.R.id.content), "Event created successfully!", Snackbar.LENGTH_SHORT)
+                        Snackbar.make(
+                                activity!!.findViewById(android.R.id.content),
+                                "Event created successfully!",
+                                Snackbar.LENGTH_SHORT
+                            )
                             .setAction("Action", null)
                             .show()
                         fragmentManager!!.popBackStack()
