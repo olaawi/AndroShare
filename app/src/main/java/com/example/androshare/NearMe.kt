@@ -3,27 +3,26 @@ package com.example.androshare
 import EventAdapter
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Intent
+import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
-import android.net.Uri
+import android.location.LocationManager
 import android.os.Bundle
-import android.provider.Settings
+import android.os.Looper
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.*
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.FirebaseFirestore
 import java.time.LocalDateTime
-import com.google.android.material.snackbar.Snackbar
 
 
 // TODO: change max radius
@@ -42,38 +41,11 @@ class NearMe : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var eventAdapter: EventAdapter
 
-//    private var mLatitudeLabel: String? = null
-//    private var mLongitudeLabel: String? = null
-//    private var mLatitudeText: TextView? = null
-//    private var mLongitudeText: TextView? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        mLatitudeLabel = "Latitude"
-//        mLongitudeLabel = "Longitude"
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this.activity!!)
         database = FirebaseFirestore.getInstance()
         this.events = arrayListOf<Event?>()
-
-        // TODO: check where to do fisrt location request to not get null later
-//        val mLocationRequest = LocationRequest.create()
-//        mLocationRequest.interval = 60000
-//        mLocationRequest.fastestInterval = 5000
-//        mLocationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-//        val mLocationCallback = object : LocationCallback() {
-//            override fun onLocationResult(locationResult: LocationResult?) {
-//                if (locationResult == null) {
-//                    return
-//                }
-//                for (location in locationResult.locations) {
-//                    if(location != null) {
-//                        Log.d("NearMe - onCreate", "first location request")
-//                    }
-//                }
-//            }
-//        }
-//        LocationServices.getFusedLocationProviderClient(context!!)
-//            .requestLocationUpdates(mLocationRequest, mLocationCallback, null)
     }
 
     override fun onCreateView(
@@ -112,6 +84,9 @@ class NearMe : Fragment() {
         super.onStart()
         if (!checkPermissions()) {
             requestPermissions()
+            if (!isLocationEnabled()) {
+                Toast.makeText(context, "Please enable location", Toast.LENGTH_LONG).show()
+            }
         } else {
             getLastLocation()
         }
@@ -178,7 +153,7 @@ class NearMe : Fragment() {
                         events.add(currentEvent)
                     }
                 }
-                // TODO: add fun to view items
+                // TODO exclude events i'm already in
                 this.eventAdapter =
                     EventAdapter(
                         this.context!!,
@@ -202,31 +177,26 @@ class NearMe : Fragment() {
     private fun getLastLocation() {
         mFusedLocationClient!!.lastLocation
             .addOnCompleteListener(this.activity!!) { task ->
-                if (task.isSuccessful && task.result != null) {
-                    currentLocation = task.result
-                    findEventsNearMe()
-//                    mLatitudeText!!.text = "Lognitude"+":   "+
-//                            (currentLocation )!!.latitude
-//                    mLongitudeText!!.text = "Latitude"+":   "+
-//                            (currentLocation )!!.longitude
-                    Log.d("getLastLocation - Longitude", (currentLocation)!!.longitude.toString())
-                    Log.d("getLastLocation - Latitude", (currentLocation)!!.latitude.toString())
+                if (task.isSuccessful) {
+                    if (task.result == null) {
+                        requestNewLocationData()
+                    } else {
+                        currentLocation = task.result
+                        findEventsNearMe()
+                        Log.d(
+                            "getLastLocation - Longitude",
+                            (currentLocation)!!.longitude.toString()
+                        )
+                        Log.d("getLastLocation - Latitude", (currentLocation)!!.latitude.toString())
+                    }
                 } else {
-                    Log.d("getLastLocation", "Task failed or result=null")
                     Toast.makeText(context, "No location detected", Toast.LENGTH_LONG).show()
 
                 }
             }
+
     }
 
-
-//    private fun showSnackbar(
-//        mainTextStringId: String, actionStringId: Int,
-//        listener: View.OnClickListener
-//    ) {
-//
-//        Toast.makeText(context, mainTextStringId, Toast.LENGTH_LONG).show()
-//    }
 
     ////////////////////
     private fun checkPermissions(): Boolean {
@@ -236,6 +206,7 @@ class NearMe : Fragment() {
         )
         return permissionState == PackageManager.PERMISSION_GRANTED
     }
+
 
     private fun startLocationPermissionRequest() {
         ActivityCompat.requestPermissions(
@@ -250,7 +221,6 @@ class NearMe : Fragment() {
             this.activity!!,
             Manifest.permission.ACCESS_FINE_LOCATION
         )
-
         // Provide an additional rationale to the user. This would happen if the user denied the
         // request previously, but didn't check the "Don't ask again" checkbox.
         if (shouldProvideRationale) {
@@ -266,12 +236,6 @@ class NearMe : Fragment() {
                 // Request permission
                 startLocationPermissionRequest()
             }
-//            showSnackbar("Please allow access to location to activate this service", android.R.string.ok,
-//                View.OnClickListener {
-//                    // Request permission
-//                    startLocationPermissionRequest()
-//                })
-
         } else {
             Log.d("requestPermissions", "Requesting permission")
             // Request permission. It's possible this can be auto answered if device policy
@@ -281,105 +245,101 @@ class NearMe : Fragment() {
         }
     }
 
-    /**
-     * Callback received when a permissions request has been completed.
-     */
+    private fun isLocationEnabled(): Boolean {
+        val locationManager: LocationManager =
+            activity!!.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
+            LocationManager.NETWORK_PROVIDER
+        )
+    }
+
     override fun onRequestPermissionsResult(
-        requestCode: Int, permissions: Array<String>,
+        requestCode: Int,
+        permissions: Array<String>,
         grantResults: IntArray
     ) {
-        Log.i("onRequestPermissionsResult", "onRequestPermissionResult")
         if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
-            if (grantResults.isEmpty()) {
-                // If user interaction was interrupted, the permission request is cancelled and you
-                // receive empty arrays.
-                Log.i("onRequestPermissionsResult", "User interaction was cancelled.")
-            } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission granted.
+            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                 getLastLocation()
-            } else {
-                // Permission denied.
-
-                // Notify the user via a SnackBar that they have rejected a core permission for the
-                // app, which makes the Activity useless. In a real app, core permissions would
-                // typically be best requested during a welcome-screen flow.
-
-                // Additionally, it is important to remember that a permission might have been
-                // rejected without asking the user for permission (device policy or "Never ask
-                // again" prompts). Therefore, a user interface affordance is typically implemented
-                // when permissions are denied. Otherwise, your app could appear unresponsive to
-                // touches or interactions which have required permissions.
-
-                Snackbar.make(
-                    this.view!!,
-                    "permission_denied_explanation",
-                    Snackbar.LENGTH_LONG
-                ).setAction(R.string.settings) {
-                    // Build intent that displays the App settings screen.
-                    val intent = Intent()
-                    intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-                    val uri = Uri.fromParts(
-                        "package",
-                        BuildConfig.APPLICATION_ID, null
-                    )
-                    intent.data = uri
-                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                    startActivity(intent)
-                }
-
-//                showSnackbar("permission_denied_explanation", R.string.settings,
-//                    View.OnClickListener {
-//                        // Build intent that displays the App settings screen.
-//                        val intent = Intent()
-//                        intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-//                        val uri = Uri.fromParts(
-//                            "package",
-//                            BuildConfig.APPLICATION_ID, null
-//                        )
-//                        intent.data = uri
-//                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-//                        startActivity(intent)
-//                    })
             }
         }
     }
-    ////////////////////
 
-//    fun onButtonPressed(uri: Uri) {
-//        this.listener?.onFragmentInteraction(uri)
-//    }
+    @SuppressLint("MissingPermission")
+    private fun requestNewLocationData() {
+        val mLocationRequest = LocationRequest()
+        mLocationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        mLocationRequest.interval = 0
+        mLocationRequest.fastestInterval = 0
+        mLocationRequest.numUpdates = 1
 
-//    override fun onAttach(context: Context) {
-//        super.onAttach(context)
-//        if (context is OnFragmentInteractionListener) {
-//            listener = context
-//        } else {
-//            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
-//        }
-//    }
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this.activity!!)
+        mFusedLocationClient!!.requestLocationUpdates(
+            mLocationRequest, mLocationCallback,
+            Looper.myLooper()
+        )
+    }
 
-    override fun onDetach() {
-        super.onDetach()
+    private val mLocationCallback = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult) {
+            val mLastLocation: Location = locationResult.lastLocation
+            currentLocation = mLastLocation
+//            findViewByIdewById<TextView>(R.id.latTextView).text = mLastLocation.latitude.toString()
+//            findViewById<TextView>(R.id.lonTextView).text = mLastLocation.longitude.toString()
+        }
     }
 
     /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     *
-     *
-     * See the Android Training lesson [Communicating with Other Fragments]
-     * (http://developer.android.com/training/basics/fragments/communicating.html)
-     * for more information.
+     * Callback received when a permissions request has been completed.
      */
-//    interface OnFragmentInteractionListener {
-//        fun onFragmentInteraction(uri: Uri)
+//    override fun onRequestPermissionsResult(
+//        requestCode: Int, permissions: Array<String>,
+//        grantResults: IntArray
+//    ) {
+//        Log.i("onRequestPermissionsResult", "onRequestPermissionResult")
+//        if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
+//            if (grantResults.isEmpty()) {
+//                // If user interaction was interrupted, the permission request is cancelled and you
+//                // receive empty arrays.
+//                Log.i("onRequestPermissionsResult", "User interaction was cancelled.")
+//            } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                // Permission granted.
+//                getLastLocation()
+//            } else {
+//                // Permission denied.
+//
+//                // Notify the user via a SnackBar that they have rejected a core permission for the
+//                // app, which makes the Activity useless. In a real app, core permissions would
+//                // typically be best requested during a welcome-screen flow.
+//
+//                // Additionally, it is important to remember that a permission might have been
+//                // rejected without asking the user for permission (device policy or "Never ask
+//                // again" prompts). Therefore, a user interface affordance is typically implemented
+//                // when permissions are denied. Otherwise, your app could appear unresponsive to
+//                // touches or interactions which have required permissions.
+//
+//                Snackbar.make(
+//                    this.view!!,
+//                    "permission_denied_explanation",
+//                    Snackbar.LENGTH_LONG
+//                ).setAction(R.string.settings) {
+//                    // Build intent that displays the App settings screen.
+//                    val intent = Intent()
+//                    intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+//                    val uri = Uri.fromParts(
+//                        "package",
+//                        BuildConfig.APPLICATION_ID, null
+//                    )
+//                    intent.data = uri
+//                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+//                    startActivity(intent)
+//                }
+//            }
+//        }
 //    }
-
+    ////////////////////
 
     companion object {
-        //        private val TAG = "LocationProvider"
         private const val REQUEST_PERMISSIONS_REQUEST_CODE = 34
     }
 }
