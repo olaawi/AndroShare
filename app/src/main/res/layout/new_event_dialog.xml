@@ -1,249 +1,295 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:fitsSystemWindows="true"
-    android:orientation="vertical"
     android:background="@color/primaryColor"
     tools:context=".NewEvent">
 
-    <LinearLayout
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="3dp">
+
+        <androidx.appcompat.widget.Toolbar
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp">
+
+                <ImageView
+                    android:id="@+id/cancel_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:src="@drawable/ic_close_black_24dp" />
+
+                <TextView
+                    android:id="@+id/confirm_button"
+                    style="@style/Subtitle1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:text="CONFIRM"
+                    android:textColor="@color/accentColor"
+                    android:textStyle="bold" />
+
+            </RelativeLayout>
+
+        </androidx.appcompat.widget.Toolbar>
+
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@drawable/empty_tall_divider"
-        android:orientation="vertical"
-        android:padding="24dp"
-        android:showDividers="middle">
-
-        <!--        TODO: add event description-->
-
-        <EditText
-            android:id="@+id/new_event_title"
-            style="@style/Headline5"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:hint="Title"
-            android:inputType="textCapWords" />
-
-        <EditText
-            android:padding="4dp"
-            android:id="@+id/new_event_descriptions"
-            style="@style/Body1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/rectangle1"
-            android:hint="Enter event description..."
-            android:inputType="textCapSentences" />
-
-        <TextView
-            style="@style/Body2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Location" />
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <fragment
-                android:id="@+id/event_location_autocomplete"
-                android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
-                android:layout_width="match_parent"
-                android:layout_height="20dp" />
-        </androidx.cardview.widget.CardView>
-
-        <!--        <CheckBox-->
-        <!--            android:id="@+id/event_type_check_box"-->
-        <!--            style="@style/TextAppearance.MdcTypographyStyles.Body2"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:text="Private Event" />-->
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:divider="@drawable/empty_tall_divider"
-            android:orientation="horizontal"
+            android:orientation="vertical"
+            android:padding="24dp"
             android:showDividers="middle">
 
-            <ImageView
+            <EditText
+                android:id="@+id/new_event_title"
+                style="@style/Headline5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:hint="Title"
+                android:inputType="textCapWords|textNoSuggestions"
+                android:maxLength="25" />
+
+            <EditText
+                android:id="@+id/new_event_descriptions"
+                style="@style/Body1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rectangle1"
+                android:hint="Enter event description..."
+                android:inputType="textCapSentences|textNoSuggestions|textMultiLine"
+                android:maxLines="5"
+                android:padding="4dp" />
+
+            <TextView
+                style="@style/Body2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Location" />
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <fragment
+                    android:id="@+id/event_location_autocomplete"
+                    android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp" />
+            </androidx.cardview.widget.CardView>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_date_range_black_24dp"
-                android:tint="@color/accentColor"/>
+                android:divider="@drawable/empty_tall_divider"
+                android:orientation="horizontal"
+                android:showDividers="middle">
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <Button
-                    android:id="@+id/start_date"
-                    android:layout_width="150dp"
-                    android:layout_height="24dp"
-                    android:background="@drawable/rectangle1" />
-
-                <TextView
-                    android:id="@+id/chosen_start_date"
+                <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=""
-                    android:layout_gravity="center"/>
-            </FrameLayout>
+                    android:src="@drawable/ic_date_range_black_24dp"
+                    android:tint="@color/accentColor" />
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-                <Button
-                    android:id="@+id/end_date"
-                    android:layout_width="150dp"
-                    android:layout_height="24dp"
-                    android:background="@drawable/rectangle1" />
+                    <Button
+                        android:id="@+id/start_date"
+                        android:layout_width="150dp"
+                        android:layout_height="24dp"
+                        android:background="@drawable/rectangle1" />
 
-                <TextView
-                    android:id="@+id/chosen_end_date"
+                    <TextView
+                        android:id="@+id/chosen_start_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <Button
+                        android:id="@+id/end_date"
+                        android:layout_width="150dp"
+                        android:layout_height="24dp"
+                        android:background="@drawable/rectangle1" />
+
+                    <TextView
+                        android:id="@+id/chosen_end_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="" />
+                </FrameLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:divider="@drawable/empty_tall_divider"
+                android:orientation="horizontal"
+                android:showDividers="middle">
+
+                <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=""
-                    android:layout_gravity="center"/>
-            </FrameLayout>
+                    android:src="@drawable/ic_access_time_black_24dp"
+                    android:tint="@color/accentColor" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <Button
+                        android:id="@+id/start_time"
+                        android:layout_width="150dp"
+                        android:layout_height="24dp"
+                        android:background="@drawable/rectangle1" />
+
+                    <TextView
+                        android:id="@+id/chosen_start_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <Button
+                        android:id="@+id/end_time"
+                        android:layout_width="150dp"
+                        android:layout_height="24dp"
+                        android:background="@drawable/rectangle1" />
+
+                    <TextView
+                        android:id="@+id/chosen_end_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="" />
+                </FrameLayout>
+
+            </LinearLayout>
+
+
+            <Switch
+                android:id="@+id/event_type_switch"
+                style="@style/Body2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="@string/private_event" />
+
+            <LinearLayout
+                android:id="@+id/new_event_pin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        style="@style/Body2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Password" />
+
+<!--                    <View-->
+<!--                        android:layout_width="160dp"-->
+<!--                        android:layout_height="0dp" />-->
+
+                    <EditText
+                        android:id="@+id/new_event_pin_text"
+                        style="@style/Body2"
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPassword"
+                        android:background="@drawable/rectangle1"
+                        android:maxLength="10"
+                        android:padding="4dp"
+                        android:layout_alignParentEnd="true"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        style="@style/Body2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Confirm Password" />
+
+<!--                    <View-->
+<!--                        android:layout_width="97dp"-->
+<!--                        android:layout_height="0dp" />-->
+
+                    <EditText
+                        android:id="@+id/new_event_confirm_pin_text"
+                        style="@style/Body2"
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPassword"
+                        android:background="@drawable/rectangle1"
+                        android:maxLength="10"
+                        android:padding="4dp"
+                        android:layout_alignParentEnd="true"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+
+            <!--            <EditText-->
+            <!--                android:id="@+id/new_event_pin"-->
+            <!--                style="@style/Body1"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:autofillHints="@string/pin"-->
+            <!--                android:background="@color/accentColor"-->
+            <!--                android:gravity="center"-->
+            <!--                android:inputType="numberPassword"-->
+            <!--                android:visibility="visible" />-->
+
+
+            <TextView
+                android:id="@+id/new_event_warning"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/holo_red_dark"
+                android:visibility="invisible" />
+
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:divider="@drawable/empty_tall_divider"
-            android:orientation="horizontal"
-            android:showDividers="middle">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_access_time_black_24dp"
-                android:tint="@color/accentColor"/>
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <Button
-                    android:id="@+id/start_time"
-                    android:layout_width="150dp"
-                    android:layout_height="24dp"
-                    android:background="@drawable/rectangle1" />
-
-                <TextView
-                    android:id="@+id/chosen_start_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:layout_gravity="center"/>
-            </FrameLayout>
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <Button
-                    android:id="@+id/end_time"
-                    android:layout_width="150dp"
-                    android:layout_height="24dp"
-                    android:background="@drawable/rectangle1" />
-
-                <TextView
-                    android:id="@+id/chosen_end_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:layout_gravity="center"/>
-            </FrameLayout>
-
-        </LinearLayout>
-
-
-        <!--        <RelativeLayout-->
-        <!--            android:id="@+id/start_date"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="wrap_content">-->
-
-        <!--            <TextView-->
-        <!--                android:layout_width="wrap_content"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                android:layout_alignParentLeft="true"-->
-        <!--                android:text="Start"-->
-        <!--                style="@style/TextAppearance.MdcTypographyStyles.Body2" />-->
-
-        <!--            <TextView-->
-        <!--                android:id="@+id/chosen_start_date"-->
-        <!--                android:layout_width="wrap_content"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                android:layout_alignParentRight="true"-->
-        <!--                android:text=""-->
-        <!--                style="@style/TextAppearance.MdcTypographyStyles.Body2" />-->
-        <!--        </RelativeLayout>-->
-
-        <!--        <RelativeLayout-->
-        <!--            android:id="@+id/end_date"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="wrap_content">-->
-        <!--            <TextView-->
-        <!--                android:layout_width="wrap_content"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                android:text="End"-->
-        <!--                android:layout_alignParentLeft="true"-->
-        <!--                style="@style/TextAppearance.MdcTypographyStyles.Body2"/>-->
-        <!--            <TextView-->
-        <!--                android:id="@+id/chosen_end_date"-->
-        <!--                android:layout_width="wrap_content"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                android:layout_alignParentRight="true"-->
-        <!--                android:text=""-->
-        <!--                style="@style/TextAppearance.MdcTypographyStyles.Body2" />-->
-        <!--        </RelativeLayout>-->
-
-        <Switch
-            android:id="@+id/event_type_switch"
-            style="@style/Body2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:checked="false"
-            android:text="@string/private_event" />
-
-        <EditText
-            android:id="@+id/new_event_pin"
-            style="@style/Body1"
-            android:layout_width="80dp"
-            android:layout_height="30dp"
-            android:autofillHints="@string/pin"
-            android:gravity="center"
-            android:inputType="numberPassword"
-            android:visibility="invisible" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="end"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/cancel_button"
-                style="@style/Button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Cancel"
-                android:background="@android:color/transparent"/>
-
-            <Button
-                android:id="@+id/confirm_button"
-                style="@style/Button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Confirm"
-                android:backgroundTint="@color/primaryColor"/>
-        </LinearLayout>
-
-    </LinearLayout>
-
-</RelativeLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
