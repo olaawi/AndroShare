@@ -33,6 +33,7 @@ class NearMe : Fragment() {
 
     //Provides the entry point to the Fused Location Provider API.
     private var mFusedLocationClient: FusedLocationProviderClient? = null
+
     //Represents a geographical location.
     private var currentLocation: Location? = null
     private lateinit var database: FirebaseFirestore
@@ -87,6 +88,8 @@ class NearMe : Fragment() {
             if (!isLocationEnabled()) {
                 Toast.makeText(context, "Please enable location", Toast.LENGTH_LONG).show()
             }
+        } else if (!isLocationEnabled()) {
+            Toast.makeText(context, "Please enable location", Toast.LENGTH_LONG).show()
         } else {
             getLastLocation()
         }
