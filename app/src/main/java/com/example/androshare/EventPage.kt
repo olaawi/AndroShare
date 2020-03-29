@@ -78,8 +78,7 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
         }
 
         view.findViewById<ImageView>(R.id.event_more).setOnClickListener {
-            // TODO implement
-            Toast.makeText(context, "More here", Toast.LENGTH_SHORT).show()
+//            Toast.makeText(context, "More here", Toast.LENGTH_SHORT).show()
             val popUpMenu = PopupMenu(context, it)
 
             val account = GoogleSignIn.getLastSignedInAccount(context)
