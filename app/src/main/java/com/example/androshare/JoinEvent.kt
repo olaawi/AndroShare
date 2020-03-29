@@ -68,14 +68,14 @@ class JoinEvent(private val event: Event) : DialogFragment() {
             } else {
                 //TODO add event for user + add user as participant
                 val account = GoogleSignIn.getLastSignedInAccount(context)
-                val user = User(
-                    account!!.givenName!!,
-                    account.familyName!!,
-                    account.email!!,
-                    account.id!!
-                )
+//                val user = User(
+//                    account!!.givenName!!,
+//                    account.familyName!!,
+//                    account.email!!,
+//                    account.id!!
+//                )
                 // add event to user
-                val doc1 = database.collection("users").document(account.id!!)
+                val doc1 = database.collection("users").document(account!!.id!!)
                 doc1.get()
                     .addOnSuccessListener { document ->
                         val eventsList = document.get("events") as ArrayList<String>
@@ -96,8 +96,8 @@ class JoinEvent(private val event: Event) : DialogFragment() {
                 val doc = database.collection("events").document(event.id)
                 doc.get()
                     .addOnSuccessListener { document ->
-                        val usersList = document.get("participants") as ArrayList<User>
-                        usersList.add(user)
+                        val usersList = document.get("participants") as ArrayList<String>
+                        usersList.add(account.id!!)
                         database.collection("events").document(event.id)
                             .update("participants", usersList)
                             .addOnSuccessListener {
