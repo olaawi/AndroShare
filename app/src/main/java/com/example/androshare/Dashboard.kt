@@ -48,6 +48,7 @@ class Dashboard : Fragment() {
         return inflater.inflate(R.layout.fragment_dashboard, container, false)
     }
 
+    @Suppress("UNCHECKED_CAST")
     @SuppressLint("InflateParams")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         this.recyclerView = view.findViewById(R.id.recyclerView)
@@ -76,8 +77,8 @@ class Dashboard : Fragment() {
 //        val user = User(account!!.givenName!!, account.familyName!!, account.email!!, account.id!!)
         val userDoc = database.collection("users").document(account!!.id!!)
         userDoc.get()
-            .addOnSuccessListener { document ->
-                val eventIds = document.get("events") as ArrayList<String>
+            .addOnSuccessListener { userDocument ->
+                val eventIds = userDocument.get("events") as ArrayList<String>
 
                 for (eventId in eventIds) {
 

@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.location.*
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.FirebaseFirestore
@@ -46,7 +47,7 @@ class NearMe : Fragment() {
         super.onCreate(savedInstanceState)
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this.activity!!)
         database = FirebaseFirestore.getInstance()
-        this.events = arrayListOf<Event?>()
+        this.events = arrayListOf()
     }
 
     override fun onCreateView(
@@ -62,11 +63,6 @@ class NearMe : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         this.recyclerView = view.findViewById(R.id.recyclerViewNearMe)
         this.recyclerView.layoutManager = LinearLayoutManager(this.context)
-//        this.eventAdapter =
-//            EventAdapter(this.context!!, this.events) { event: Event -> onEventClicked(event) }
-//        this.recyclerView.adapter = this.eventAdapter
-//        mLatitudeText = view.findViewById<View>(R.id.latitude_text) as TextView
-//        mLongitudeText = view.findViewById<View>(R.id.longitude_text) as TextView
     }
 
     private fun onEventClicked(event: Event) {
@@ -78,7 +74,6 @@ class NearMe : Fragment() {
             .add(android.R.id.content, eventPageFragment)
             .addToBackStack(null)
             .commit()
-//        Toast.makeText(context, "Clicked: ${event.title}", Toast.LENGTH_LONG).show()
     }
 
     override fun onStart() {
@@ -95,6 +90,7 @@ class NearMe : Fragment() {
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
     private fun findEventsNearMe() {
         events.clear()
         database.collection("events")
@@ -102,6 +98,11 @@ class NearMe : Fragment() {
             .addOnSuccessListener { result ->
                 for (document in result) {
                     Log.d("NearMe-findEventsNearMe1", "${document.id} => ${document.data}")
+                    val participantsList = document.get("participants")!! as ArrayList<String>
+                    val account = GoogleSignIn.getLastSignedInAccount(context)
+                    if(participantsList.contains(account!!.id!!)){
+                        continue
+                    }
                     val eventLng: Double = document.get("location.longitude")!! as Double
                     val eventLat: Double = document.get("location.latitude")!! as Double
                     val distance = FloatArray(1)
@@ -156,7 +157,7 @@ class NearMe : Fragment() {
                         events.add(currentEvent)
                     }
                 }
-                // TODO exclude events i'm already in
+                // TODO add notify
                 this.eventAdapter =
                     EventAdapter(
                         this.context!!,

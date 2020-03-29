@@ -16,7 +16,10 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import android.view.*
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.cardview.widget.CardView
@@ -36,7 +39,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import kotlinx.android.synthetic.main.event_page_menu_dialog.*
 import kotlinx.android.synthetic.main.event_page_menu_dialog.view.*
 import kotlinx.android.synthetic.main.fragment_event_page.*
 import kotlinx.android.synthetic.main.fragment_event_page.view.*
@@ -64,6 +66,8 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
         return inflater.inflate(R.layout.fragment_event_page, container, false)
     }
 
+    @SuppressLint("InflateParams")
+    @Suppress("UNCHECKED_CAST")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         view.findViewById<ImageView>(R.id.event_back).setOnClickListener {
@@ -76,7 +80,7 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
         view.findViewById<ImageView>(R.id.event_more).setOnClickListener {
             // TODO implement
             Toast.makeText(context, "More here", Toast.LENGTH_SHORT).show()
-            val popUpMenu = PopupMenu(context, view)
+            val popUpMenu = PopupMenu(context, it)
 
             val account = GoogleSignIn.getLastSignedInAccount(context)
             val isAdmin = event.isAdmin(account!!.id!!)
@@ -88,7 +92,7 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
             } else {
                 popUpMenu.inflate(R.menu.event_page_participant_menu)
             }
-            popUpMenu.show()
+            popUpMenu.gravity = Gravity.RELATIVE_LAYOUT_DIRECTION
 //            event_more.event_more_menu.showContextMenu()
             popUpMenu.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
@@ -96,13 +100,17 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
                         // remove user from participants
                         database.collection("events").document(event.id)
                             .get()
-                            .addOnSuccessListener { document ->
-                                val usersList = document.get("participants") as ArrayList<String>
+                            .addOnSuccessListener { eventDocument ->
+                                val usersList =
+                                    eventDocument.get("participants") as ArrayList<String>
                                 usersList.remove(account.id!!)
                                 database.collection("events").document(event.id)
                                     .update("participants", usersList)
                                     .addOnSuccessListener {
-                                        Log.d("EventPage", "left event with ID: ${document.id}")
+                                        Log.d(
+                                            "EventPage",
+                                            "left event with ID: ${eventDocument.id}"
+                                        )
                                         // remove event for user
                                         database.collection("users").document(account.id!!)
                                             .get()
@@ -115,10 +123,10 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
                                                     .addOnSuccessListener {
                                                         Log.d("EventPage", "Removed event for user")
                                                         Snackbar.make(
-                                                                view,
-                                                                "Successfully left event!",
-                                                                Snackbar.LENGTH_LONG
-                                                            )
+                                                            view,
+                                                            "Successfully left event!",
+                                                            Snackbar.LENGTH_LONG
+                                                        )
                                                             .setAction("Action", null)
                                                             .show()
                                                     }
@@ -155,24 +163,31 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
                             .setView(mDialogView)
                             .show()
                         mDialogView.event_page_dialog_confirm_button.setOnClickListener {
-                            val emailEditText = mDialogView.findViewById(R.id.event_page_dialog_email) as EditText
+                            val emailEditText =
+                                mDialogView.findViewById(R.id.event_page_dialog_email) as EditText
                             val email = emailEditText.text.toString()
                             database.collection("users").whereEqualTo("email", email)
                                 .get()
                                 .addOnSuccessListener { result ->
-                                    Log.d("HALA is mad", "WHY?")
-                                    if(result.isEmpty){
-                                        Log.e("HALA", "NO USER")
+                                    if (result.isEmpty) {
+                                        Log.d("EventPage", "No such user in database")
+                                        Snackbar.make(
+                                            view,
+                                            "Failed adding participant, no such user in database!",
+                                            Snackbar.LENGTH_LONG
+                                        )
+                                            .setAction("Action", null)
+                                            .show()
                                     }
                                     for (document in result) {
                                         val emailId = document.get("id") as String
                                         // if user is already a participant
                                         if (event.isParticipant(emailId)) {
                                             Snackbar.make(
-                                                    view,
-                                                    "User is already a participant",
-                                                    Snackbar.LENGTH_LONG
-                                                )
+                                                view,
+                                                "User is already a participant",
+                                                Snackbar.LENGTH_LONG
+                                            )
                                                 .setAction("Action", null)
                                                 .show()
                                         } else {
@@ -199,10 +214,10 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
                                                                         "Joined event with ID: ${document.id}"
                                                                     )
                                                                     Snackbar.make(
-                                                                            view,
-                                                                            "Successfully added participant!",
-                                                                            Snackbar.LENGTH_LONG
-                                                                        )
+                                                                        view,
+                                                                        "Successfully added participant!",
+                                                                        Snackbar.LENGTH_LONG
+                                                                    )
                                                                         .setAction("Action", null)
                                                                         .show()
                                                                 }
@@ -223,13 +238,6 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
                                         "Error adding new participant",
                                         exception
                                     )
-                                    Snackbar.make(
-                                            view,
-                                            "Failed adding participant, email is not in database!",
-                                            Snackbar.LENGTH_LONG
-                                        )
-                                        .setAction("Action", null)
-                                        .show()
                                 }
                             mBuilder.dismiss()
                         }
@@ -248,20 +256,31 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
                             .setView(mDialogView)
                             .show()
                         mDialogView.event_page_dialog_confirm_button.setOnClickListener {
-                            val emailEditText = mDialogView.findViewById<EditText>(R.id.event_page_dialog_email) as EditText
+                            val emailEditText =
+                                mDialogView.findViewById<EditText>(R.id.event_page_dialog_email) as EditText
                             val email = emailEditText.text.toString()
                             database.collection("users").whereEqualTo("email", email)
                                 .get()
                                 .addOnSuccessListener { result ->
+                                    if (result.isEmpty) {
+                                        Log.d("EvantPage", "User not in DB")
+                                        Snackbar.make(
+                                            view,
+                                            "Failed removing participant, user is not in database!",
+                                            Snackbar.LENGTH_LONG
+                                        )
+                                            .setAction("Action", null)
+                                            .show()
+                                    }
                                     for (document in result) {
                                         val emailId = document.get("id") as String
                                         // if user is not a participant
                                         if (!event.isParticipant(emailId)) {
                                             Snackbar.make(
-                                                    view,
-                                                    "User is not a participant",
-                                                    Snackbar.LENGTH_LONG
-                                                )
+                                                view,
+                                                "User is not a participant",
+                                                Snackbar.LENGTH_LONG
+                                            )
                                                 .setAction("Action", null)
                                                 .show()
                                         } else {
@@ -288,10 +307,10 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
                                                                         "Removed participant"
                                                                     )
                                                                     Snackbar.make(
-                                                                            view,
-                                                                            "Successfully removed participant!",
-                                                                            Snackbar.LENGTH_LONG
-                                                                        )
+                                                                        view,
+                                                                        "Successfully removed participant!",
+                                                                        Snackbar.LENGTH_LONG
+                                                                    )
                                                                         .setAction("Action", null)
                                                                         .show()
                                                                 }
@@ -300,7 +319,7 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
                                                 .addOnFailureListener {
                                                     Log.e(
                                                         "EventPage",
-                                                        "Error removing participant from"
+                                                        "Error removing participant from event"
                                                     )
                                                 }
                                         }
@@ -312,13 +331,6 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
                                         "Error removing participant, user is not in database",
                                         exception
                                     )
-                                    Snackbar.make(
-                                            view,
-                                            "Failed removing participant, email is not in database!",
-                                            Snackbar.LENGTH_LONG
-                                        )
-                                        .setAction("Action", null)
-                                        .show()
                                 }
                             mBuilder.dismiss()
                         }
@@ -337,28 +349,39 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
                             .setView(mDialogView)
                             .show()
                         mDialogView.event_page_dialog_confirm_button.setOnClickListener {
-                            val emailEditText = mDialogView.findViewById<EditText>(R.id.event_page_dialog_email) as EditText
+                            val emailEditText =
+                                mDialogView.findViewById<EditText>(R.id.event_page_dialog_email) as EditText
                             val email = emailEditText.text.toString()
                             database.collection("users").whereEqualTo("email", email)
                                 .get()
                                 .addOnSuccessListener { result ->
+                                    if (result.isEmpty) {
+                                        Log.d("EventPage", "User is not in DB")
+                                        Snackbar.make(
+                                            view,
+                                            "Failed adding admin, user is not in database!",
+                                            Snackbar.LENGTH_LONG
+                                        )
+                                            .setAction("Action", null)
+                                            .show()
+                                    }
                                     for (document in result) {
                                         val emailId = document.get("id") as String
                                         // if user is not a participant
                                         if (event.isAdmin(emailId)) {
                                             Snackbar.make(
-                                                    view,
-                                                    "User is already an admin",
-                                                    Snackbar.LENGTH_LONG
-                                                )
+                                                view,
+                                                "User is already an admin",
+                                                Snackbar.LENGTH_LONG
+                                            )
                                                 .setAction("Action", null)
                                                 .show()
                                         } else if (!event.isParticipant(emailId)) {
                                             Snackbar.make(
-                                                    view,
-                                                    "User is not a participant in this event",
-                                                    Snackbar.LENGTH_LONG
-                                                )
+                                                view,
+                                                "User is not a participant in this event",
+                                                Snackbar.LENGTH_LONG
+                                            )
                                                 .setAction("Action", null)
                                                 .show()
                                         } else {
@@ -378,10 +401,10 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
                                                                 "Added admin"
                                                             )
                                                             Snackbar.make(
-                                                                    view,
-                                                                    "Successfully added admin!",
-                                                                    Snackbar.LENGTH_LONG
-                                                                )
+                                                                view,
+                                                                "Successfully added admin!",
+                                                                Snackbar.LENGTH_LONG
+                                                            )
                                                                 .setAction("Action", null)
                                                                 .show()
                                                         }
@@ -401,13 +424,6 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
                                         "Error adding admin, user is not in database",
                                         exception
                                     )
-                                    Snackbar.make(
-                                            view,
-                                            "Failed adding admin, email is not in database!",
-                                            Snackbar.LENGTH_LONG
-                                        )
-                                        .setAction("Action", null)
-                                        .show()
                                 }
                             mBuilder.dismiss()
                         }
@@ -426,20 +442,31 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
                             .setView(mDialogView)
                             .show()
                         mDialogView.event_page_dialog_confirm_button.setOnClickListener {
-                            val emailEditText = mDialogView.findViewById<EditText>(R.id.event_page_dialog_email) as EditText
+                            val emailEditText =
+                                mDialogView.findViewById<EditText>(R.id.event_page_dialog_email) as EditText
                             val email = emailEditText.text.toString()
                             database.collection("users").whereEqualTo("email", email)
                                 .get()
                                 .addOnSuccessListener { result ->
+                                    if (result.isEmpty) {
+                                        Log.d("EventPage", "User is not in DB")
+                                        Snackbar.make(
+                                            view,
+                                            "Failed removing admin, email is not in database!",
+                                            Snackbar.LENGTH_LONG
+                                        )
+                                            .setAction("Action", null)
+                                            .show()
+                                    }
                                     for (document in result) {
                                         val emailId = document.get("id") as String
                                         // if user is not a participant
                                         if (!event.isAdmin(emailId)) {
                                             Snackbar.make(
-                                                    view,
-                                                    "User is not an admin",
-                                                    Snackbar.LENGTH_LONG
-                                                )
+                                                view,
+                                                "User is not an admin",
+                                                Snackbar.LENGTH_LONG
+                                            )
                                                 .setAction("Action", null)
                                                 .show()
                                         } else {
@@ -459,10 +486,10 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
                                                                 "Removed admin"
                                                             )
                                                             Snackbar.make(
-                                                                    view,
-                                                                    "Successfully removed admin!",
-                                                                    Snackbar.LENGTH_LONG
-                                                                )
+                                                                view,
+                                                                "Successfully removed admin!",
+                                                                Snackbar.LENGTH_LONG
+                                                            )
                                                                 .setAction("Action", null)
                                                                 .show()
                                                         }
@@ -482,13 +509,6 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
                                         "Error removing admin, user is not in database",
                                         exception
                                     )
-                                    Snackbar.make(
-                                            view,
-                                            "Failed removing admin, email is not in database!",
-                                            Snackbar.LENGTH_LONG
-                                        )
-                                        .setAction("Action", null)
-                                        .show()
                                 }
                             mBuilder.dismiss()
                         }
@@ -533,10 +553,10 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
                                         .delete()
                                         .addOnSuccessListener {
                                             Snackbar.make(
-                                                    view,
-                                                    "Successfully deleted event!",
-                                                    Snackbar.LENGTH_LONG
-                                                )
+                                                view,
+                                                "Successfully deleted event!",
+                                                Snackbar.LENGTH_LONG
+                                            )
                                                 .setAction("Action", null)
                                                 .show()
                                         }
@@ -549,6 +569,7 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
                 }
                 true
             }
+            popUpMenu.show()
         }
 
         view.findViewById<ImageView>(R.id.event_download).setOnClickListener {
@@ -599,6 +620,7 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
             })
     }
 
+    @Suppress("SameParameterValue", "SameParameterValue")
     private fun insertImage(
         cr: ContentResolver,
         source: Bitmap?,
@@ -811,14 +833,14 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
         val storageRef = storage.reference
         val eventFolder = storageRef.child(event.id)
         eventFolder.listAll().addOnSuccessListener { listResult ->
-                listResult.items.forEach { item ->
-                    item.downloadUrl.addOnSuccessListener { url ->
-                        images.add(Image(url))
-                        Log.e("images", url.toString())
-                        imageAdapter.notifyItemInserted(images.size - 1)
-                    }
+            listResult.items.forEach { item ->
+                item.downloadUrl.addOnSuccessListener { url ->
+                    images.add(Image(url))
+                    Log.e("images", url.toString())
+                    imageAdapter.notifyItemInserted(images.size - 1)
                 }
             }
+        }
             .addOnFailureListener {
                 Log.e("images", "failed to get images from storage")
             }

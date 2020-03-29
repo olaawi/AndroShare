@@ -39,16 +39,8 @@ class Profile : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val acct = GoogleSignIn.getLastSignedInAccount(activity)
-//        Log.d("tag", "Profile - signed_in: " + acct!!.id)
         myEventsCountTextView = view.findViewById<View>(R.id.profile_my_events_count) as TextView
         nameTextView = view.findViewById<View>(R.id.profile_name) as TextView
-        // TODO: change to signed in profile
-//        if(acct != null){
-//            nameTextView!!.text = acct.givenName + acct.familyName
-//            val user =  database.collection("users").whereEqualTo("id", acct.id)
-//        val user = database.collection("users").whereEqualTo("id", "RHofcmS36qEcPIihjqwe")
-
-        // TODO uncomment below this
         database.collection("users").whereEqualTo("id", acct!!.id)
             .get()
             .addOnSuccessListener { result ->
@@ -68,8 +60,6 @@ class Profile : Fragment() {
         signOutButton.setOnClickListener {
             signOut()
         }
-        // end TODO
-//        }
         val editAvatarTextView = view.findViewById<TextView>(R.id.profile_edit_avatar)
         editAvatarTextView.setOnClickListener {
             val chooseAvatarFragement = ChooseAvatar()
@@ -80,7 +70,6 @@ class Profile : Fragment() {
                 .addToBackStack(null)
                 .commit()
         }
-
     }
 
     private fun signOut() {
@@ -88,36 +77,6 @@ class Profile : Fragment() {
         FirebaseAuth.getInstance().signOut()
     }
 
-//    override fun onAttach(context: Context) {
-//        super.onAttach(context)
-//        if (context is OnFragmentInteractionListener) {
-//            listener = context
-//        } else {
-//            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
-//        }
-//    }
-
-//    override fun onDetach() {
-//        super.onDetach()
-//        listener = null
-//    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     *
-     *
-     * See the Android Training lesson [Communicating with Other Fragments]
-     * (http://developer.android.com/training/basics/fragments/communicating.html)
-     * for more information.
-     */
-//    interface OnFragmentInteractionListener {
-//        fun onFragmentInteraction(uri: Uri)
-//    }
-
     companion object {
-
     }
 }

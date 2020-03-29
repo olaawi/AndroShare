@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.GridView
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.material.snackbar.Snackbar
@@ -24,7 +25,7 @@ class ChooseAvatar : Fragment() {
         super.onCreate(savedInstanceState)
         database = FirebaseFirestore.getInstance()
         // Initialize a list of string values
-        avatars = arrayListOf<Int>()
+        avatars = arrayListOf()
         avatars.add(R.drawable.avatar1)
         avatars.add(R.drawable.avatar2)
         avatars.add(R.drawable.avatar3)
@@ -72,12 +73,12 @@ class ChooseAvatar : Fragment() {
         val adapter = AvatarAdapter(this.context!!, R.layout.avatar_image_view, avatars)
         grid.adapter = adapter
 
-
-        grid.onItemClickListener = AdapterView.OnItemClickListener { parent, v, position, id ->
+        grid.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _
+            ->
             // Write code to perform action when item is clicked.
             val acct = GoogleSignIn.getLastSignedInAccount(activity)
             database.collection("users").document(acct!!.id!!)
-                .update("avatar", this.avatars!![position])
+                .update("avatar", this.avatars[position])
                 .addOnSuccessListener {
                     Log.d("ChooseAvatar", "")
                     Snackbar.make(
@@ -91,46 +92,10 @@ class ChooseAvatar : Fragment() {
                 .addOnFailureListener {
                     Log.e("ChooseAvatar", "Error updating avatar")
                 }
-
         }
-
+        val closeTextView = view.findViewById<TextView>(R.id.choose_avatar_close)
+        closeTextView.setOnClickListener {
+            fragmentManager!!.popBackStack()
+        }
     }
-
-//    fun onButtonPressed(uri: Uri) {
-//        listener?.onFragmentInteraction(uri)
-//    }
-
-//    override fun onAttach(context: Context) {
-//        super.onAttach(context)
-//        if (context is OnFragmentInteractionListener) {
-//            listener = context
-//        } else {
-//            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
-//        }
-//    }
-
-//    override fun onDetach() {
-//        super.onDetach()
-//        listener = null
-//    }
-
-
-//    interface OnFragmentInteractionListener {
-//        fun onFragmentInteraction(uri: Uri)
-//    }
-//
-//    companion object {
-//        /**
-//         * Use this factory method to create a new instance of
-//         * this fragment using the provided parameters.
-//         *
-//         * @param param1 Parameter 1.
-//         * @param param2 Parameter 2.
-//         * @return A new instance of fragment ChooseAvatar.
-//         */
-//        @JvmStatic
-//        fun newInstance(param1: String, param2: String) =
-//            ChooseAvatar().apply {
-//            }
-//    }
 }
