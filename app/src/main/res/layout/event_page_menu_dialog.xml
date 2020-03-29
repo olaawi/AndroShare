@@ -25,7 +25,7 @@
         android:id="@+id/event_page_dialog_email"
         style="@style/Body1"
         android:layout_width="250dp"
-        android:layout_height="35dp"
+        android:layout_height="wrap_content"
         android:autofillHints="@string/email"
         android:gravity="center"
         android:inputType="textEmailAddress" />

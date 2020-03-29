@@ -60,15 +60,13 @@
                     android:layout_alignParentEnd="true"
                     android:backgroundTint="@color/accentColor"
                     android:src="@drawable/ic_more_vert_black_24dp"
-                    android:contentDescription="@string/more_menu">
+                    android:contentDescription="@string/more_menu"/>
 
-                    <com.google.android.material.navigation.NavigationView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:menu="@menu/event_page_participant_menu"
-                        android:id="@+id/event_more_menu"/>
-
-                </ImageView>
+<!--                    <com.google.android.material.navigation.NavigationView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        app:menu="@menu/event_page_participant_menu"-->
+<!--                        android:id="@+id/event_more_menu" />-->
 
             </RelativeLayout>
 
