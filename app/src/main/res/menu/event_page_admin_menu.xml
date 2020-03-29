@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <item
+            android:id="@+id/event_page_add_participant"
+            android:title="@string/add_participant"/>
+
+        <item
+            android:id="@+id/event_page_remove_participant"
+            android:title="@string/remove_participant"/>
+
+        <item
+            android:id="@+id/event_page_add_admin"
+            android:title="@string/add_admin"/>
+
+        <item
+            android:id="@+id/event_page_remove_admin"
+            android:title="@string/remove_admin"/>
+
+        <item
+            android:id="@+id/event_page_delete_event"
+            android:title="@string/delete_event"/>
+
+</menu>

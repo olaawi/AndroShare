@@ -34,22 +34,13 @@
                     android:src="@drawable/ic_close_black_24dp"/>
 
 <!--                <ImageView-->
-<!--                    android:id="@+id/choose_avatar_done"-->
+<!--                    android:id="@+id/choose_avatar_more"-->
 <!--                    android:layout_width="wrap_content"-->
 <!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_toStartOf="@id/choose_avatar_more"-->
+<!--                    android:layout_alignParentEnd="true"-->
 <!--                    android:backgroundTint="@color/accentColor"-->
-<!--                    android:contentDescription="@string/done"-->
-<!--                    android:src="@drawable/ic_done_black_24dp" />-->
-
-                <ImageView
-                    android:id="@+id/choose_avatar_more"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:backgroundTint="@color/accentColor"
-                    android:contentDescription="@string/more"
-                    android:src="@drawable/ic_more_vert_black_24dp" />
+<!--                    android:contentDescription="@string/more"-->
+<!--                    android:src="@drawable/ic_more_vert_black_24dp" />-->
 
             </RelativeLayout>
 
@@ -58,24 +49,24 @@
     </com.google.android.material.appbar.AppBarLayout>
 
 
-    <androidx.core.widget.NestedScrollView
+<!--    <androidx.core.widget.NestedScrollView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:layout_height="522dp">
 
-        <LinearLayout
+        <GridView
+            android:id="@+id/choose_avatar_grid"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="647dp"
+            android:horizontalSpacing="4dp"
+            android:numColumns="3"
+            android:verticalSpacing="4dp" />
 
-            <GridView
-                android:id="@+id/choose_avatar_grid"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:numColumns="3"
-                android:verticalSpacing="4dp"
-                android:horizontalSpacing="4dp"/>
-
-        </LinearLayout>
+    </LinearLayout>
 
 <!--        <LinearLayout-->
 <!--            android:id="@+id/event_bar"-->
@@ -122,6 +113,6 @@
 
 <!--        </LinearLayout>-->
 
-    </androidx.core.widget.NestedScrollView>
+<!--    </androidx.core.widget.NestedScrollView>-->
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

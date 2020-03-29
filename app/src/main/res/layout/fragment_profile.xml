@@ -44,12 +44,18 @@
             android:layout_gravity="center"
             android:background="@drawable/rectangle1">
 
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:id="@+id/space1"/>
+
             <ImageView
                 android:id="@+id/profile_avatar"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_centerHorizontal="true"
-                android:contentDescription="@string/avatar" />
+                android:contentDescription="@string/avatar"
+                android:layout_below="@+id/space1"/>
 
             <TextView
                 android:id="@+id/profile_edit_avatar"

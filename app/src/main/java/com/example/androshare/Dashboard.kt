@@ -73,8 +73,8 @@ class Dashboard : Fragment() {
         // Create list of the user's events
         // Get current logged in user
         val account = GoogleSignIn.getLastSignedInAccount(context)
-        val user = User(account!!.givenName!!, account.familyName!!, account.email!!, account.id!!)
-        val userDoc = database.collection("users").document(user.id)
+//        val user = User(account!!.givenName!!, account.familyName!!, account.email!!, account.id!!)
+        val userDoc = database.collection("users").document(account!!.id!!)
         userDoc.get()
             .addOnSuccessListener { document ->
                 val eventIds = document.get("events") as ArrayList<String>
@@ -127,16 +127,27 @@ class Dashboard : Fragment() {
                             )
                             currentEvent.id = document.get("id")!! as String
                             currentEvent.participants.clear() // Annoying bug
-                            val userIds = document.get("participants") as ArrayList<*>
+                            currentEvent.admins.clear() // Annoying bug
+                            val participantsIds = document.get("participants") as ArrayList<*>
+                            val adminsIds = document.get("admins") as ArrayList<*>
 
-                            for (userId in userIds) {
+                            for (userId in participantsIds) {
 //                                val avatar = ((userHash as HashMap<*, *>)["avatar"] as Long).toInt()
 //                                val givenName = (userHash as HashMap<*, *>)["givenName"] as String
 //                                val familyName = (userHash as HashMap<*, *>)["familyName"] as String
 //                                val currUser = User(givenName, familyName, "", "")
 //                                currUser.avatar = avatar
                                 currentEvent.participants.add(userId as String)
-                                Log.d("Dash","added user " + user.givenName)
+                                Log.d("Dash", "added participant id $userId")
+                            }
+                            for (userId in adminsIds) {
+//                                val avatar = ((userHash as HashMap<*, *>)["avatar"] as Long).toInt()
+//                                val givenName = (userHash as HashMap<*, *>)["givenName"] as String
+//                                val familyName = (userHash as HashMap<*, *>)["familyName"] as String
+//                                val currUser = User(givenName, familyName, "", "")
+//                                currUser.avatar = avatar
+                                currentEvent.admins.add(userId as String)
+                                Log.d("Dash", "added admin id $userId")
                             }
 
                             events.add(currentEvent)

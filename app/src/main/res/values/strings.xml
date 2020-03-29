@@ -24,4 +24,16 @@
     <string name="done">DONE</string>
     <string name="more">More</string>
     <string name="choose_avatar">Choose Avatar:</string>
+    <string name="add_participant">Add Participant</string>
+    <string name="add_admin">Add Admin</string>
+    <string name="delete_event">Delete Event</string>
+    <string name="leave_event">Leave Event</string>
+    <string name="more_menu">More menu</string>
+    <string name="download">Download</string>
+    <string name="ad_photo">Add photo</string>
+    <string name="remove_participant">Remove Participant</string>
+    <string name="remove_admin">Remove Admin</string>
+    <string name="confirm">Confirm</string>
+    <string name="email">Email</string>
+    <string name="please_insert_email_address">Please insert email address:</string>
 </resources>

@@ -77,22 +77,22 @@ class Event(
         participants.add(creator.id)
     }
 
-    fun addAdmin(newAdmin: User) {
-        admins.add(newAdmin.id)
-        if (!participants.contains(newAdmin.id))
-            participants.add(newAdmin.id)
+    fun addAdmin(newAdmin: String) {
+        admins.add(newAdmin)
+        if (!participants.contains(newAdmin))
+            participants.add(newAdmin)
     }
 
-    fun isAdmin(user: User): Boolean {
-        return admins.contains(user.id)
+    fun isAdmin(user: String): Boolean {
+        return admins.contains(user)
     }
 
-    fun addParticipant(newParticipant: User) {
-        participants.add(newParticipant.id)
+    fun addParticipant(newParticipant: String) {
+        participants.add(newParticipant)
     }
 
-    fun isParticipant(user: User): Boolean {
-        return participants.contains(user.id)
+    fun isParticipant(user: String): Boolean {
+        return participants.contains(user)
     }
 
 }
