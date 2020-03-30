@@ -772,39 +772,50 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
             for (image in pickedImages) {
                 // Upload to storage
                 // TODO check if location ok
-                val storageRef =
-                    storage.getReference(event.id + "/" + image.id + ".jpg")
-                storageRef.putFile(image.uri).addOnSuccessListener {
-                    Log.d("upload", "image added successfully!")
-                }
+
+                val exifInterface =
+                    ExifInterface(context!!.contentResolver.openInputStream(image.uri)!!)
+
+                var exif = ""
+                exif += "\nIMAGE_LENGTH: " + exifInterface.getAttribute(TAG_IMAGE_LENGTH)
+                exif += "\nIMAGE_WIDTH: " + exifInterface.getAttribute(TAG_IMAGE_WIDTH)
+                exif += "\n DATETIME: " + exifInterface.getAttribute(TAG_DATETIME)
+                exif += "\n TAG_MAKE: " + exifInterface.getAttribute(TAG_MAKE)
+                exif += "\n TAG_MODEL: " + exifInterface.getAttribute(TAG_MODEL)
+                exif += "\n TAG_ORIENTATION: " + exifInterface.getAttribute(TAG_ORIENTATION)
+                exif += "\n TAG_WHITE_BALANCE: " + exifInterface.getAttribute(TAG_WHITE_BALANCE)
+                exif += "\n TAG_FOCAL_LENGTH: " + exifInterface.getAttribute(TAG_FOCAL_LENGTH)
+                exif += "\n TAG_FLASH: " + exifInterface.getAttribute(TAG_FLASH)
+                exif += "\nGPS related:"
+                exif += "\n TAG_GPS_DATESTAMP: " + exifInterface.getAttribute(TAG_GPS_DATESTAMP)
+                exif += "\n TAG_GPS_TIMESTAMP: " + exifInterface.getAttribute(TAG_GPS_TIMESTAMP)
+                exif += "\n TAG_GPS_LATITUDE: " + exifInterface.getAttribute(TAG_GPS_LATITUDE)
+                exif += "\n TAG_GPS_LATITUDE_REF: " + exifInterface.getAttribute(TAG_GPS_LATITUDE_REF)
+                exif += "\n TAG_GPS_LONGITUDE: " + exifInterface.getAttribute(TAG_GPS_LONGITUDE)
+                exif += "\n TAG_GPS_LONGITUDE_REF: " + exifInterface.getAttribute(TAG_GPS_LONGITUDE_REF)
+                exif += "\n TAG_GPS_PROCESSING_METHOD: " + exifInterface.getAttribute(
+                    TAG_GPS_PROCESSING_METHOD
+                )
+                Log.e("exif", exif)
+
+
+                // TODO what we need to chech is exifInterface.getAttribute(TAG_GPS_LATITUDE)
+                // TODO and exifInterface.getAttribute(TAG_GPS_LONGITUDE)
+                // TODO plus the time exifInterface.getAttribute(TAG_GPS_TIMESTAMP)
+                // TODO and exifInterface.getAttribute(TAG_GPS_DATESTAMP)
+
+
+//                if(/* Location okay*/){
+
+                    val storageRef =
+                        storage.getReference(event.id + "/" + image.id + ".jpg")
+                    storageRef.putFile(image.uri).addOnSuccessListener {
+                        Log.d("upload", "image added successfully!")
+                    }
+
+//                }
             }
 
-
-            val exifInterface =
-                ExifInterface(context!!.contentResolver.openInputStream(imageUri!!)!!)
-
-            var exif = ""
-            exif += "\nIMAGE_LENGTH: " + exifInterface.getAttribute(TAG_IMAGE_LENGTH)
-            exif += "\nIMAGE_WIDTH: " + exifInterface.getAttribute(TAG_IMAGE_WIDTH)
-            exif += "\n DATETIME: " + exifInterface.getAttribute(TAG_DATETIME)
-            exif += "\n TAG_MAKE: " + exifInterface.getAttribute(TAG_MAKE)
-            exif += "\n TAG_MODEL: " + exifInterface.getAttribute(TAG_MODEL)
-            exif += "\n TAG_ORIENTATION: " + exifInterface.getAttribute(TAG_ORIENTATION)
-            exif += "\n TAG_WHITE_BALANCE: " + exifInterface.getAttribute(TAG_WHITE_BALANCE)
-            exif += "\n TAG_FOCAL_LENGTH: " + exifInterface.getAttribute(TAG_FOCAL_LENGTH)
-            exif += "\n TAG_FLASH: " + exifInterface.getAttribute(TAG_FLASH)
-            exif += "\nGPS related:"
-            exif += "\n TAG_GPS_DATESTAMP: " + exifInterface.getAttribute(TAG_GPS_DATESTAMP)
-            exif += "\n TAG_GPS_TIMESTAMP: " + exifInterface.getAttribute(TAG_GPS_TIMESTAMP)
-            exif += "\n TAG_GPS_LATITUDE: " + exifInterface.getAttribute(TAG_GPS_LATITUDE)
-            exif += "\n TAG_GPS_LATITUDE_REF: " + exifInterface.getAttribute(TAG_GPS_LATITUDE_REF)
-            exif += "\n TAG_GPS_LONGITUDE: " + exifInterface.getAttribute(TAG_GPS_LONGITUDE)
-            exif += "\n TAG_GPS_LONGITUDE_REF: " + exifInterface.getAttribute(TAG_GPS_LONGITUDE_REF)
-            exif += "\n TAG_GPS_PROCESSING_METHOD: " + exifInterface.getAttribute(
-                TAG_GPS_PROCESSING_METHOD
-            )
-
-            Log.e("exif", exif)
         }
     }
 

@@ -31,14 +31,17 @@ class ParticipantsList(private val event: Event) : Fragment() {
                 .get()
                 .addOnSuccessListener { document ->
                     participantsCount++
-                    participantsList.add(
-                        User(
-                            document.get("givenName") as String,
-                            document.get("familyName") as String,
-                            document.get("email") as String,
-                            document.get("id") as String
-                        )
+
+                    val user = User(
+                        document.get("givenName") as String,
+                        document.get("familyName") as String,
+                        document.get("email") as String,
+                        document.get("id") as String
                     )
+
+                    user.avatar = (document.get("avatar") as Long).toInt()
+
+                    participantsList.add(user)
                     if (participantsCount == event.participants.size) {
                         participantsAdapter = ParticipantsAdapter(activity!!, participantsList)
                         view.findViewById<ListView>(R.id.participants_list).adapter =
