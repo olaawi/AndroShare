@@ -30,8 +30,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:backgroundTint="@color/accentColor"
-                    android:src="@drawable/ic_arrow_back_black_24dp"
-                    android:contentDescription="@string/back_arrow" />
+                    android:contentDescription="@string/back_arrow"
+                    android:src="@drawable/ic_arrow_back_black_24dp" />
 
                 <ImageView
                     android:id="@+id/event_add"
@@ -39,9 +39,9 @@
                     android:layout_height="wrap_content"
                     android:layout_toStartOf="@id/event_more"
                     android:backgroundTint="@color/accentColor"
+                    android:contentDescription="@string/ad_photo"
                     android:src="@drawable/ic_add_a_photo_black_24dp"
-                    android:visibility="visible"
-                    android:contentDescription="@string/ad_photo" />
+                    android:visibility="visible" />
 
                 <ImageView
                     android:id="@+id/event_download"
@@ -49,9 +49,9 @@
                     android:layout_height="wrap_content"
                     android:layout_toStartOf="@id/event_more"
                     android:backgroundTint="@color/accentColor"
+                    android:contentDescription="@string/download"
                     android:src="@drawable/ic_file_download_black_24dp"
-                    android:visibility="invisible"
-                    android:contentDescription="@string/download" />
+                    android:visibility="invisible" />
 
                 <ImageView
                     android:id="@+id/event_more"
@@ -59,87 +59,77 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:backgroundTint="@color/accentColor"
-                    android:src="@drawable/ic_more_vert_black_24dp"
-                    android:contentDescription="@string/more_menu"/>
-
-<!--                    <com.google.android.material.navigation.NavigationView-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        app:menu="@menu/event_page_participant_menu"-->
-<!--                        android:id="@+id/event_more_menu" />-->
+                    android:contentDescription="@string/more_menu"
+                    android:src="@drawable/ic_more_vert_black_24dp" />
 
             </RelativeLayout>
 
         </androidx.appcompat.widget.Toolbar>
 
-        <!--        <com.google.android.material.tabs.TabLayout-->
-
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="match_parent"-->
-        <!--            app:layout_scrollFlags="scroll|enterAlways" />-->
-
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.core.widget.NestedScrollView
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/event_page_refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:layout_height="wrap_content"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
 
-        <LinearLayout
-            android:id="@+id/event_bar"
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <View
+
+            <LinearLayout
+                android:id="@+id/event_bar"
                 android:layout_width="match_parent"
-                android:layout_height="8dp" />
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/event_title"
-                style="@style/Headline5"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:scrollHorizontally="false"
-                android:text="@string/title"
-                android:textAlignment="center" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="8dp" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="8dp" />
+                <TextView
+                    android:id="@+id/event_title"
+                    style="@style/Headline5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:scrollHorizontally="false"
+                    android:text="@string/title"
+                    android:textAlignment="center" />
 
-            <TextView
-                android:id="@+id/event_description"
-                style="@style/Body1"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="@string/description" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="8dp" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="8dp" />
+                <TextView
+                    android:id="@+id/event_description"
+                    style="@style/Body1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/description" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="8dp" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="8dp" />
 
-            <View
-                android:layout_width="396dp"
-                android:layout_height="1dp"
-                android:layout_gravity="center_horizontal"
-                android:background="@color/primaryDarkColor" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="8dp" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="8dp" />
+                <View
+                    android:layout_width="396dp"
+                    android:layout_height="1dp"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@color/primaryDarkColor" />
 
-<!--            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout-->
-<!--                android:id="@+id/swipeContainer"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent">-->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="8dp" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/images_grid"
@@ -148,11 +138,10 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_margin="8dp" />
 
-<!--            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>-->
+            </LinearLayout>
 
-        </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
 
-    </androidx.core.widget.NestedScrollView>
-
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

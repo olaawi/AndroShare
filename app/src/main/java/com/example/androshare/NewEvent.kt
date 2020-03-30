@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Switch
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -232,15 +233,15 @@ class NewEvent : Fragment(), PlaceSelectionListener {
             // Check if all okay
             val warnings = ArrayList<String>()
             if (eventTitle == "")
-                warnings.add("* Please fill title.\n")
+                warnings.add("Title cannot be empty\n")
             if (eventDescription == "")
-                warnings.add("* Please fill description.\n")
+                warnings.add("Description cannot be empty\n")
             if (!::eventLocation.isInitialized)
-                warnings.add("* Please fill location.\n")
+                warnings.add("Location cannot be empty\n")
             if (eventType == Event.EventType.PRIVATE_EVENT && pin.length < 8)
-                warnings.add("* Password must be at least 8 characters.\n")
+                warnings.add("Password must be at least 8 characters\n")
             if (eventType == Event.EventType.PRIVATE_EVENT && pin != confirmPin)
-                warnings.add("* Passwords don't match.")
+                warnings.add("Passwords don't match")
 
             var warning = ""
             for (w in warnings) {
@@ -248,8 +249,16 @@ class NewEvent : Fragment(), PlaceSelectionListener {
             }
 
             if (warnings.size != 0) {
-                new_event_warning.text = warning
-                new_event_warning.visibility = View.VISIBLE
+
+                // Show alert
+                val builder = AlertDialog.Builder(context!!,R.style.alertDialogStyle)
+                builder.setTitle("Error")
+                builder.setMessage(warning)
+                builder.setNeutralButton("Ok"){ dialog, _ ->
+                    dialog.dismiss()
+                }
+                builder.show()
+
             } else {
 
                 // And finally create the event ..

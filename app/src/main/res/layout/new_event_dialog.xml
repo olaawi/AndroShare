@@ -211,8 +211,8 @@
                 android:id="@+id/new_event_pin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="invisible"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="invisible">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -224,20 +224,20 @@
                         android:layout_height="wrap_content"
                         android:text="Password" />
 
-<!--                    <View-->
-<!--                        android:layout_width="160dp"-->
-<!--                        android:layout_height="0dp" />-->
+                    <!--                    <View-->
+                    <!--                        android:layout_width="160dp"-->
+                    <!--                        android:layout_height="0dp" />-->
 
                     <EditText
                         android:id="@+id/new_event_pin_text"
                         style="@style/Body2"
                         android:layout_width="120dp"
                         android:layout_height="wrap_content"
-                        android:inputType="textPassword"
+                        android:layout_alignParentEnd="true"
                         android:background="@drawable/rectangle1"
+                        android:inputType="textPassword"
                         android:maxLength="10"
-                        android:padding="4dp"
-                        android:layout_alignParentEnd="true"/>
+                        android:padding="4dp" />
 
                 </RelativeLayout>
 
@@ -251,44 +251,22 @@
                         android:layout_height="wrap_content"
                         android:text="Confirm Password" />
 
-<!--                    <View-->
-<!--                        android:layout_width="97dp"-->
-<!--                        android:layout_height="0dp" />-->
 
                     <EditText
                         android:id="@+id/new_event_confirm_pin_text"
                         style="@style/Body2"
                         android:layout_width="120dp"
                         android:layout_height="wrap_content"
-                        android:inputType="textPassword"
+                        android:layout_alignParentEnd="true"
                         android:background="@drawable/rectangle1"
+                        android:inputType="textPassword"
                         android:maxLength="10"
-                        android:padding="4dp"
-                        android:layout_alignParentEnd="true"/>
+                        android:padding="4dp" />
 
                 </RelativeLayout>
 
             </LinearLayout>
 
-
-            <!--            <EditText-->
-            <!--                android:id="@+id/new_event_pin"-->
-            <!--                style="@style/Body1"-->
-            <!--                android:layout_width="wrap_content"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:autofillHints="@string/pin"-->
-            <!--                android:background="@color/accentColor"-->
-            <!--                android:gravity="center"-->
-            <!--                android:inputType="numberPassword"-->
-            <!--                android:visibility="visible" />-->
-
-
-            <TextView
-                android:id="@+id/new_event_warning"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/holo_red_dark"
-                android:visibility="invisible" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

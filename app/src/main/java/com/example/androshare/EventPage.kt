@@ -32,6 +32,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
@@ -75,6 +76,16 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
         }
         view.findViewById<ImageView>(R.id.event_add).setOnClickListener {
             uploadImage()
+        }
+
+        // set up refresh layout
+        val refreshView = view.findViewById<SwipeRefreshLayout>(R.id.event_page_refresh)
+        refreshView.setColorSchemeResources(R.color.accentColor)
+        refreshView.setProgressBackgroundColorSchemeResource(R.color.primaryDarkColor)
+        refreshView.setOnRefreshListener {
+            // TODO reload data from database if something changed
+            initGrid(view)
+            refreshView.isRefreshing = false
         }
 
         view.findViewById<ImageView>(R.id.event_more).setOnClickListener {
@@ -709,10 +720,29 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
     }
 
     private fun pickImage() {
+//        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+//        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+//        intent.addCategory(Intent.CATEGORY_OPENABLE)
+//        intent.type = "image/*"
+//        intent.putExtra(intent.type,"video/*")
+//        startActivityForResult(intent, IMAGE_PICK_CODE)
+
+
+//        val photoPickerIntent = Intent(Intent.ACTION_PICK)
+//        photoPickerIntent.type = "image/*"
+//        photoPickerIntent.putExtra(
+//            Intent.EXTRA_MIME_TYPES,
+//            arrayOf("video/*")
+//        )
+//        startActivityForResult(photoPickerIntent, IMAGE_PICK_CODE)
+
+        // TODO see if downloading a video works. Uploading works already tested!!!
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
         intent.addCategory(Intent.CATEGORY_OPENABLE)
-        intent.type = "image/*"
+        intent.type = "*/*"
+        val mimetypes = arrayOf("image/*", "video/*")
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes)
         startActivityForResult(intent, IMAGE_PICK_CODE)
     }
 
@@ -822,12 +852,13 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
     }
 
     private fun initGrid(view: View) {
-
         val grid = view.findViewById<RecyclerView>(R.id.images_grid)
         grid.layoutManager = GridLayoutManager(this.context, 4)
         imageAdapter = ImageAdapter(images, this)
         grid.adapter = imageAdapter
         grid.addItemDecoration(GridItemDecorator(4))
+
+        images.clear() // TODO check problematic?
 
         val storageRef = storage.reference
         val eventFolder = storageRef.child(event.id)
@@ -843,83 +874,6 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
             .addOnFailureListener {
                 Log.e("images", "failed to get images from storage")
             }
-
-//        val swipeContainer : SwipeRefreshLayout = view.findViewById(R.id.swipeContainer)
-//        swipeContainer.setOnRefreshListener {
-//            // Your code to refresh the list here.
-//            // Make sure you call swipeContainer.setRefreshing(false)
-//            // once the network request has completed successfully.
-//            Log.d("ref","refresh")
-//        }
-
-//        view.findViewById<SwipeRefreshLayout>(R.id.event_page_refresh).setOnRefreshListener {
-//            Log.e("ref","refreshed")
-//        }
-/*
-        val im1 = Image()
-        im1.drawable = R.drawable.avatar1
-        images.add(im1)
-
-        val im2 = Image()
-        im2.drawable = R.drawable.avatar2
-        images.add(im2)
-
-        val im3 = Image()
-        im3.drawable = R.drawable.avatar3
-        images.add(im3)
-
-        val im4 = Image()
-        im4.drawable = R.drawable.avatar4
-        images.add(im4)
-
-        val im5 = Image()
-        im5.drawable = R.drawable.avatar5
-        images.add(im5)
-
-        val im6 = Image()
-        im6.drawable = R.drawable.avatar6
-        images.add(im6)
-
-        val im7 = Image()
-        im7.drawable = R.drawable.avatar7
-        images.add(im7)
-
-        val im8 = Image()
-        im8.drawable = R.drawable.avatar8
-        images.add(im8)
-
-        val im9 = Image()
-        im9.drawable = R.drawable.avatar9
-        images.add(im9)
-
-        val im10 = Image()
-        im10.drawable = R.drawable.avatar10
-        images.add(im10)
-
-        val im11 = Image()
-        im11.drawable = R.drawable.avatar11
-        images.add(im11)
-
-        val im12 = Image()
-        im12.drawable = R.drawable.avatar12
-        images.add(im12)
-
-        val im13 = Image()
-        im13.drawable = R.drawable.avatar13
-        images.add(im13)
-
-        val im14 = Image()
-        im14.drawable = R.drawable.avatar14
-        images.add(im14)
-
-        val im15 = Image()
-        im15.drawable = R.drawable.avatar15
-        images.add(im15)
-
-        val im16 = Image()
-        im16.drawable = R.drawable.avatar16
-        images.add(im16)
-*/
     }
 
 

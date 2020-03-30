@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.firebase.firestore.FirebaseFirestore
 import java.time.LocalDateTime
@@ -51,14 +52,21 @@ class Dashboard : Fragment() {
     @Suppress("UNCHECKED_CAST")
     @SuppressLint("InflateParams")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        this.recyclerView = view.findViewById(R.id.recyclerView)
-        this.recyclerView.layoutManager = LinearLayoutManager(this.context)
-        this.eventAdapter =
-            EventAdapter(this.context!!, this.events) { event: Event -> onEventClicked(event) }
-        this.recyclerView.adapter = this.eventAdapter
-        this.newEventButton = view.findViewById(R.id.new_event_button)
+        // set up refresh layout
+        val refreshView = view.findViewById<SwipeRefreshLayout>(R.id.dashboard_refresh)
+        refreshView.setColorSchemeResources(R.color.accentColor)
+        refreshView.setProgressBackgroundColorSchemeResource(R.color.primaryDarkColor)
+        refreshView.setOnRefreshListener {
+            // TODO reload data from database if something changed
+            initEvents(view)
+            refreshView.isRefreshing = false
+        }
 
-        this.newEventButton.setOnClickListener {
+        initEvents(view)
+
+        newEventButton = view.findViewById(R.id.new_event_button)
+
+        newEventButton.setOnClickListener {
             val newFragment = NewEvent()
             val transaction = fragmentManager!!.beginTransaction()
             // TODO For a little polish, specify a transition animation
@@ -70,11 +78,20 @@ class Dashboard : Fragment() {
                 .addToBackStack(null)
                 .commit()
         }
+    }
+
+    private fun initEvents(view: View){
+        recyclerView = view.findViewById(R.id.recyclerView)
+        recyclerView.layoutManager = LinearLayoutManager(this.context)
+        eventAdapter =
+            EventAdapter(this.context!!, this.events) { event: Event -> onEventClicked(event) }
+        recyclerView.adapter = this.eventAdapter
+
+        events.clear() // TODO check if ok
 
         // Create list of the user's events
         // Get current logged in user
         val account = GoogleSignIn.getLastSignedInAccount(context)
-//        val user = User(account!!.givenName!!, account.familyName!!, account.email!!, account.id!!)
         val userDoc = database.collection("users").document(account!!.id!!)
         userDoc.get()
             .addOnSuccessListener { userDocument ->
@@ -160,7 +177,6 @@ class Dashboard : Fragment() {
             .addOnFailureListener { exception ->
                 Log.e("Dashboard", "Failed to get user from database", exception)
             }
-
     }
 
 }

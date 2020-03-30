@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.material.snackbar.Snackbar
@@ -61,10 +62,19 @@ class JoinEvent(private val event: Event) : DialogFragment() {
         }
 
         confirmButton.setOnClickListener {
-            if (event.type == Event.EventType.PRIVATE_EVENT && event.pin != pinEditText.text) {
-                Snackbar.make(view, "Wrong PIN, try again!", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null)
-                    .show()
+            if (event.type == Event.EventType.PRIVATE_EVENT && event.pin != pinEditText.text.toString()) {
+//                Snackbar.make(view, "Wrong PIN, try again!", Snackbar.LENGTH_LONG)
+//                    .setAction("Action", null)
+//                    .show()
+                // Show alert
+                val builder = AlertDialog.Builder(context!!,R.style.alertDialogStyle)
+                builder.setTitle("Error")
+                builder.setMessage("Wrong password, try again.")
+                builder.setNeutralButton("Ok"){ dialog, _ ->
+                    dialog.dismiss()
+                }
+                builder.show()
+
             } else {
                 //TODO add event for user + add user as participant
                 val account = GoogleSignIn.getLastSignedInAccount(context)
@@ -127,24 +137,4 @@ class JoinEvent(private val event: Event) : DialogFragment() {
         }
     }
 
-//    override fun onAttach(context: Context) {
-//        super.onAttach(context)
-//        if (context is OnFragmentInteractionListener) {
-//            listener = context
-//        } else {
-//            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
-//        }
-//    }
-//
-//    override fun onDetach() {
-//        super.onDetach()
-//        listener = null
-//    }
-
-//    interface OnFragmentInteractionListener {
-//        fun onFragmentInteraction(uri: Uri)
-//    }
-
-//companion object {
-//}
 }
