@@ -174,7 +174,6 @@ class NearMe : Fragment() {
                         events.add(currentEvent)
                     }
                 }
-                // TODO add notify
                 this.eventAdapter =
                     EventAdapter(
                         this.context!!,
