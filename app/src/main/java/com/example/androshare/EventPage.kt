@@ -911,12 +911,11 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
                 .addOnSuccessListener { document ->
                     avatar.setImageResource((document.get("avatar") as Long).toInt())
                 }
-//            avatar.setImageResource(event.participants[i].avatar)
             card.addView(avatar)
             linearLayout.addView(card)
 
         }
-        event_bar.addView(linearLayout, 5)
+        event_bar.addView(linearLayout, 7)
     }
 
     private fun initGrid(view: View) {

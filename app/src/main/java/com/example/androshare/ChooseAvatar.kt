@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.GridView
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -93,7 +94,7 @@ class ChooseAvatar : Fragment() {
                     Log.e("ChooseAvatar", "Error updating avatar")
                 }
         }
-        val closeTextView = view.findViewById<TextView>(R.id.choose_avatar_close)
+        val closeTextView = view.findViewById<ImageView>(R.id.choose_avatar_close)
         closeTextView.setOnClickListener {
             fragmentManager!!.popBackStack()
         }
