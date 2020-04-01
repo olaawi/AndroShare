@@ -92,27 +92,20 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
         refreshView.setColorSchemeResources(R.color.accentColor)
         refreshView.setProgressBackgroundColorSchemeResource(R.color.primaryDarkColor)
         refreshView.setOnRefreshListener {
-            // TODO reload data from database if something changed
+            // Reload data from database if something changed
             initGrid(view)
             refreshView.isRefreshing = false
         }
 
         view.findViewById<ImageView>(R.id.event_more).setOnClickListener {
-            //            Toast.makeText(context, "More here", Toast.LENGTH_SHORT).show()
             val popUpMenu = PopupMenu(context, it)
-
-//            val account = GoogleSignIn.getLastSignedInAccount(context)
-//            val isAdmin = event.isAdmin(account!!.id!!)
             popUpMenu.menu.clear()
             if (isAdmin) {
-//                event_more.event_more_menu.menu.clear()
                 popUpMenu.inflate(R.menu.event_page_admin_menu)
-//                event_more.event_more_menu.inflateMenu(R.menu.event_page_admin_menu)
             } else {
                 popUpMenu.inflate(R.menu.event_page_participant_menu)
             }
             popUpMenu.gravity = Gravity.RELATIVE_LAYOUT_DIRECTION
-//            event_more.event_more_menu.showContextMenu()
             popUpMenu.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.event_page_leave_event -> {
@@ -592,7 +585,6 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
         }
 
         view.findViewById<ImageView>(R.id.event_download).setOnClickListener {
-            // TODO implement
             for (image in images) {
                 if (image.isSelected) {
                     downloadImage(image.uri)
@@ -606,6 +598,18 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
 
         }
 
+        view.findViewById<ImageView>(R.id.event_delete).setOnClickListener {
+            for (image in images) {
+                if (image.isSelected) {
+                    deleteImage(image)
+                    image.toggleSelect()
+                }
+            }
+            imageAdapter.mode = ImageAdapter.MODE.REGULAR
+            imageAdapter.notifyDataSetChanged()
+            setRegularLayout()
+        }
+
         view.findViewById<LinearLayout>(R.id.event_bar).setOnClickListener {
             val eventPageFragment = ParticipantsList(event)
             val transaction = fragmentManager!!.beginTransaction()
@@ -617,6 +621,8 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
         }
         view.event_title.text = event.title
         view.event_description.text = event.description
+        view.event_page_time.text = event.getTime()
+        view.event_page_location.text = event.location.name
         initParticipantsList()
         initGrid(view)
         ViewCompat.setNestedScrollingEnabled(view.findViewById(R.id.event_bar), true)
@@ -947,12 +953,18 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
 
     fun setSelectLayout() {
         view!!.findViewById<ImageView>(R.id.event_add).visibility = View.INVISIBLE
+        view!!.findViewById<ImageView>(R.id.event_more).visibility = View.INVISIBLE
         view!!.findViewById<ImageView>(R.id.event_download).visibility = View.VISIBLE
+        if(isAdmin)
+            view!!.findViewById<ImageView>(R.id.event_delete).visibility = View.VISIBLE
     }
 
     fun setRegularLayout() {
         view!!.findViewById<ImageView>(R.id.event_add).visibility = View.VISIBLE
+        view!!.findViewById<ImageView>(R.id.event_more).visibility = View.VISIBLE
         view!!.findViewById<ImageView>(R.id.event_download).visibility = View.INVISIBLE
+        if(isAdmin)
+            view!!.findViewById<ImageView>(R.id.event_delete).visibility = View.INVISIBLE
     }
 
 
@@ -982,6 +994,14 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
             .add(android.R.id.content, imageViewerFragment)
             .addToBackStack(null)
             .commit()
+    }
+
+    fun deleteImage(image: Image){
+        val storageRef =
+            storage.getReference(event.id + "/" + image.id + ".jpg")
+        storageRef.delete().addOnSuccessListener {
+            Log.d("upload", "image deleted successfully")
+        }
     }
 
     override fun customOnBackPressed(): Boolean {
