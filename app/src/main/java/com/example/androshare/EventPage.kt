@@ -12,6 +12,7 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
+import android.location.Location
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -37,6 +38,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -44,7 +46,10 @@ import kotlinx.android.synthetic.main.event_page_menu_dialog.view.*
 import kotlinx.android.synthetic.main.fragment_event_page.*
 import kotlinx.android.synthetic.main.fragment_event_page.view.*
 import java.io.OutputStream
+import java.time.LocalDate
+import java.time.LocalDateTime
 
+private const val EVENT_RADIUS = 1000
 
 class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
 
@@ -52,12 +57,16 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
     private lateinit var images: ArrayList<Image>
     lateinit var imageAdapter: ImageAdapter
     private lateinit var database: FirebaseFirestore
+    private var isAdmin: Boolean = false
+    private lateinit var account: GoogleSignInAccount
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         storage = FirebaseStorage.getInstance()
         images = ArrayList()
         database = FirebaseFirestore.getInstance()
+        account = GoogleSignIn.getLastSignedInAccount(context)!!
+        isAdmin = event.isAdmin(account.id!!)
     }
 
     override fun onCreateView(
@@ -89,11 +98,11 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
         }
 
         view.findViewById<ImageView>(R.id.event_more).setOnClickListener {
-//            Toast.makeText(context, "More here", Toast.LENGTH_SHORT).show()
+            //            Toast.makeText(context, "More here", Toast.LENGTH_SHORT).show()
             val popUpMenu = PopupMenu(context, it)
 
-            val account = GoogleSignIn.getLastSignedInAccount(context)
-            val isAdmin = event.isAdmin(account!!.id!!)
+//            val account = GoogleSignIn.getLastSignedInAccount(context)
+//            val isAdmin = event.isAdmin(account!!.id!!)
             popUpMenu.menu.clear()
             if (isAdmin) {
 //                event_more.event_more_menu.menu.clear()
@@ -790,32 +799,80 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
                 exif += "\n TAG_GPS_DATESTAMP: " + exifInterface.getAttribute(TAG_GPS_DATESTAMP)
                 exif += "\n TAG_GPS_TIMESTAMP: " + exifInterface.getAttribute(TAG_GPS_TIMESTAMP)
                 exif += "\n TAG_GPS_LATITUDE: " + exifInterface.getAttribute(TAG_GPS_LATITUDE)
-                exif += "\n TAG_GPS_LATITUDE_REF: " + exifInterface.getAttribute(TAG_GPS_LATITUDE_REF)
+                exif += "\n TAG_GPS_LATITUDE_REF: " + exifInterface.getAttribute(
+                    TAG_GPS_LATITUDE_REF
+                )
                 exif += "\n TAG_GPS_LONGITUDE: " + exifInterface.getAttribute(TAG_GPS_LONGITUDE)
-                exif += "\n TAG_GPS_LONGITUDE_REF: " + exifInterface.getAttribute(TAG_GPS_LONGITUDE_REF)
+                exif += "\n TAG_GPS_LONGITUDE_REF: " + exifInterface.getAttribute(
+                    TAG_GPS_LONGITUDE_REF
+                )
                 exif += "\n TAG_GPS_PROCESSING_METHOD: " + exifInterface.getAttribute(
                     TAG_GPS_PROCESSING_METHOD
                 )
                 Log.e("exif", exif)
 
 
-                // TODO what we need to chech is exifInterface.getAttribute(TAG_GPS_LATITUDE)
+                // TODO what we need to check is exifInterface.getAttribute(TAG_GPS_LATITUDE)
                 // TODO and exifInterface.getAttribute(TAG_GPS_LONGITUDE)
                 // TODO plus the time exifInterface.getAttribute(TAG_GPS_TIMESTAMP)
                 // TODO and exifInterface.getAttribute(TAG_GPS_DATESTAMP)
 
+                val imageLongitude =
+                    (exifInterface.getAttribute(TAG_GPS_LONGITUDE) as String).toDouble()
+                val imageLatitude =
+                    (exifInterface.getAttribute(TAG_GPS_LATITUDE) as String).toDouble()
+                val imageDateTimeArr =
+                    (exifInterface.getAttribute(TAG_DATETIME) as String).split(" ").toTypedArray()
+                val imageDateArr = imageDateTimeArr[0].split(":").toTypedArray()
+                val imageTimeArr = imageDateTimeArr[1].split(":").toTypedArray()
+                val imageDateTime = LocalDateTime.of(
+                    imageDateArr[0].toInt(),
+                    imageDateArr[1].toInt(),
+                    imageDateArr[2].toInt(),
+                    imageTimeArr[0].toInt(),
+                    imageTimeArr[1].toInt(),
+                    imageTimeArr[2].toInt()
+                )
+                val eventStart = LocalDateTime.of(
+                    event.startTime.year,
+                    event.startTime.month,
+                    event.startTime.dayOfMonth,
+                    event.startTime.hour,
+                    event.startTime.minute,
+                    event.startTime.second
+                )
+                val eventEnd =
+                    LocalDateTime.of(
+                        event.endTime.year,
+                        event.endTime.month,
+                        event.endTime.dayOfMonth,
+                        event.endTime.hour,
+                        event.endTime.minute,
+                        event.endTime.second
+                    )
 
-//                if(/* Location okay*/){
-
+                val distance = FloatArray(1)
+                Location.distanceBetween(
+                    event.location.latitude,
+                    event.location.longitude,
+                    imageLatitude,
+                    imageLongitude,
+                    distance
+                )
+                // check location, date and time
+                if (isAdmin || (distance[0] <= EVENT_RADIUS && imageDateTime.isAfter(eventStart) && imageDateTime.isBefore(
+                        eventEnd
+                    ))
+                ) {
                     val storageRef =
                         storage.getReference(event.id + "/" + image.id + ".jpg")
                     storageRef.putFile(image.uri).addOnSuccessListener {
                         Log.d("upload", "image added successfully!")
                     }
-
-//                }
+                } else {
+                    Log.d("EventPage", "Photo was now taken at the event")
+                }
             }
-
         }
     }
 
