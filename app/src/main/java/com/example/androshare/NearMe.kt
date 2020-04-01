@@ -14,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
@@ -174,12 +175,23 @@ class NearMe : Fragment() {
                         events.add(currentEvent)
                     }
                 }
-                this.eventAdapter =
-                    EventAdapter(
-                        this.context!!,
-                        this.events
-                    ) { event: Event -> onEventClicked(event) }
-                this.recyclerView.adapter = this.eventAdapter
+                if(events.isEmpty()){
+                    // Show alert
+                    val builder = AlertDialog.Builder(context!!,R.style.alertDialogStyle)
+                    builder.setTitle("Info")
+                    builder.setMessage("No events are currently taking place here.")
+                    builder.setNeutralButton("Ok"){ dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    builder.show()
+                }else {
+                    this.eventAdapter =
+                        EventAdapter(
+                            this.context!!,
+                            this.events
+                        ) { event: Event -> onEventClicked(event) }
+                    this.recyclerView.adapter = this.eventAdapter
+                }
             }
             .addOnFailureListener { exception ->
                 Log.d("findEventsNearMe", "Error getting documents: ", exception)
