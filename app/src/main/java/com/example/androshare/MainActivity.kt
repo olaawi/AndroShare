@@ -1,7 +1,6 @@
 package com.example.androshare
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -10,8 +9,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var dashboardFragment: Dashboard
     private lateinit var nearMeFragment: NearMe
-    private lateinit var favouritesFragment: Favourites
-    private lateinit var moreFragment: More
+    private lateinit var profileFragment: Profile
     private lateinit var bottomNavigation: BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,20 +48,11 @@ class MainActivity : AppCompatActivity() {
 //                        .addToBackStack(null)
                         .commit()
                 }
-//                R.id.navigation_favourites -> {
-//                    favouritesFragment = Favourites()
-//                    supportFragmentManager
-//                        .beginTransaction()
-//                        .replace(R.id.frame_layout, favouritesFragment)
-//                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-////                        .addToBackStack(null)
-//                        .commit()
-//                }
-                R.id.navigation_more -> {
-                    moreFragment = More()
+                R.id.navigation_profile -> {
+                    profileFragment = Profile()
                     supportFragmentManager
                         .beginTransaction()
-                        .replace(R.id.frame_layout, moreFragment, "MORE")
+                        .replace(R.id.frame_layout, profileFragment)
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
 //                        .addToBackStack(null)
                         .commit()

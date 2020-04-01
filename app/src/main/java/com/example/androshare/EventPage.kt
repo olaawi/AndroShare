@@ -811,12 +811,13 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
                 )
                 Log.e("exif", exif)
 
-
-                // TODO what we need to check is exifInterface.getAttribute(TAG_GPS_LATITUDE)
-                // TODO and exifInterface.getAttribute(TAG_GPS_LONGITUDE)
-                // TODO plus the time exifInterface.getAttribute(TAG_GPS_TIMESTAMP)
-                // TODO and exifInterface.getAttribute(TAG_GPS_DATESTAMP)
-
+                if (exifInterface.getAttribute(TAG_GPS_LONGITUDE) == null || exifInterface.getAttribute(
+                        TAG_GPS_LATITUDE
+                    ) == null || exifInterface.getAttribute(TAG_DATETIME) == null
+                ) {
+                    Log.e("EventPage", "Image doesn't have the relevant tags")
+                    return
+                }
                 val imageLongitude =
                     (exifInterface.getAttribute(TAG_GPS_LONGITUDE) as String).toDouble()
                 val imageLatitude =

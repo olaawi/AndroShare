@@ -36,4 +36,6 @@
     <string name="confirm">Confirm</string>
     <string name="email">Email</string>
     <string name="please_insert_email_address">Please insert email address:</string>
+    <string name="discover">Discover</string>
+    <string name="dashboard">Dashboard</string>
 </resources>
