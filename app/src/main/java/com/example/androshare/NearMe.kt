@@ -128,8 +128,8 @@ class NearMe : Fragment() {
                     )
                     val today = LocalDate.now()
                     // if i'm already a participant or the event is not today
-                    if (participantsList.contains(account!!.id!!) || today.isEqual(eventStartDate) ||
-                        (today.isAfter(eventStartDate) && today.isBefore(eventEndDate) || today.isEqual(
+                    if (participantsList.contains(account!!.id!!) || !(today.isEqual(eventStartDate) ||
+                        (today.isAfter(eventStartDate) && today.isBefore(eventEndDate)) || today.isEqual(
                             eventEndDate
                         ))
                     ) {

@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.GridView
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.material.snackbar.Snackbar
@@ -89,6 +88,7 @@ class ChooseAvatar : Fragment() {
                     )
                         .setAction("Action", null)
                         .show()
+                    fragmentManager!!.popBackStack()
                 }
                 .addOnFailureListener {
                     Log.e("ChooseAvatar", "Error updating avatar")

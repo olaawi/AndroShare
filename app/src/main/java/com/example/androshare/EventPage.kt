@@ -116,6 +116,7 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
                                 val usersList =
                                     eventDocument.get("participants") as ArrayList<String>
                                 usersList.remove(account.id!!)
+                                event.participants.remove(account.id!!)
                                 database.collection("events").document(event.id)
                                     .update("participants", usersList)
                                     .addOnSuccessListener {
@@ -164,6 +165,8 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
                             .addOnFailureListener { exception ->
                                 Log.e("EventPage", "Error leaving event", exception)
                             }
+
+                        fragmentManager!!.popBackStack()
                     }
 
                     R.id.event_page_add_participant -> {
@@ -221,6 +224,7 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
                                                                 .document(event.id)
                                                                 .update("participants", usersList)
                                                                 .addOnSuccessListener {
+                                                                    event.addParticipant(emailId)
                                                                     Log.d(
                                                                         "EventPage",
                                                                         "Joined event with ID: ${document.id}"
@@ -269,7 +273,7 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
                             .show()
                         mDialogView.event_page_dialog_confirm_button.setOnClickListener {
                             val emailEditText =
-                                mDialogView.findViewById<EditText>(R.id.event_page_dialog_email) as EditText
+                                mDialogView.findViewById(R.id.event_page_dialog_email) as EditText
                             val email = emailEditText.text.toString()
                             database.collection("users").whereEqualTo("email", email)
                                 .get()
@@ -295,6 +299,14 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
                                                 )
                                                 .setAction("Action", null)
                                                 .show()
+                                        } else if (event.isAdmin(emailId)) {
+                                            Snackbar.make(
+                                                    view,
+                                                    "Cannot remove an admin",
+                                                    Snackbar.LENGTH_LONG
+                                                )
+                                                .setAction("Action", null)
+                                                .show()
                                         } else {
                                             val eventsList =
                                                 document.get("events") as ArrayList<String>
@@ -314,6 +326,9 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
                                                                 .document(event.id)
                                                                 .update("participants", usersList)
                                                                 .addOnSuccessListener {
+                                                                    event.participants.remove(
+                                                                        emailId
+                                                                    )
                                                                     Log.d(
                                                                         "EventPage",
                                                                         "Removed participant"
@@ -408,6 +423,7 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
                                                         .document(event.id)
                                                         .update("admins", usersList)
                                                         .addOnSuccessListener {
+                                                            event.addAdmin(emailId)
                                                             Log.d(
                                                                 "EventPage",
                                                                 "Added admin"
@@ -472,7 +488,7 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
                                     }
                                     for (document in result) {
                                         val emailId = document.get("id") as String
-                                        // if user is not a participant
+                                        // if user is not an admin
                                         if (!event.isAdmin(emailId)) {
                                             Snackbar.make(
                                                     view,
@@ -493,6 +509,7 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
                                                         .document(event.id)
                                                         .update("admins", usersList)
                                                         .addOnSuccessListener {
+                                                            event.admins.remove(emailId)
                                                             Log.d(
                                                                 "EventPage",
                                                                 "Removed admin"
@@ -824,10 +841,11 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
                     Log.e("EventPage", "Image doesn't have the relevant tags")
                     return
                 }
-                val imageLongitude =
-                    (exifInterface.getAttribute(TAG_GPS_LONGITUDE) as String).toDouble()
-                val imageLatitude =
-                    (exifInterface.getAttribute(TAG_GPS_LATITUDE) as String).toDouble()
+                // TODO format longitude&latitude
+                val imageLongitude = 1.2
+//                    (exifInterface.getAttribute(TAG_GPS_LONGITUDE) as String).toDouble()
+                val imageLatitude = 1.3
+//                    (exifInterface.getAttribute(TAG_GPS_LATITUDE) as String).toDouble()
                 val imageDateTimeArr =
                     (exifInterface.getAttribute(TAG_DATETIME) as String).split(" ").toTypedArray()
                 val imageDateArr = imageDateTimeArr[0].split(":").toTypedArray()
@@ -1002,7 +1020,13 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
         Log.e("delete", event.id + "/" + id + ".jpg")
         storageReference.delete().addOnSuccessListener {
             Log.d("upload", "image deleted successfully")
-            view?.let { view -> Snackbar.make(view, "Images deleted successfully", Snackbar.LENGTH_SHORT).show() }
+            view?.let { view ->
+                Snackbar.make(
+                    view,
+                    "Images deleted successfully",
+                    Snackbar.LENGTH_SHORT
+                ).show()
+            }
         }.addOnFailureListener {
             Log.d("upload", "image delete error")
         }
