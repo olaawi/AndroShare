@@ -23,6 +23,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.location.*
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.FirebaseFirestore
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 
@@ -100,7 +101,23 @@ class NearMe : Fragment() {
                     Log.d("NearMe-findEventsNearMe1", "${document.id} => ${document.data}")
                     val participantsList = document.get("participants")!! as ArrayList<String>
                     val account = GoogleSignIn.getLastSignedInAccount(context)
-                    if(participantsList.contains(account!!.id!!)){
+                    val eventStartDate = LocalDate.of(
+                        (document.get("startTime.year")!! as Long).toInt(),
+                        (document.get("startTime.monthValue")!! as Long).toInt(),
+                        (document.get("startTime.dayOfMonth")!! as Long).toInt()
+                    )
+                    val eventEndDate = LocalDate.of(
+                        (document.get("endTime.year")!! as Long).toInt(),
+                        (document.get("endTime.monthValue")!! as Long).toInt(),
+                        (document.get("endTime.dayOfMonth")!! as Long).toInt()
+                    )
+                    val today = LocalDate.now()
+                    // if i'm already a participant or the event is not today
+                    if (participantsList.contains(account!!.id!!) || today.isEqual(eventStartDate) ||
+                        (today.isAfter(eventStartDate) && today.isBefore(eventEndDate) || today.isEqual(
+                            eventEndDate
+                        ))
+                    ) {
                         continue
                     }
                     val eventLng: Double = document.get("location.longitude")!! as Double
