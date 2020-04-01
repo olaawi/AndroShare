@@ -20,12 +20,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.location.*
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.FirebaseFirestore
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 
 // TODO: change max radius
@@ -65,6 +68,17 @@ class NearMe : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         this.recyclerView = view.findViewById(R.id.recyclerViewNearMe)
         this.recyclerView.layoutManager = LinearLayoutManager(this.context)
+
+        // set up refresh layout
+        val refreshView = view.findViewById<SwipeRefreshLayout>(R.id.near_me_refresh)
+        refreshView.setColorSchemeResources(R.color.accentColor)
+        refreshView.setProgressBackgroundColorSchemeResource(R.color.primaryDarkColor)
+        refreshView.setOnRefreshListener {
+            // Reload data from database
+            getLastLocation()
+            refreshView.isRefreshing = false
+        }
+
     }
 
     private fun onEventClicked(event: Event) {
@@ -119,6 +133,8 @@ class NearMe : Fragment() {
                             eventEndDate
                         ))
                     ) {
+                        Log.e("find","event not today" + document.get("title").toString())
+                        Log.e("find",today.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)))
                         continue
                     }
                     val eventLng: Double = document.get("location.longitude")!! as Double
