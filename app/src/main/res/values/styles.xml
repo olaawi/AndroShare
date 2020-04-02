@@ -22,6 +22,14 @@
 <!--        <item name="android:windowExitAnimation">@anim/slide_down</item>-->
 <!--    </style>-->
 
+    <style name="Replace">
+        <item name="android:activityOpenEnterAnimation">@anim/replace_anim</item>
+        <item name="android:activityOpenExitAnimation">@anim/replace_anim</item>
+        <item name="android:activityCloseEnterAnimation">@anim/replace_anim</item>
+        <item name="android:activityCloseExitAnimation">@anim/replace_anim</item>
+        <item name="android:taskOpenEnterAnimation">@anim/replace_anim</item>
+        <item name="android:taskOpenExitAnimation">@anim/replace_anim</item>
+    </style>
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/primaryColor</item>
@@ -34,6 +42,7 @@
         <item name="colorControlHighlight">@color/accentColor</item>
         <item name="android:statusBarColor">@color/primaryDarkColor</item>
 
+        <item name="android:windowAnimationStyle">@style/Replace</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:windowTranslucentNavigation">false</item>

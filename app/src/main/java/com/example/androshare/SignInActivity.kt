@@ -92,11 +92,17 @@ class SignInActivity : AppCompatActivity() {
                             val user = User(givenName!!, familyName!!, email!!, id)
                             database.collection("users").document(id).set(user)
                                 .addOnSuccessListener {
-                                    val intent = Intent(this, MainActivity::class.java)
-                                    startActivity(intent)
+                                    startActivity(MainActivity.getLaunchIntent(this))
+//                                    val intent = Intent(this, MainActivity::class.java)
+//                                    startActivity(intent)
+//                                    finish()
                                 }
                         } else {
                             Log.d("signIn", "the user already exists")
+                            startActivity(MainActivity.getLaunchIntent(this))
+//                            val intent = Intent(this, MainActivity::class.java)
+//                            startActivity(intent)
+//                            finish()
                         }
                     }
                 } else {

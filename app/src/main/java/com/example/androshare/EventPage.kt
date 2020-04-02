@@ -834,56 +834,88 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
                 )
                 Log.e("exif", exif)
 
-                if (exifInterface.getAttribute(TAG_GPS_LONGITUDE) == null || exifInterface.getAttribute(
-                        TAG_GPS_LATITUDE
-                    ) == null || exifInterface.getAttribute(TAG_DATETIME) == null
+                if (!isAdmin && (exifInterface.getAttribute(TAG_GPS_LONGITUDE) == null ||
+                            exifInterface.getAttribute(TAG_GPS_LATITUDE) == null ||
+                            exifInterface.getAttribute(TAG_DATETIME) == null ||
+                            exifInterface.getAttribute(TAG_GPS_LONGITUDE_REF) == null ||
+                            exifInterface.getAttribute(TAG_GPS_LATITUDE_REF) == null
+                            )
                 ) {
                     Log.e("EventPage", "Image doesn't have the relevant tags")
                     return
                 }
-                // TODO format longitude&latitude
-                val imageLongitude = 1.2
-//                    (exifInterface.getAttribute(TAG_GPS_LONGITUDE) as String).toDouble()
-                val imageLatitude = 1.3
-//                    (exifInterface.getAttribute(TAG_GPS_LATITUDE) as String).toDouble()
-                val imageDateTimeArr =
-                    (exifInterface.getAttribute(TAG_DATETIME) as String).split(" ").toTypedArray()
-                val imageDateArr = imageDateTimeArr[0].split(":").toTypedArray()
-                val imageTimeArr = imageDateTimeArr[1].split(":").toTypedArray()
-                val imageDateTime = LocalDateTime.of(
-                    imageDateArr[0].toInt(),
-                    imageDateArr[1].toInt(),
-                    imageDateArr[2].toInt(),
-                    imageTimeArr[0].toInt(),
-                    imageTimeArr[1].toInt(),
-                    imageTimeArr[2].toInt()
-                )
-                val eventStart = LocalDateTime.of(
-                    event.startTime.year,
-                    event.startTime.month,
-                    event.startTime.dayOfMonth,
-                    event.startTime.hour,
-                    event.startTime.minute,
-                    event.startTime.second
-                )
-                val eventEnd =
-                    LocalDateTime.of(
-                        event.endTime.year,
-                        event.endTime.month,
-                        event.endTime.dayOfMonth,
-                        event.endTime.hour,
-                        event.endTime.minute,
-                        event.endTime.second
-                    )
-
                 val distance = FloatArray(1)
-                Location.distanceBetween(
-                    event.location.latitude,
-                    event.location.longitude,
-                    imageLatitude,
-                    imageLongitude,
-                    distance
-                )
+                val imageLongitudeAttr: String
+                val imageLatitudeAttr: String
+                val imageLongitudeRef: String
+                val imageLatitudeRef: String
+                var imageDateTime = LocalDateTime.now()
+                var eventStart = LocalDateTime.now()
+                var eventEnd = LocalDateTime.now()
+                if (!isAdmin) {
+                    // TODO format longitude&latitude
+                    imageLongitudeAttr =
+                        exifInterface.getAttribute(TAG_GPS_LONGITUDE) as String
+                    imageLatitudeAttr =
+                        exifInterface.getAttribute(TAG_GPS_LATITUDE) as String
+                    imageLongitudeRef =
+                        exifInterface.getAttribute(TAG_GPS_LONGITUDE_REF) as String
+                    imageLatitudeRef =
+                        exifInterface.getAttribute(TAG_GPS_LATITUDE_REF) as String
+                    var imageLatitude: Double
+                    var imageLongitude: Double
+                    if (imageLatitudeRef == "N") {
+                        imageLatitude = this.convertToDegree(imageLatitudeAttr)!!
+                    } else {
+                        imageLatitude = 0 - this.convertToDegree(imageLatitudeAttr)!!
+                    }
+
+                    if (imageLongitudeRef == "E") {
+                        imageLongitude = this.convertToDegree(imageLongitudeAttr)!!
+                    } else {
+                        imageLongitude = 0 - this.convertToDegree(imageLongitudeAttr)!!
+                    }
+
+                    val imageDateTimeArr =
+                        (exifInterface.getAttribute(TAG_DATETIME) as String).split(" ")
+                            .toTypedArray()
+                    val imageDateArr = imageDateTimeArr[0].split(":").toTypedArray()
+                    val imageTimeArr = imageDateTimeArr[1].split(":").toTypedArray()
+                    imageDateTime = LocalDateTime.of(
+                        imageDateArr[0].toInt(),
+                        imageDateArr[1].toInt(),
+                        imageDateArr[2].toInt(),
+                        imageTimeArr[0].toInt(),
+                        imageTimeArr[1].toInt(),
+                        imageTimeArr[2].toInt()
+                    )
+                    eventStart = LocalDateTime.of(
+                        event.startTime.year,
+                        event.startTime.month,
+                        event.startTime.dayOfMonth,
+                        event.startTime.hour,
+                        event.startTime.minute,
+                        event.startTime.second
+                    )
+                    eventEnd =
+                        LocalDateTime.of(
+                            event.endTime.year,
+                            event.endTime.month,
+                            event.endTime.dayOfMonth,
+                            event.endTime.hour,
+                            event.endTime.minute,
+                            event.endTime.second
+                        )
+
+
+                    Location.distanceBetween(
+                        event.location.latitude,
+                        event.location.longitude,
+                        imageLatitude,
+                        imageLongitude,
+                        distance
+                    )
+                }
                 // check location, date and time
                 if (isAdmin || (distance[0] <= EVENT_RADIUS && imageDateTime.isAfter(eventStart) && imageDateTime.isBefore(
                         eventEnd
@@ -896,9 +928,40 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
                     }
                 } else {
                     Log.d("EventPage", "Photo was now taken at the event")
+                    view?.let {
+                        Snackbar.make(
+                            it,
+                            "Photo was now taken at the event",
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             }
         }
+    }
+
+    private fun convertToDegree(stringDMS: String): Double? {
+        val result: Double?
+        val dMS = stringDMS.split(",".toRegex(), 3).toTypedArray()
+
+        val stringD = dMS[0].split("/".toRegex(), 2).toTypedArray()
+        val d0 = stringD[0].toDouble()
+        val d1 = stringD[1].toDouble()
+        val floatD = d0 / d1
+
+        val stringM = dMS[1].split("/".toRegex(), 2).toTypedArray()
+        val m0 = stringM[0].toDouble()
+        val m1 = stringM[1].toDouble()
+        val floatM = m0 / m1
+
+        val stringS = dMS[2].split("/".toRegex(), 2).toTypedArray()
+        val s0 = stringS[0].toDouble()
+        val s1 = stringS[1].toDouble()
+        val floatS = s0 / s1
+
+        result = floatD + floatM / 60 + floatS / 3600
+
+        return result
     }
 
     @SuppressLint("SetTextI18n")
