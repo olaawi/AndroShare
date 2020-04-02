@@ -39,4 +39,18 @@
     <string name="discover">Discover</string>
     <string name="dashboard">Dashboard</string>
     <string name="near_me">Near Me</string>
+    <string name="welcome">Welcome!</string>
+    <string name="click_to_sign_up_or_sign_in_with_google">Click to sign up or sign in with Google</string>
+    <string name="developed_by_hala_and_ola">Developed by Hala and Ola</string>
+    <string name="your_crowd_sourced_album">Your crowd sourced album</string>
+    <string name="share">Share</string>
+    <string name="photo">Photo</string>
+    <string name="time">Time</string>
+    <string name="location">Location</string>
+    <string name="hello_i_am_a_dialog">Hello I am a dialog!</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="enter_event_description">Enter event description...</string>
+    <string name="confirm_c">CONFIRM</string>
+    <string name="submit">submit</string>
 </resources>

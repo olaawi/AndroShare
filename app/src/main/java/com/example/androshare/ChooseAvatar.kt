@@ -75,7 +75,6 @@ class ChooseAvatar : Fragment() {
 
         grid.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _
             ->
-            // Write code to perform action when item is clicked.
             val acct = GoogleSignIn.getLastSignedInAccount(activity)
             database.collection("users").document(acct!!.id!!)
                 .update("avatar", this.avatars[position])

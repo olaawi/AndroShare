@@ -18,8 +18,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-//        val acct = GoogleSignIn.getLastSignedInAccount(this) // this is how we access account in activity
-
         bottomNavigation = findViewById(R.id.bottom_navigation)
 
         dashboardFragment = Dashboard()
@@ -38,7 +36,6 @@ class MainActivity : AppCompatActivity() {
                         .beginTransaction()
                         .replace(R.id.frame_layout, dashboardFragment)
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-//                        .addToBackStack(null)
                         .commit()
                 }
                 R.id.navigation_near_me -> {
@@ -47,7 +44,6 @@ class MainActivity : AppCompatActivity() {
                         .beginTransaction()
                         .replace(R.id.frame_layout, nearMeFragment)
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-//                        .addToBackStack(null)
                         .commit()
                 }
                 R.id.navigation_profile -> {
@@ -56,7 +52,6 @@ class MainActivity : AppCompatActivity() {
                         .beginTransaction()
                         .replace(R.id.frame_layout, profileFragment)
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-//                        .addToBackStack(null)
                         .commit()
                 }
 

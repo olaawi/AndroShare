@@ -2,13 +2,11 @@ package com.example.androshare
 
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
-import kotlinx.android.synthetic.main.image_viewer.view.*
 
 
 class ImageViewer(private val images: List<Image>, val position: Int) : Fragment() {

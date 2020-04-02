@@ -28,19 +28,8 @@
         android:layout_height="wrap_content"
         android:autofillHints="@string/email"
         android:gravity="center"
-        android:inputType="textEmailAddress" />
-
-<!--    <Space-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="10dp" />-->
-
-<!--    <TextView-->
-<!--        android:id="@+id/event_page_dialog_errors"-->
-<!--        style="@style/Body2"-->
-<!--        android:textColor="@color/redColor"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:gravity="start" />-->
+        android:inputType="textEmailAddress"
+        tools:ignore="LabelFor" />
 
     <Space
         android:layout_width="match_parent"

@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!--    Action bar-->
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,13 +19,13 @@
                 style="@style/Headline5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Photo" />
+                android:text="@string/photo" />
 
             <TextView
                 style="@style/Headline5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Share"
+                android:text="@string/share"
                 android:textColor="@color/accentColor" />
 
         </androidx.appcompat.widget.Toolbar>
@@ -68,7 +67,7 @@
         android:layout_alignParentBottom="true"
         android:layout_gravity="end|bottom"
         android:layout_margin="16dp"
-        android:contentDescription="submit"
+        android:contentDescription="@string/submit"
         android:src="@drawable/ic_add_black_24dp"
         android:tint="@color/primaryColor" />
 

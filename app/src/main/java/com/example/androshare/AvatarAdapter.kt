@@ -26,16 +26,12 @@ internal class AvatarAdapter internal constructor(
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(resource, null)
             holder = ItemHolder()
-//            holder.name = convertView!!.findViewById(R.id.textView)
             holder.icon = convertView.findViewById(R.id.icon)
             convertView.tag = holder
         } else {
             holder = convertView.tag as ItemHolder
         }
-
-//        holder.name!!.text = this.itemList!![position]
         holder.icon!!.setImageResource(this.itemList!![position])
-
         return convertView!!
     }
 

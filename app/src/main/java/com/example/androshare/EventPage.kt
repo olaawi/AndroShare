@@ -604,7 +604,7 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
         view.findViewById<ImageView>(R.id.event_download).setOnClickListener {
             for (image in images) {
                 if (image.isSelected) {
-                    downloadImage(image.uri)
+                    downloadImage(image.uri, image.id)
                     image.toggleSelect()
                 }
             }
@@ -645,52 +645,39 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
         ViewCompat.setNestedScrollingEnabled(view.findViewById(R.id.event_bar), true)
     }
 
-    private fun downloadImage(uri: Uri) {
+    private fun downloadImage(uri: Uri, id: String) {
         Glide.with(this).asBitmap().load(uri)
             .into(object : CustomTarget<Bitmap?>() {
-
                 override fun onResourceReady(
                     resource: Bitmap,
                     transition: Transition<in Bitmap?>?
                 ) {
-                    insertImage(context!!.contentResolver, resource, "ttt", "ddd")
+                    insertImage(context!!.contentResolver, resource, id)
                 }
 
                 override fun onLoadCleared(placeholder: Drawable?) {
-//                    TODO("Not yet implemented")
+                    return
                 }
             })
     }
 
     @Suppress("SameParameterValue", "SameParameterValue")
-    private fun insertImage(
-        cr: ContentResolver,
-        source: Bitmap?,
-        title: String?,
-        description: String?
-    ): String? {
+    private fun insertImage(cr: ContentResolver, source: Bitmap, title: String?): String? {
         val values = ContentValues()
         values.put(MediaStore.Images.Media.TITLE, title)
         values.put(MediaStore.Images.Media.DISPLAY_NAME, title)
-        values.put(MediaStore.Images.Media.DESCRIPTION, description)
         values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
-        // Add the date meta data to ensure the image is added at the front of the gallery
         values.put(MediaStore.Images.Media.DATE_ADDED, System.currentTimeMillis())
         values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis())
         var url: Uri? = null
-        var stringUrl: String? = null /* value to be returned */
+        var stringUrl: String? = null
         try {
             url = cr.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
-            if (source != null) {
-                val imageOut: OutputStream? = cr.openOutputStream(url!!)
-                try {
-                    source.compress(Bitmap.CompressFormat.JPEG, 50, imageOut)
-                } finally {
-                    imageOut!!.close()
-                }
-            } else {
-                cr.delete(url!!, null, null)
-                url = null
+            val imageOut: OutputStream? = cr.openOutputStream(url!!)
+            try {
+                source.compress(Bitmap.CompressFormat.JPEG, 50, imageOut)
+            } finally {
+                imageOut!!.close()
             }
         } catch (e: Exception) {
             if (url != null) {
@@ -752,29 +739,10 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
     }
 
     private fun pickImage() {
-//        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
-//        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-//        intent.addCategory(Intent.CATEGORY_OPENABLE)
-//        intent.type = "image/*"
-//        intent.putExtra(intent.type,"video/*")
-//        startActivityForResult(intent, IMAGE_PICK_CODE)
-
-
-//        val photoPickerIntent = Intent(Intent.ACTION_PICK)
-//        photoPickerIntent.type = "image/*"
-//        photoPickerIntent.putExtra(
-//            Intent.EXTRA_MIME_TYPES,
-//            arrayOf("video/*")
-//        )
-//        startActivityForResult(photoPickerIntent, IMAGE_PICK_CODE)
-
-        // TODO see if downloading a video works. Uploading works already tested!!!
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
         intent.addCategory(Intent.CATEGORY_OPENABLE)
-        intent.type = "*/*"
-        val mimetypes = arrayOf("image/*", "video/*")
-        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes)
+        intent.type = "image/*"
         startActivityForResult(intent, IMAGE_PICK_CODE)
     }
 
@@ -786,7 +754,7 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
             && null != data
         ) {
             val pickedImages = ArrayList<Image>()
-            var imageUri: Uri? = null
+            var imageUri: Uri?
 
             if (data.clipData != null) {
                 // Two or more images we picked
@@ -803,7 +771,6 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
 
             for (image in pickedImages) {
                 // Upload to storage
-                // TODO check if location ok
 
                 val exifInterface =
                     ExifInterface(context!!.contentResolver.openInputStream(image.uri)!!)
@@ -832,7 +799,7 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
                 exif += "\n TAG_GPS_PROCESSING_METHOD: " + exifInterface.getAttribute(
                     TAG_GPS_PROCESSING_METHOD
                 )
-                Log.e("exif", exif)
+                Log.d("exif", exif)
 
                 if (!isAdmin && (exifInterface.getAttribute(TAG_GPS_LONGITUDE) == null ||
                             exifInterface.getAttribute(TAG_GPS_LATITUDE) == null ||
@@ -853,7 +820,7 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
                 var eventStart = LocalDateTime.now()
                 var eventEnd = LocalDateTime.now()
                 if (!isAdmin) {
-                    // TODO format longitude&latitude
+                    // format longitude&latitude
                     imageLongitudeAttr =
                         exifInterface.getAttribute(TAG_GPS_LONGITUDE) as String
                     imageLatitudeAttr =
@@ -1013,7 +980,7 @@ class EventPage(private val event: Event) : Fragment(), IOnBackPressed {
         grid.adapter = imageAdapter
         grid.addItemDecoration(GridItemDecorator(4))
 
-        images.clear() // TODO check problematic?
+        images.clear()
 
         val storageRef = storage.reference
         val eventFolder = storageRef.child(event.id)

@@ -13,7 +13,7 @@ class SplashActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash)
 
         Handler().postDelayed({
-            val intent: Intent = if (GoogleSignIn.getLastSignedInAccount(this) != null){
+            val intent: Intent = if (GoogleSignIn.getLastSignedInAccount(this) != null) {
                 // User already signed in, go to main
                 Intent(this, MainActivity::class.java)
             } else {
@@ -26,7 +26,7 @@ class SplashActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val SPLASH_DURATION: Long = 2000 // 1 sec
+        const val SPLASH_DURATION: Long = 2000 // 2 sec
     }
 
 }

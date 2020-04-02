@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    <color name="colorPrimary">#008577</color>-->
-    <!--    <color name="colorPrimaryDark">#00574B</color>-->
-    <!--    <color name="colorAccent">#D81B60</color>-->
-    <!--    <color name="whiteColor">#FFFFFF</color>-->
-    <!--    <color name="turkezeColor">#33FFCC</color>-->
-
 
     <color name="primaryColor">#ffffff</color>
     <color name="primaryLightColor">#ffffff</color>
@@ -18,12 +12,5 @@
     <color name="accentColor">#36b3b7</color>
     <color name="darkGreyColor">#333333</color>
     <color name="redColor">#FF0000</color>
-
-    <!--    <color name="colorPrimary">#6200EE</color>-->
-    <!--    <color name="colorPrimaryVariant">#3700B3</color>-->
-    <!--    <color name="colorOnPrimary">#FFFFFF</color>-->
-    <!--    <color name="colorSecondary">#03DAC6</color>-->
-    <!--    <color name="colorSecondaryVariant">#018786</color>-->
-    <!--    <color name="colorOnSecondary">#000000</color>-->
 
 </resources>

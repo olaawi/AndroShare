@@ -8,23 +8,29 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.androshare.Event
 import com.example.androshare.R
 
-class EventAdapter(var context: Context, val events: ArrayList<Event?>, private val clickListener: (Event) -> Unit) : RecyclerView.Adapter<EventAdapter.EventHolder>() {
+class EventAdapter(
+    var context: Context,
+    val events: ArrayList<Event?>,
+    private val clickListener: (Event) -> Unit
+) : RecyclerView.Adapter<EventAdapter.EventHolder>() {
 
 
-    class EventHolder(val view: View) : RecyclerView.ViewHolder(view){
+    class EventHolder(val view: View) : RecyclerView.ViewHolder(view) {
         var title: TextView = view.findViewById(R.id.titleId)
         var description: TextView = view.findViewById(R.id.descriptionId)
-        var time : TextView = view.findViewById(R.id.timeId)
-        var location : TextView = view.findViewById(R.id.locationId)
+        var time: TextView = view.findViewById(R.id.timeId)
+        var date: TextView = view.findViewById(R.id.dateId)
+        var location: TextView = view.findViewById(R.id.locationId)
 
         fun bind(event: Event, clickListener: (Event) -> Unit) {
-            itemView.setOnClickListener { clickListener(event)}
+            itemView.setOnClickListener { clickListener(event) }
         }
     }
 
     @SuppressLint("InflateParams")
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventHolder {
-        val view: View = LayoutInflater.from(parent.context).inflate(R.layout.event_in_dashboard, null)
+        val view: View =
+            LayoutInflater.from(parent.context).inflate(R.layout.event_in_dashboard, null)
         return EventHolder(view)
     }
 
@@ -32,6 +38,7 @@ class EventAdapter(var context: Context, val events: ArrayList<Event?>, private 
         holder.title.text = events[position]!!.title
         holder.description.text = events[position]!!.description
         holder.time.text = events[position]!!.getTime()
+        holder.date.text = events[position]!!.getDate()
         holder.location.text = events[position]!!.location.name
         holder.bind(events[position]!!, clickListener)
     }
@@ -39,7 +46,6 @@ class EventAdapter(var context: Context, val events: ArrayList<Event?>, private 
     override fun getItemCount(): Int {
         return events.size
     }
-
 
 
 }

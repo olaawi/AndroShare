@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -16,24 +15,24 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center_horizontal">
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal">
 
             <TextView
                 style="@style/Headline3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Photo"
+                android:text="@string/photo"
                 android:textColor="@android:color/black"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <TextView
                 style="@style/Headline3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Share"
+                android:text="@string/share"
                 android:textColor="@color/accentColor"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
         </LinearLayout>
 
@@ -41,8 +40,7 @@
             style="@style/Headline5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="Your crowd sourced album"
+            android:text="@string/your_crowd_sourced_album"
             android:textColor="@color/accentColor" />
 
     </LinearLayout>
@@ -52,7 +50,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:text="Developed by Hala and Ola" />
-
+        android:text="@string/developed_by_hala_and_ola" />
 
 </RelativeLayout>

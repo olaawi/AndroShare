@@ -63,27 +63,18 @@ class JoinEvent(private val event: Event) : DialogFragment() {
 
         confirmButton.setOnClickListener {
             if (event.type == Event.EventType.PRIVATE_EVENT && event.pin != pinEditText.text.toString()) {
-//                Snackbar.make(view, "Wrong PIN, try again!", Snackbar.LENGTH_LONG)
-//                    .setAction("Action", null)
-//                    .show()
                 // Show alert
-                val builder = AlertDialog.Builder(context!!,R.style.alertDialogStyle)
+                val builder = AlertDialog.Builder(context!!, R.style.alertDialogStyle)
                 builder.setTitle("Error")
                 builder.setMessage("Wrong password, try again.")
-                builder.setNeutralButton("Ok"){ dialog, _ ->
+                builder.setNeutralButton("Ok") { dialog, _ ->
                     dialog.dismiss()
                 }
                 builder.show()
 
             } else {
-                //TODO add event for user + add user as participant
+                // Add event for user + add user as participant
                 val account = GoogleSignIn.getLastSignedInAccount(context)
-//                val user = User(
-//                    account!!.givenName!!,
-//                    account.familyName!!,
-//                    account.email!!,
-//                    account.id!!
-//                )
                 // add event to user
                 val doc1 = database.collection("users").document(account!!.id!!)
                 doc1.get()
@@ -102,7 +93,7 @@ class JoinEvent(private val event: Event) : DialogFragment() {
                     .addOnFailureListener { exception ->
                         Log.e("JoinEvent", "Error adding event to user", exception)
                     }
-                // add user as participant
+                // Add user as participant
                 val doc = database.collection("events").document(event.id)
                 doc.get()
                     .addOnSuccessListener { document ->
@@ -114,10 +105,10 @@ class JoinEvent(private val event: Event) : DialogFragment() {
                                 Log.d("JoinEvent", "Joined event with ID: ${document.id}")
                                 this.dismiss()
                                 Snackbar.make(
-                                    view,
-                                    "Successfully joined event!",
-                                    Snackbar.LENGTH_LONG
-                                )
+                                        view,
+                                        "Successfully joined event!",
+                                        Snackbar.LENGTH_LONG
+                                    )
                                     .setAction("Action", null)
                                     .show()
                             }

@@ -57,7 +57,7 @@ class Dashboard : Fragment() {
         refreshView.setColorSchemeResources(R.color.accentColor)
         refreshView.setProgressBackgroundColorSchemeResource(R.color.primaryDarkColor)
         refreshView.setOnRefreshListener {
-            // TODO reload data from database if something changed
+            // Reload data from database
             initEvents(view)
             refreshView.isRefreshing = false
         }
@@ -69,10 +69,7 @@ class Dashboard : Fragment() {
         newEventButton.setOnClickListener {
             val newFragment = NewEvent()
             val transaction = fragmentManager!!.beginTransaction()
-            // TODO For a little polish, specify a transition animation
             transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-            // To make it fullscreen, use the 'content' root view as the container
-            // for the fragment, which is always the root view for the activity
             transaction
                 .add(android.R.id.content, newFragment)
                 .addToBackStack(null)
@@ -80,14 +77,14 @@ class Dashboard : Fragment() {
         }
     }
 
-    private fun initEvents(view: View){
+    private fun initEvents(view: View) {
         recyclerView = view.findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this.context)
         eventAdapter =
             EventAdapter(this.context!!, this.events) { event: Event -> onEventClicked(event) }
         recyclerView.adapter = this.eventAdapter
 
-        events.clear() // TODO check if ok
+        events.clear()
 
         // Create list of the user's events
         // Get current logged in user
@@ -144,26 +141,16 @@ class Dashboard : Fragment() {
                                 pin
                             )
                             currentEvent.id = document.get("id")!! as String
-                            currentEvent.participants.clear() // Annoying bug
-                            currentEvent.admins.clear() // Annoying bug
+                            currentEvent.participants.clear()
+                            currentEvent.admins.clear()
                             val participantsIds = document.get("participants") as ArrayList<*>
                             val adminsIds = document.get("admins") as ArrayList<*>
 
                             for (userId in participantsIds) {
-//                                val avatar = ((userHash as HashMap<*, *>)["avatar"] as Long).toInt()
-//                                val givenName = (userHash as HashMap<*, *>)["givenName"] as String
-//                                val familyName = (userHash as HashMap<*, *>)["familyName"] as String
-//                                val currUser = User(givenName, familyName, "", "")
-//                                currUser.avatar = avatar
                                 currentEvent.participants.add(userId as String)
                                 Log.d("Dash", "added participant id $userId")
                             }
                             for (userId in adminsIds) {
-//                                val avatar = ((userHash as HashMap<*, *>)["avatar"] as Long).toInt()
-//                                val givenName = (userHash as HashMap<*, *>)["givenName"] as String
-//                                val familyName = (userHash as HashMap<*, *>)["familyName"] as String
-//                                val currUser = User(givenName, familyName, "", "")
-//                                currUser.avatar = avatar
                                 currentEvent.admins.add(userId as String)
                                 Log.d("Dash", "added admin id $userId")
                             }

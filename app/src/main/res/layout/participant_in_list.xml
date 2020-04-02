@@ -19,7 +19,8 @@
             <ImageView
                 android:id="@+id/avatar"
                 android:layout_width="48dp"
-                android:layout_height="48dp" />
+                android:layout_height="48dp"
+                android:contentDescription="@string/avatar" />
 
         </androidx.cardview.widget.CardView>
 

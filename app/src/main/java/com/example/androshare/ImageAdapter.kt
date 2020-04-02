@@ -53,11 +53,6 @@ class ImageAdapter(private val images: ArrayList<Image>, var eventPage: EventPag
         return ImageHolder(parent.context, view)
     }
 
-    override fun onViewRecycled(holder: ImageHolder) {
-        // TODO implement
-        super.onViewRecycled(holder)
-    }
-
     override fun onBindViewHolder(holder: ImageHolder, position: Int) {
         Glide.with(holder.itemView.context).load(images[position].uri).into(holder.img)
         if (mode == MODE.SELECT) {

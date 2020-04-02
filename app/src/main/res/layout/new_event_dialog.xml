@@ -35,7 +35,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:text="CONFIRM"
+                    android:text="@string/confirm_c"
                     android:textColor="@color/accentColor"
                     android:textStyle="bold" />
 
@@ -65,7 +65,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:hint="Title"
+                android:hint="@string/title"
                 android:inputType="textCapWords|textNoSuggestions"
                 android:maxLength="25" />
 
@@ -75,7 +75,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/rectangle1"
-                android:hint="Enter event description..."
+                android:hint="@string/enter_event_description"
                 android:inputType="textCapSentences|textNoSuggestions|textMultiLine"
                 android:maxLines="5"
                 android:padding="4dp" />
@@ -84,7 +84,7 @@
                 style="@style/Body2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Location" />
+                android:text="@string/location" />
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -222,7 +222,7 @@
                         style="@style/Body2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Password" />
+                        android:text="@string/password" />
 
                     <!--                    <View-->
                     <!--                        android:layout_width="160dp"-->
@@ -249,7 +249,7 @@
                         style="@style/Body2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Confirm Password" />
+                        android:text="@string/confirm_password" />
 
 
                     <EditText

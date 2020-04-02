@@ -34,7 +34,6 @@ class Profile : Fragment() {
         return inflater.inflate(R.layout.fragment_profile, container, false)
     }
 
-
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -77,6 +76,4 @@ class Profile : Fragment() {
         FirebaseAuth.getInstance().signOut()
     }
 
-    companion object {
-    }
 }

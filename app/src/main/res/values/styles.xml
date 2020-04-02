@@ -1,27 +1,5 @@
 <resources>
 
-
-<!--    <style name="FullScreenDialogStyle" parent="Theme.AppCompat.Dialog">-->
-<!--        <item name="android:windowNoTitle">true</item>-->
-<!--        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
-<!--        <item name="colorPrimary">@color/colorPrimary</item>-->
-<!--&lt;!&ndash;        <item name="android:windowTranslucentStatus">true</item>&ndash;&gt;-->
-<!--        <item name="android:statusBarColor">@color/colorPrimaryDark</item>-->
-
-<!--        &lt;!&ndash; Set this to true if you want Full Screen without status bar &ndash;&gt;-->
-<!--        <item name="android:windowFullscreen">false</item>-->
-
-<!--        <item name="android:windowIsFloating">false</item>-->
-
-<!--        &lt;!&ndash; This is important! Don't forget to set window background &ndash;&gt;-->
-<!--        <item name="android:windowBackground">#d9d9d9</item>-->
-
-        <!-- Additionally if you want animations when dialog opening -->
-<!--        TODO see this-->
-<!--        <item name="android:windowEnterAnimation">@anim/slide_up</item>-->
-<!--        <item name="android:windowExitAnimation">@anim/slide_down</item>-->
-<!--    </style>-->
-
     <style name="Replace">
         <item name="android:activityOpenEnterAnimation">@anim/replace_anim</item>
         <item name="android:activityOpenExitAnimation">@anim/replace_anim</item>
@@ -57,84 +35,92 @@
     </style>
 
 
-    <!--hala -->
     <style name="AppTheme.NoActionBar">
-        <!-- Customize your theme here. -->
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <!--hala -->
-    <style name="AppTheme.AppBarOverlay" parent="Theme.AppCompat.Light.DarkActionBar">
-    </style>
+    <!--        &lt;!&ndash;hala &ndash;&gt;-->
+    <!--        <style name="AppTheme.AppBarOverlay" parent="Theme.AppCompat.Light.DarkActionBar">-->
+    <!--        </style>-->
 
-    <!--hala -->
-    <style name="AppTheme.PopupOverlay" parent="Theme.AppCompat.Light">
-    </style>
+    <!--        &lt;!&ndash;hala &ndash;&gt;-->
+    <!--        <style name="AppTheme.PopupOverlay" parent="Theme.AppCompat.Light">-->
+    <!--        </style>-->
 
-    <style name="Headline1"
-        parent="TextAppearance.MaterialComponents.Headline1">
+    <style name="Headline1" parent="TextAppearance.MaterialComponents.Headline1">
         <item name="fontFamily">@font/open_sans_regular</item>
         <item name="android:fontFamily">@font/open_sans_regular</item>
         <item name="android:textSize">96sp</item>
     </style>
-    <style name="Headline2"
-        parent="TextAppearance.MaterialComponents.Headline2">
+
+    <style name="Headline2" parent="TextAppearance.MaterialComponents.Headline2">
         <item name="fontFamily">@font/open_sans_regular</item>
         <item name="android:fontFamily">@font/open_sans_regular</item>
         <item name="android:textSize">60sp</item>
     </style>
+
     <style name="Headline3" parent="TextAppearance.MaterialComponents.Headline3">
         <item name="fontFamily">@font/open_sans_regular</item>
         <item name="android:fontFamily">@font/open_sans_regular</item>
         <item name="android:textSize">48sp</item>
     </style>
+
     <style name="Headline4" parent="TextAppearance.MaterialComponents.Headline4">
         <item name="fontFamily">@font/open_sans_regular</item>
         <item name="android:fontFamily">@font/open_sans_regular</item>
         <item name="android:textSize">34sp</item>
     </style>
+
     <style name="Headline5" parent="TextAppearance.MaterialComponents.Headline5">
         <item name="fontFamily">@font/open_sans_regular</item>
         <item name="android:fontFamily">@font/open_sans_regular</item>
         <item name="android:textSize">24sp</item>
     </style>
+
     <style name="Headline6" parent="TextAppearance.MaterialComponents.Headline6">
         <item name="fontFamily">@font/open_sans_regular</item>
         <item name="android:fontFamily">@font/open_sans_regular</item>
         <item name="android:textSize">20sp</item>
     </style>
+
     <style name="Subtitle1" parent="TextAppearance.MaterialComponents.Subtitle1">
         <item name="fontFamily">@font/open_sans_regular</item>
         <item name="android:fontFamily">@font/open_sans_regular</item>
         <item name="android:textSize">16sp</item>
     </style>
+
     <style name="Subtitle2" parent="TextAppearance.MaterialComponents.Subtitle2">
         <item name="fontFamily">@font/open_sans_regular</item>
         <item name="android:fontFamily">@font/open_sans_regular</item>
         <item name="android:textSize">14sp</item>
     </style>
+
     <style name="Body1" parent="TextAppearance.MaterialComponents.Body1">
         <item name="fontFamily">@font/open_sans_regular</item>
         <item name="android:fontFamily">@font/open_sans_regular</item>
         <item name="android:textSize">16sp</item>
     </style>
+
     <style name="Body2" parent="TextAppearance.MaterialComponents.Body2">
         <item name="fontFamily">@font/open_sans_regular</item>
         <item name="android:fontFamily">@font/open_sans_regular</item>
         <item name="android:textSize">14sp</item>
     </style>
+
     <style name="Button" parent="TextAppearance.MaterialComponents.Button">
         <item name="fontFamily">@font/open_sans_regular</item>
         <item name="android:fontFamily">@font/open_sans_regular</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:textSize">14sp</item>
     </style>
+
     <style name="Caption" parent="TextAppearance.MaterialComponents.Caption">
         <item name="fontFamily">@font/open_sans_regular</item>
         <item name="android:fontFamily">@font/open_sans_regular</item>
         <item name="android:textSize">12sp</item>
     </style>
+
     <style name="Overline" parent="TextAppearance.MaterialComponents.Overline">
         <item name="fontFamily">@font/open_sans_regular</item>
         <item name="android:fontFamily">@font/open_sans_regular</item>

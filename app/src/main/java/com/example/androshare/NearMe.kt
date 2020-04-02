@@ -30,8 +30,6 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
-
-// TODO: change max radius
 // maximum radius to search events near me - in meters
 private const val MAX_RADIUS = 5000
 
@@ -129,12 +127,15 @@ class NearMe : Fragment() {
                     val today = LocalDate.now()
                     // if i'm already a participant or the event is not today
                     if (participantsList.contains(account!!.id!!) || !(today.isEqual(eventStartDate) ||
-                        (today.isAfter(eventStartDate) && today.isBefore(eventEndDate)) || today.isEqual(
+                                (today.isAfter(eventStartDate) && today.isBefore(eventEndDate)) || today.isEqual(
                             eventEndDate
                         ))
                     ) {
-                        Log.e("find","event not today" + document.get("title").toString())
-                        Log.e("find",today.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)))
+                        Log.e("find", "event not today" + document.get("title").toString())
+                        Log.e(
+                            "find",
+                            today.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
+                        )
                         continue
                     }
                     val eventLng: Double = document.get("location.longitude")!! as Double
@@ -191,16 +192,16 @@ class NearMe : Fragment() {
                         events.add(currentEvent)
                     }
                 }
-                if(events.isEmpty()){
+                if (events.isEmpty()) {
                     // Show alert
-                    val builder = AlertDialog.Builder(context!!,R.style.alertDialogStyle)
+                    val builder = AlertDialog.Builder(context!!, R.style.alertDialogStyle)
                     builder.setTitle("Info")
                     builder.setMessage("No events are currently taking place here.")
-                    builder.setNeutralButton("Ok"){ dialog, _ ->
+                    builder.setNeutralButton("Ok") { dialog, _ ->
                         dialog.dismiss()
                     }
                     builder.show()
-                }else {
+                } else {
                     this.eventAdapter =
                         EventAdapter(
                             this.context!!,
@@ -214,13 +215,6 @@ class NearMe : Fragment() {
             }
     }
 
-    /**
-     * Provides a simple way of getting a device's location and is well suited for
-     * applications that do not require a fine-grained location and that do not need location
-     * updates. Gets the best and most recent location currently available, which may be null
-     * in rare cases when a location is not available.
-     * Note: this method should be called after location permission has been granted.
-     */
     @SuppressLint("MissingPermission", "SetTextI18n")
     private fun getLastLocation() {
         mFusedLocationClient!!.lastLocation
@@ -245,8 +239,6 @@ class NearMe : Fragment() {
 
     }
 
-
-    ////////////////////
     private fun checkPermissions(): Boolean {
         val permissionState = ActivityCompat.checkSelfPermission(
             this.context!!,
@@ -254,7 +246,6 @@ class NearMe : Fragment() {
         )
         return permissionState == PackageManager.PERMISSION_GRANTED
     }
-
 
     private fun startLocationPermissionRequest() {
         ActivityCompat.requestPermissions(
@@ -269,8 +260,6 @@ class NearMe : Fragment() {
             this.activity!!,
             Manifest.permission.ACCESS_FINE_LOCATION
         )
-        // Provide an additional rationale to the user. This would happen if the user denied the
-        // request previously, but didn't check the "Don't ask again" checkbox.
         if (shouldProvideRationale) {
             Log.d(
                 "requestPermissions",
@@ -286,9 +275,6 @@ class NearMe : Fragment() {
             }
         } else {
             Log.d("requestPermissions", "Requesting permission")
-            // Request permission. It's possible this can be auto answered if device policy
-            // sets the permission in a given state or the user denied the permission
-            // previously and checked "Never ask again".
             startLocationPermissionRequest()
         }
     }
@@ -332,60 +318,8 @@ class NearMe : Fragment() {
         override fun onLocationResult(locationResult: LocationResult) {
             val mLastLocation: Location = locationResult.lastLocation
             currentLocation = mLastLocation
-//            findViewByIdewById<TextView>(R.id.latTextView).text = mLastLocation.latitude.toString()
-//            findViewById<TextView>(R.id.lonTextView).text = mLastLocation.longitude.toString()
         }
     }
-
-    /**
-     * Callback received when a permissions request has been completed.
-     */
-//    override fun onRequestPermissionsResult(
-//        requestCode: Int, permissions: Array<String>,
-//        grantResults: IntArray
-//    ) {
-//        Log.i("onRequestPermissionsResult", "onRequestPermissionResult")
-//        if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
-//            if (grantResults.isEmpty()) {
-//                // If user interaction was interrupted, the permission request is cancelled and you
-//                // receive empty arrays.
-//                Log.i("onRequestPermissionsResult", "User interaction was cancelled.")
-//            } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                // Permission granted.
-//                getLastLocation()
-//            } else {
-//                // Permission denied.
-//
-//                // Notify the user via a SnackBar that they have rejected a core permission for the
-//                // app, which makes the Activity useless. In a real app, core permissions would
-//                // typically be best requested during a welcome-screen flow.
-//
-//                // Additionally, it is important to remember that a permission might have been
-//                // rejected without asking the user for permission (device policy or "Never ask
-//                // again" prompts). Therefore, a user interface affordance is typically implemented
-//                // when permissions are denied. Otherwise, your app could appear unresponsive to
-//                // touches or interactions which have required permissions.
-//
-//                Snackbar.make(
-//                    this.view!!,
-//                    "permission_denied_explanation",
-//                    Snackbar.LENGTH_LONG
-//                ).setAction(R.string.settings) {
-//                    // Build intent that displays the App settings screen.
-//                    val intent = Intent()
-//                    intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-//                    val uri = Uri.fromParts(
-//                        "package",
-//                        BuildConfig.APPLICATION_ID, null
-//                    )
-//                    intent.data = uri
-//                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-//                    startActivity(intent)
-//                }
-//            }
-//        }
-//    }
-    ////////////////////
 
     companion object {
         private const val REQUEST_PERMISSIONS_REQUEST_CODE = 34
